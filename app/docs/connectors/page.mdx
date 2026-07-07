@@ -1,0 +1,71 @@
+export const metadata = {
+  title: 'Gmail & Calendar',
+};
+
+# Gmail & Calendar
+
+Thoughtstead can sync your Gmail and Google Calendar into your brain
+automatically, so meetings and messages show up alongside everything else
+you've captured.
+
+## Why you bring your own Google OAuth app
+
+Gmail and Calendar sync run on a Google OAuth app **you** create in your own
+Google Cloud account — not a shared one Thoughtstead operates. That means
+your mail and calendar data flow directly between Google and your own
+deployment; it never routes through anyone else's servers, and no third
+party (including us) ever sees it in transit.
+
+Setting this up takes about five minutes.
+
+## Walkthrough
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com) and
+   create a new project (or use an existing one you're comfortable using).
+2. Enable the **Gmail API** and **Google Calendar API** for that project.
+3. Under **OAuth consent screen**, configure it as **External**, and leave it
+   in **Testing** mode.
+4. Add yourself (the Google account you want to sync) as a **test user** on
+   the consent screen.
+5. Under **Credentials**, create an **OAuth client ID** of type
+   **Web application**, and add this redirect URI:
+   ```text
+   https://YOUR-APP.vercel.app/api/connectors/google/callback
+   ```
+6. Set these environment variables on your deployment:
+   - `GOOGLE_CONNECTOR_CLIENT_ID`
+   - `GOOGLE_CONNECTOR_CLIENT_SECRET`
+   - `GOOGLE_CONNECTOR_REDIRECT_URI` — the same redirect URI you just
+     registered
+   - `CONNECTOR_TOKEN_KEY` — a base64, 32-byte key used to encrypt your
+     connector tokens at rest. Generate one with:
+     ```bash
+     node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+     ```
+7. Redeploy so the new environment variables take effect.
+8. In the app: **Settings → Connectors → Connect** for Gmail and/or Google
+   Calendar.
+
+<div className="not-prose my-6 rounded-lg border border-accent/30 bg-accent/5 p-4 text-sm">
+  While your OAuth app is in Testing mode, Google will show a warning screen
+  that says <strong>"Google hasn't verified this app."</strong> This is
+  expected — click <strong>Continue</strong>. Testing mode also means only
+  the Google accounts you explicitly added as test users can connect; anyone
+  else attempting to connect will be rejected by Google.
+</div>
+
+## After connecting
+
+Sync runs automatically once a day. If you want your latest messages or
+events pulled in right away, use **Sync now** on the Connectors settings
+page for an on-demand pull.
+
+If you haven't set up the environment variables yet, the Connectors page
+will show a **"Connectors need one-time setup"** notice with a link back to
+this guide — that's expected, and everything else in Thoughtstead works
+fine without it.
+
+## Next
+
+- [Import your notes](/docs/importers) — bring in your existing history
+  alongside your live Gmail/Calendar sync.

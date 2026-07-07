@@ -1,0 +1,103 @@
+export const metadata = {
+  title: 'Connect AI tools',
+};
+
+# Connect AI tools
+
+Thoughtstead speaks [MCP](https://modelcontextprotocol.io) — the protocol
+Claude, Cursor, and a growing list of AI tools use to read and act on
+outside data. Once connected, your AI tools can search your brain, list
+recent captures, look up people and decisions, and capture new thoughts —
+all scoped to exactly what you allow.
+
+## Create a key
+
+In your app: **Settings → MCP access**. Give the key a name (e.g.
+`laptop-claude`), pick an access mode, and create it. The raw key is shown
+**once**, right after creation — copy it somewhere safe immediately, because
+Thoughtstead only stores a hash of it and can't show it to you again.
+
+Three access modes are available:
+
+- **Read only** — search, list, and lookup tools only. A read-only key
+  cannot capture a thought, record a decision, or touch the agent queue,
+  even if a connected AI tool tries to call those tools — they're never
+  registered for that key in the first place.
+- **Read + write** — every tool, including capturing thoughts and recording
+  decisions.
+- **Custom** — pick the exact set of tools this key can call, tool by tool.
+
+This is least-privilege by construction: the tools an unlisted-for key
+*doesn't* exist for it at all, not just hidden behind a permission check.
+
+## Connect a client
+
+The MCP endpoint for your deployment is:
+
+```text
+https://YOUR-APP.vercel.app/api/mcp/mcp
+```
+
+Replace `YOUR-APP.vercel.app` with your actual deployment URL. Every request
+needs your key as a bearer token: `Authorization: Bearer YOUR_KEY`.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http thoughtstead https://YOUR-APP.vercel.app/api/mcp/mcp --header "Authorization: Bearer YOUR_KEY"
+```
+
+### Claude Desktop
+
+Claude Desktop needs a small local bridge to attach an `Authorization`
+header to a remote MCP server. Add this to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "thoughtstead": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://YOUR-APP.vercel.app/api/mcp/mcp",
+        "--header",
+        "Authorization:Bearer ${THOUGHTSTEAD_MCP_KEY}"
+      ],
+      "env": {
+        "THOUGHTSTEAD_MCP_KEY": "YOUR_KEY"
+      }
+    }
+  }
+}
+```
+
+### Cursor
+
+Cursor talks to remote MCP servers directly. Add this to `.cursor/mcp.json`
+(project-level) or `~/.cursor/mcp.json` (global):
+
+```json
+{
+  "mcpServers": {
+    "thoughtstead": {
+      "url": "https://YOUR-APP.vercel.app/api/mcp/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_KEY"
+      }
+    }
+  }
+}
+```
+
+## Revoking a key
+
+Back in **Settings → MCP access**, click **Revoke** next to any key. Revoked
+keys stop working immediately — the client will get an authentication
+error on its next call.
+
+## Next
+
+- [Agents & approval](/docs/agents) — how tools like `capture_thought` and
+  the agent queue tools fit into the bigger picture of what agents are and
+  aren't allowed to do on their own.

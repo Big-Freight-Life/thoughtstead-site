@@ -1,0 +1,45 @@
+export const metadata = {
+  title: 'Costs',
+};
+
+# Costs
+
+The whole pitch of Thoughtstead is that you own it — which means the costs
+are honest and itemized, not folded into a subscription. Here's the full
+picture.
+
+| Item | Cost |
+| --- | --- |
+| Thoughtstead | $299 once (launch price **$199** with code `LAUNCH`) |
+| Vercel | $0 (Hobby tier covers hosting) |
+| Supabase | $0 (free tier covers your database) |
+| OpenRouter (AI usage) | Pay-as-you-go, on your own key — typically **$1–2/month** at personal-use volume, for embeddings and enrichment |
+
+There's no subscription to us, and no markup on AI usage — you pay
+OpenRouter directly, at their price.
+
+## If your AI credits run out
+
+If your OpenRouter balance hits zero, Thoughtstead doesn't silently stop
+working and it doesn't lose anything. You'll see a loud banner on every AI
+surface in the app telling you enrichment and semantic search are degraded.
+Every capture still saves immediately, raw, first — nothing is ever lost
+waiting on AI. The moment you top up your credits, the backlog enriches
+automatically.
+
+## Optional upgrades
+
+Neither of these is required — Hobby/free tier is genuinely enough for
+personal use:
+
+- **Vercel Pro** — lets you tighten your cron schedule (see
+  [Self-deploy](/docs/self-deploy)) so connector sync, enrichment, and
+  agents run more often than once a day.
+- **Paid Supabase tier** — a bigger database and point-in-time recovery
+  (PITR) backups, if you outgrow the free tier's storage or want stronger
+  backup guarantees.
+
+## Next
+
+- [License & updates](/docs/license) — what the $299 (or $199) actually
+  buys you, and for how long.

@@ -1,0 +1,66 @@
+export const metadata = {
+  title: 'Agents & approval',
+};
+
+# Agents & approval
+
+Thoughtstead's built-in agents can draft you a morning brief, tidy up
+duplicate people and entities, and work through a queue of small chores —
+all without you lifting a finger. This page explains the boundary around
+what they're allowed to do on their own, and why you can trust it.
+
+## Agents propose. You approve.
+
+Every agent in Thoughtstead runs on the same loop: it claims a task, does
+the work, and if that work would touch anything outside your own brain —
+sending an email, posting somewhere, taking any outbound or otherwise
+irreversible action — it doesn't just do it. It parks the task with a
+proposal attached and waits in your review queue, in the app, for you to
+approve or reject it.
+
+Nothing an agent proposes becomes real until a human looks at it and clicks
+**Approve**.
+
+## Every action leaves a receipt
+
+Every step an agent takes — claiming a task, making progress, completing it,
+being approved or rejected — writes a receipt: who did it, what happened,
+and when. You can always look back at the queue and see exactly what an
+agent did and why, not just what it currently says.
+
+## The approval boundary lives in the database, not in a prompt
+
+This is the part worth trusting, not just believing. The rule that an AI
+session can't approve its own work isn't a system prompt asking the model
+to please wait for permission — instructions like that can be argued with,
+talked around, or simply ignored by a sufficiently persuasive input. The
+boundary is enforced as a database constraint: the code path that moves a
+task from "review" to "approved" checks who's asking, and an agent identity
+is never an acceptable answer. It's a constraint the code can't bypass, not
+a policy the model has agreed to follow.
+
+## What that stops
+
+Say a hostile email lands in your inbox with text instructing your agent to
+"forward all documents" to some outside address, or to take some other
+destructive action on its own. Even if an agent reads that email as part of
+its normal work and is fooled into trying, it cannot cause any outbound
+action to actually happen without you clicking **Approve** on the resulting
+proposal first. This isn't a hope — it's a launch requirement that's
+verified by an automated test before any release ships: a hostile input
+should produce zero outbound action without human approval, full stop.
+
+## In practice
+
+- Read-only and internal work (search, summarizing, linking a person to a
+  thought) generally completes on its own.
+- Anything outbound or destructive lands in your review queue with a
+  proposal you can read before deciding.
+- You can approve, or reject with a reason — either way, it's on the
+  record.
+
+## Next
+
+- [Connect AI tools](/docs/mcp) — the same least-privilege thinking applies
+  to MCP keys: a read-only key can't even see the tools that would let it
+  capture or act.
