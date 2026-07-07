@@ -27,8 +27,9 @@ Three access modes are available:
   decisions.
 - **Custom** — pick the exact set of tools this key can call, tool by tool.
 
-This is least-privilege by construction: the tools an unlisted-for key
-*doesn't* exist for it at all, not just hidden behind a permission check.
+This is least-privilege by construction: a tool a key isn't scoped for
+*doesn't exist* for that key at all — it's never registered, not just hidden
+behind a permission check.
 
 ## Connect a client
 

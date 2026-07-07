@@ -34,7 +34,7 @@ This is the part worth trusting, not just believing. The rule that an AI
 session can't approve its own work isn't a system prompt asking the model
 to please wait for permission — instructions like that can be argued with,
 talked around, or simply ignored by a sufficiently persuasive input. The
-boundary is enforced as a database constraint: the code path that moves a
+boundary is enforced in the database layer: the code path that moves a
 task from "review" to "approved" checks who's asking, and an agent identity
 is never an acceptable answer. It's a constraint the code can't bypass, not
 a policy the model has agreed to follow.
