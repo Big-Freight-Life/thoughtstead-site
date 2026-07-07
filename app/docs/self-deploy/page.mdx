@@ -33,7 +33,7 @@ Then fill in `.env.local`. Every variable, in order, with what it means:
 | `GOOGLE_CONNECTOR_REDIRECT_URI` | The redirect URI registered on that OAuth client |
 | `CONNECTOR_TOKEN_KEY` | AES-256 key for encrypting connector OAuth tokens at rest (base64, 32 bytes). Generate with `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
 | `DIAGNOSTICS_ENDPOINT` | Optional. Where the opt-in, content-free daily diagnostics ping (app version + per-check pass/fail booleans only) is POSTed. Unset = diagnostics cron no-ops |
-| `NEXT_PUBLIC_REPO_SLUG` | Optional. `"owner/repo"` for the Health page's best-effort update check against the GitHub releases feed. Unset = Health shows the version but skips the check. E.g. `thoughtstead/thoughtstead` |
+| `NEXT_PUBLIC_REPO_SLUG` | Optional. `"owner/repo"` for the Health page's best-effort update check against the GitHub releases feed. Unset = Health shows the version but skips the check. E.g. `Big-Freight-Life/thoughtstead` |
 | `CHAT_MODEL` | Chat model for in-app AI chat (OpenRouter id). Default: `google/gemini-2.5-flash` |
 
 You don't need the `GOOGLE_CONNECTOR_*` or `CONNECTOR_TOKEN_KEY` values to get
