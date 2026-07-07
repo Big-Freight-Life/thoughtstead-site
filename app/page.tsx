@@ -78,7 +78,7 @@ const FAQS = [
   },
   {
     q: 'Can my team use it?',
-    a: "Each purchase covers one person's private deployment — your own repo, your own accounts. If your whole team wants in, buy a license per person, or email support@bfl.design about a team plan.",
+    a: "Yes. Invite your team into your deployed instance — that's covered by your purchase. You'd only buy another license if someone wants their own separate deployment and repo access.",
   },
   {
     q: 'What happens after 12 months?',
@@ -91,19 +91,16 @@ const FAQS = [
 ];
 
 function Section({
-  id,
   wide = false,
   className = '',
   children,
 }: {
-  id?: string;
   wide?: boolean;
   className?: string;
   children: ReactNode;
 }) {
   return (
     <section
-      id={id}
       className={`mx-auto px-6 py-16 md:py-24 ${wide ? 'max-w-5xl' : 'max-w-3xl'} ${className}`}
     >
       {children}
@@ -131,7 +128,7 @@ export default function Home() {
             <BuyButton large />
           </div>
           <p className="mt-4 text-sm text-foreground/60">
-            One-time purchase &middot; 12 months of updates &middot; runs for ~$1/mo in your own
+            One-time purchase &middot; 12 months of updates &middot; runs for ~$1–2/mo in your own
             accounts
           </p>
         </Section>
