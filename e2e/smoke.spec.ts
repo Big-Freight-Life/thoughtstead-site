@@ -1,15 +1,35 @@
 import { expect, test } from '@playwright/test';
 
-test('landing renders the pitch and pricing', async ({ page }) => {
+test('landing renders the pitch and hosted pricing', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: /homestead for your thoughts/i })).toBeVisible();
-  await expect(page.getByText('$299').first()).toBeVisible();
+  // exact: 'Hosted' is a substring of 'Self-hosted', which is the other card.
+  await expect(page.getByRole('heading', { name: 'Hosted', exact: true })).toBeVisible();
+  await expect(page.getByText('$20').first()).toBeVisible();
 });
 
-test('buy button targets Polar checkout when configured', async ({ page }) => {
+// Self-hosted ships after the hosted apps. Until then the page must not offer a
+// way to pay for it — this test is what keeps a checkout from creeping back in
+// before there is something to deliver.
+test('self-hosted is a waitlist, not a checkout', async ({ page }) => {
   await page.goto('/');
-  const buy = page.getByTestId('buy-button').first();
-  if (await buy.count()) expect(await buy.getAttribute('href')).toMatch(/polar\.sh/);
+  await expect(page.getByRole('heading', { name: 'Self-hosted' })).toBeVisible();
+
+  const waitlist = page.getByTestId('waitlist-cta');
+  await expect(waitlist).toBeVisible();
+  expect(await waitlist.getAttribute('href')).toMatch(/^mailto:/);
+
+  // No payment link anywhere on the page while self-hosted is unreleased.
+  expect(await page.locator('a[href*="polar.sh"]').count()).toBe(0);
+  await expect(page.getByText('$299')).toHaveCount(0);
+});
+
+test('hosted CTA points at signup when configured', async ({ page }) => {
+  await page.goto('/');
+  const cta = page.getByTestId('hosted-cta').first();
+  // Absent until NEXT_PUBLIC_HOSTED_SIGNUP_URL is set — the page renders
+  // "Launching soon" rather than a dead link.
+  if (await cta.count()) expect(await cta.getAttribute('href')).toMatch(/^https?:\/\//);
 });
 
 test('docs sidebar navigates every page without 404', async ({ page }) => {

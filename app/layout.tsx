@@ -7,9 +7,9 @@ const serif = Source_Serif_4({ subsets: ['latin'], variable: '--font-serif' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://thoughtstead.com'),
-  title: { default: 'Thoughtstead — the second brain you own', template: '%s · Thoughtstead' },
+  title: { default: 'Thoughtstead — an AI second brain that remembers', template: '%s · Thoughtstead' },
   description:
-    'An AI second brain you actually own. Capture thoughts, email, and meetings into a private, semantically searchable memory that runs in your own cloud accounts. One-time purchase.',
+    'An AI second brain that remembers what you know and hands it back when you need it. Capture thoughts, email, and meetings into a private, semantically searchable memory — connected to Claude, ChatGPT, and Cursor. Full export, any time.',
   openGraph: {
     title: 'Thoughtstead',
     description: 'A homestead for your thoughts.',

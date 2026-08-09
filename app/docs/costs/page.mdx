@@ -4,42 +4,35 @@ export const metadata = {
 
 # Costs
 
-The whole pitch of Thoughtstead is that you own it — which means the costs
-are honest and itemized, not folded into a subscription. Here's the full
-picture.
+One price, and it covers everything you need to run Thoughtstead.
 
 | Item | Cost |
 | --- | --- |
-| Thoughtstead | $299 once (launch price **$199** with code `LAUNCH`) |
-| Vercel | $0 (Hobby tier covers hosting) |
-| Supabase | $0 (free tier covers your database) |
-| OpenRouter (AI usage) | Pay-as-you-go, on your own key — typically **$1–2/month** at personal-use volume, for embeddings and enrichment |
+| Thoughtstead (hosted) | **$20/month** |
+| Hosting | Included |
+| AI usage — embeddings, enrichment, search | Included, at no markup |
+| Exporting your data | Free, any time |
 
-There's no subscription to us, and no markup on AI usage — you pay
-OpenRouter directly, at their price.
+There is no API key to obtain, no cloud account to create, and no per-token
+bill to watch. If you cancel, you can still export everything first.
 
-## If your AI credits run out
+## Self-hosted
 
-If your OpenRouter balance hits zero, Thoughtstead doesn't silently stop
-working and it doesn't lose anything. You'll see a loud banner on every AI
-surface in the app telling you enrichment and semantic search are degraded.
-Every capture still saves immediately, raw, first — nothing is ever lost
-waiting on AI. The moment you top up your credits, the backlog enriches
-automatically.
+Self-hosting — running Thoughtstead entirely on your own infrastructure, with
+your own database and your own AI keys — ships after the hosted apps. Its
+pricing will be announced at launch. The cost shape will be different: you pay
+for your own hosting and AI usage directly, at whatever those providers charge.
 
-## Optional upgrades
+If you want it, [email us](mailto:support@bfl.design?subject=Self-hosted%20waitlist)
+and we will tell you when it is ready.
 
-Neither of these is required — Hobby/free tier is genuinely enough for
-personal use:
+## What happens if something degrades
 
-- **Vercel Pro** — lets you tighten your cron schedule (see
-  [Self-deploy](/docs/self-deploy)) so connector sync, enrichment, and
-  agents run more often than once a day.
-- **Paid Supabase tier** — a bigger database and point-in-time recovery
-  (PITR) backups, if you outgrow the free tier's storage or want stronger
-  backup guarantees.
+Thoughtstead never loses a capture. Every thought saves immediately, raw, before
+any AI touches it. If enrichment or semantic search is temporarily degraded, the
+app says so plainly on every AI surface, and the backlog processes automatically
+once service is restored.
 
 ## Next
 
-- [License & updates](/docs/license) — what the $299 (or $199) actually
-  buys you, and for how long.
+- [Privacy](/privacy) — what we do and do not do with your data.
