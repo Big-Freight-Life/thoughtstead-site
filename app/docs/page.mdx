@@ -7,49 +7,40 @@ export const metadata = {
 Welcome to Thoughtstead. This page is the map — everything else in these docs
 hangs off it.
 
-## What arrives after purchase
+## Getting started
 
-Three things land in your inbox within a few minutes of checkout:
+Thoughtstead is a hosted service, so there is nothing to install and nothing to
+deploy. Sign in and you are in your own brain: your contexts, defaults, and
+document categories are all created for you on first sign-in.
 
-1. **A GitHub invite email**, inviting you to the private repository at
-   `github.com/Big-Freight-Life/thoughtstead`. Accept it there, or from
-   [github.com/notifications](https://github.com/notifications) if the email
-   is slow to arrive.
-2. **A license key on your Polar receipt.** Keep the receipt — the key is your
-   proof of purchase if you ever need support.
-3. **A zip download of the release**, in case you'd rather grab the source
-   directly than clone the repo.
+There is no setup wizard, no database to verify, and no API key to obtain — AI
+usage is included in your subscription.
 
-Once you've accepted the invite, you're ready to deploy.
+From signing in to your first captured thought is under a minute.
 
-## Choose a path
+## Make it yours
 
-There are two ways to get Thoughtstead running, and they end up in the exact
-same place: your own Vercel project, your own Supabase database, your own AI
-key.
-
-- **[Click-and-go](/docs/click-and-go)** — no terminal required. Click a
-  button, connect two accounts, paste a couple of values. Best if you're not
-  comfortable on the command line.
-- **[Self-deploy](/docs/self-deploy)** — you run the commands yourself, in
-  your terminal, with full control over local development too. Best if you
-  want to run Thoughtstead locally before it's live, or you're already
-  comfortable with `git` and `npm`.
-
-Either path lands you in the same place: a first-run **setup wizard** that
-checks your database connection, confirms your AI key, and offers to connect
-Gmail, Calendar, and your AI tools. From an accepted invite to your first
-captured thought takes under 10 minutes.
-
-## After that
-
-- [Connect AI tools](/docs/mcp) — wire up Claude, Cursor, or any MCP client
-  so they can read from and write into your brain.
-- [Gmail & Calendar](/docs/connectors) — sync your own mail and calendar
-  using your own Google OAuth app.
+- [Connect AI tools](/docs/mcp) — wire up Claude, Cursor, or any MCP client so
+  they can read from and write into your brain.
+- [Gmail & Calendar](/docs/connectors) — sync your mail and calendar.
 - [Import your notes](/docs/importers) — bring in an Obsidian vault or a
   ChatGPT export.
 - [Agents & approval](/docs/agents) — how the built-in agents work, and why
   nothing leaves your Thoughtstead without your sign-off.
-- [Costs](/docs/costs) — the honest, itemized running cost.
-- [License & updates](/docs/license) — what you bought, in plain English.
+- [Costs](/docs/costs) — what the subscription covers.
+
+## Running it yourself
+
+A self-hosted edition — Thoughtstead on your own infrastructure, your own
+database, your own keys — ships after the hosted apps. It is not available yet.
+
+The deployment guides below describe how that works and are kept here for
+reference, but they are **not usable today**: they assume access to the source,
+which is not currently sold.
+
+- [Click-and-go](/docs/click-and-go) — the no-terminal deployment path.
+- [Self-deploy](/docs/self-deploy) — the command-line deployment path.
+
+Want it when it lands?
+[Email us](mailto:support@bfl.design?subject=Self-hosted%20waitlist) and we will
+tell you.

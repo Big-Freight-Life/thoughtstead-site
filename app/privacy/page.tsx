@@ -3,7 +3,8 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Privacy',
-  description: 'What Thoughtstead the website collects, in plain English: not much.',
+  description:
+    'What Thoughtstead does with your data, in plain English: no training on it, no selling it, full export any time.',
 };
 
 export default function PrivacyPage() {
@@ -21,16 +22,21 @@ export default function PrivacyPage() {
       <main className="mx-auto max-w-2xl px-6 py-10 md:py-16">
         <article className="prose prose-neutral min-w-0 max-w-2xl prose-headings:font-serif prose-headings:tracking-tight prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-hr:border-foreground/15">
           <h1>Privacy</h1>
-          <p className="text-sm text-foreground/60">Last updated 2026-07-07</p>
+          <p className="text-sm text-foreground/60">Last updated 2026-08-09</p>
 
           <p>
-            The short version: this marketing and documentation site is <strong>static</strong>.
-            It doesn&rsquo;t have accounts, doesn&rsquo;t have a database, and doesn&rsquo;t set
-            any cookies of its own. There&rsquo;s no cookie banner here because there&rsquo;s
-            nothing to consent to.
+            The short version: <strong>we do not train on your content and we never sell it</strong>,
+            you can export everything at any time, and this website itself collects almost
+            nothing. The rest of this page covers both — the site you are reading, and the
+            Thoughtstead service you subscribe to.
           </p>
 
           <h2>What this site collects</h2>
+          <p>
+            This marketing and documentation site is <strong>static</strong>. It has no accounts,
+            no database, and sets no cookies of its own — there is no cookie banner here because
+            there is nothing to consent to.
+          </p>
           <p>
             We use <a href="https://vercel.com/docs/analytics">Vercel Analytics</a> to see
             anonymous, aggregate traffic — things like page views and which country a visit came
@@ -38,27 +44,64 @@ export default function PrivacyPage() {
             combine it with anything else about you.
           </p>
 
-          <h2>Buying Thoughtstead</h2>
+          <h2>Subscribing</h2>
           <p>
-            Checkout is handled entirely by{' '}
-            <a href="https://polar.sh" target="_blank" rel="noreferrer">
-              Polar
-            </a>
-            , our merchant of record. Polar processes your payment and their own privacy policy
-            governs that transaction — we never see or store your card details. What we do
-            receive from Polar after a purchase is your order information: name, email, and the
-            license key issued for your purchase. We use that to send your GitHub repository
-            invite, respond to support requests, and confirm license validity if you ever ask us
-            to.
+            Payment is handled entirely by our payment provider, acting as merchant of record.
+            They process your payment under their own privacy policy — <strong>we never see or
+            store your card details</strong>. What we receive is your order information: name,
+            email, and subscription status. We use it to run your account, answer support
+            requests, and send billing notices. We do not send marketing you did not ask for.
           </p>
 
-          <h2>Your deployed Thoughtstead instance</h2>
+          <h2>Your Thoughtstead</h2>
           <p>
-            Once you deploy Thoughtstead, it runs entirely in <strong>your own</strong> Vercel and
-            Supabase accounts, using <strong>your own</strong> AI API keys. We don&rsquo;t host it,
-            we don&rsquo;t have access to it, and your deployed instance sends us{' '}
-            <strong>nothing</strong> — no thoughts, no email content, no usage data — unless you
-            explicitly turn on the optional diagnostics ping described below.
+            Thoughtstead is a hosted service, so what you capture is stored on our
+            infrastructure. That makes the following commitments the important part of this page:
+          </p>
+          <ul>
+            <li>
+              <strong>We do not train AI models on your content, and we never sell it.</strong>
+            </li>
+            <li>
+              <strong>Your workspace is isolated</strong> from every other customer at the
+              database level, not merely by application code.
+            </li>
+            <li>
+              <strong>You can export everything, any time</strong> — thoughts, contacts,
+              decisions, and documents, in readable formats. That includes while you are
+              cancelling.
+            </li>
+            <li>
+              <strong>Delete means delete.</strong> Ask us to delete your account and we remove
+              your content from live systems promptly, and from backups as those age out on their
+              normal cycle.
+            </li>
+            <li>
+              <strong>Outbound actions need your approval.</strong> Agents draft and queue; they
+              do not send on their own. That is enforced in the database, not by prompt.
+            </li>
+          </ul>
+          <p>
+            To operate the service we necessarily process your content — storing it, indexing it
+            for semantic search, and sending it to our AI provider to enrich and answer questions
+            about it. That processing exists to serve you and for no other purpose.
+          </p>
+
+          <h3>Staff access</h3>
+          <p>
+            Hosting your second brain means our staff could technically read it. We treat that as
+            a serious responsibility: access is limited to what is needed to operate the service
+            or to fix a problem you have asked us to fix, and we would rather ask you than look.
+            If you want a stricter guarantee than any hosted service can give, the self-hosted
+            edition — running Thoughtstead entirely on your own infrastructure — is planned and
+            will be the honest answer for that.
+          </p>
+
+          <h3>Connected accounts</h3>
+          <p>
+            If you connect Gmail or Calendar, we store the access tokens Google issues, encrypted,
+            and use them only to sync what you have asked us to sync. Disconnect at any time and
+            we discard them.
           </p>
 
           <h3>Optional diagnostics ping</h3>
@@ -81,10 +124,12 @@ export default function PrivacyPage() {
 
           <h2>Third parties</h2>
           <p>
-            The only third parties involved in this site and the purchase flow are Polar
-            (payments) and Vercel (hosting this site and its anonymous analytics). Your deployed
-            Thoughtstead instance is your own infrastructure, running under your own agreements
-            with Vercel, Supabase, and whichever AI provider you choose.
+            Running Thoughtstead involves a small number of providers: our payment provider
+            (billing), Vercel (hosting this site and the app, plus anonymous analytics for this
+            site), Supabase (the database your workspace lives in), Clerk (sign-in), and our AI
+            provider (embeddings and enrichment). They process data on our instructions in order
+            to deliver the service, and none of them is permitted to use your content for their
+            own purposes.
           </p>
 
           <h2>Changes</h2>

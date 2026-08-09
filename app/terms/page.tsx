@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { HOSTED_PRICE, HOSTED_PERIOD } from '@/components/cta';
 
 export const metadata: Metadata = {
   title: 'Terms',
-  description: 'The terms of buying and using Thoughtstead, in plain English.',
+  description: 'The terms of subscribing to and using Thoughtstead, in plain English.',
 };
 
 export default function TermsPage() {
@@ -21,66 +22,100 @@ export default function TermsPage() {
       <main className="mx-auto max-w-2xl px-6 py-10 md:py-16">
         <article className="prose prose-neutral min-w-0 max-w-2xl prose-headings:font-serif prose-headings:tracking-tight prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-hr:border-foreground/15">
           <h1>Terms</h1>
-          <p className="text-sm text-foreground/60">Last updated 2026-07-07</p>
+          <p className="text-sm text-foreground/60">Last updated 2026-08-09</p>
 
           <p>
-            These are the terms for buying and using Thoughtstead, written in plain English. If
-            anything here ever conflicts with the license file in the repository you receive
-            (<code>LICENSE.md</code>), that file governs.
+            These are the terms for subscribing to and using Thoughtstead, written in plain
+            English. By creating an account you agree to them.
           </p>
 
-          <h2>Sales</h2>
+          <h2>The service</h2>
           <p>
-            All purchases are sold by{' '}
-            <a href="https://polar.sh" target="_blank" rel="noreferrer">
-              Polar
-            </a>
-            , acting as merchant of record. Polar handles payment processing, receipts, and
-            refunds. <strong>Refunds are available within 14 days of purchase, no questions
-            asked</strong>, and are processed by Polar.
+            Thoughtstead is a hosted subscription. We run the service; you sign in and use it.
+            Your subscription covers one individual account and everything described on the{' '}
+            <Link href="/">home page</Link> for as long as it is active.
           </p>
 
-          <h2>What you&rsquo;re buying</h2>
-          <p>
-            You&rsquo;re buying a license to the Thoughtstead source code, granted under{' '}
-            <code>LICENSE.md</code> in the private repository you get access to after purchase.
-            In summary:
-          </p>
+          <h2>Billing</h2>
           <ul>
-            <li>Use it for personal or commercial purposes.</li>
-            <li>Modify it freely — the source is yours to study, change, and extend.</li>
             <li>
-              Invite your team onto your own deployed instance; that&rsquo;s covered by a single
-              purchase.
+              Thoughtstead is <strong>{HOSTED_PRICE} per {HOSTED_PERIOD}</strong>, billed in
+              advance. AI usage is included; there is no metered surcharge.
             </li>
             <li>
-              You may not resell or redistribute the code — including hosting it for others as a
-              product or service.
+              <strong>Cancel any time.</strong> Your subscription runs to the end of the period
+              you have already paid for, and is not renewed after that.
             </li>
             <li>
-              Your purchase includes 12 months of updates. Your access to the repository and to
-              whatever you&rsquo;ve already deployed does not expire after that — you simply stop
-              receiving new updates unless you renew.
+              If we ever change the price, we will tell you before it affects you, and you can
+              cancel rather than accept it.
             </li>
-            <li>Support covers the latest released version, best-effort.</li>
+            <li>
+              Payments are handled by our payment provider, who acts as merchant of record and
+              issues your receipts.
+            </li>
           </ul>
+
+          <h2>Your data</h2>
+          <ul>
+            <li>
+              <strong>Your content is yours.</strong> Subscribing does not give us ownership of
+              anything you capture. We claim only the permission needed to operate the service
+              for you — storing it, indexing it, and processing it with AI so you can search and
+              recall it.
+            </li>
+            <li>
+              <strong>We do not train models on your content, and we do not sell it.</strong>
+            </li>
+            <li>
+              <strong>You can export everything, at any time, on any plan</strong> — including
+              while cancelling. See <Link href="/privacy">Privacy</Link> for what we store and
+              for how long.
+            </li>
+            <li>
+              You are responsible for what you put in, and for having the right to put it there.
+            </li>
+          </ul>
+
+          <h2>Acceptable use</h2>
           <p>
-            This is a summary, not the license itself. Read the full text in{' '}
-            <code>LICENSE.md</code> in the repository, or see{' '}
-            <Link href="/docs/license">the license &amp; updates doc</Link>.
+            Do not use Thoughtstead to break the law, to store or distribute material you have no
+            right to, or to attack the service or other people using it. We may suspend an account
+            doing those things; where we can, we will tell you first and give you the chance to
+            export your data.
           </p>
 
-          <h2>No warranty</h2>
+          <h2>Self-hosted</h2>
           <p>
-            Thoughtstead is provided <strong>as-is</strong>, without warranty of any kind, express
-            or implied. You&rsquo;re deploying it into your own Vercel, Supabase, and AI provider
-            accounts, under your own agreements with those providers — we&rsquo;re not
-            responsible for their uptime, pricing, or behavior.
+            A self-hosted edition — running Thoughtstead on your own infrastructure — is planned
+            and is not available yet. Nothing on this page is a commitment to a date, a price, or
+            specific terms for it. When it ships it will have its own licence, and these terms
+            will not govern it.
+          </p>
+
+          <h2>Availability and warranty</h2>
+          <p>
+            We work to keep Thoughtstead running and your data safe, but the service is provided{' '}
+            <strong>as-is</strong>, without warranty of any kind, express or implied. We do not
+            guarantee uninterrupted availability. To the extent the law allows, our liability is
+            limited to the amount you paid us in the twelve months before the claim.
+          </p>
+          <p>
+            Your export is the real backstop, and it is the reason we keep it free and always
+            available: nothing about your ability to keep your own data should depend on us still
+            being here.
+          </p>
+
+          <h2>Ending things</h2>
+          <p>
+            You can cancel or delete your account at any time. If we ever discontinue the service,
+            we will give you reasonable notice and a window to export everything before anything
+            is deleted.
           </p>
 
           <h2>Support</h2>
           <p>
-            For help with your purchase, license key, or deployment, email{' '}
+            For help with your account, your subscription, or anything else, email{' '}
             <a href="mailto:support@bfl.design">support@bfl.design</a>.
           </p>
 

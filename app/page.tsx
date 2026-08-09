@@ -1,17 +1,23 @@
 import type { ReactNode } from 'react';
-import { BuyButton } from '@/components/buy-button';
+import {
+  HostedCta,
+  WaitlistCta,
+  HOSTED_PRICE,
+  HOSTED_PERIOD,
+  HOSTED_LIVE,
+} from '@/components/cta';
 
 const HERO_SUBLINE =
-  "The AI second brain you own — not rent. Your memory, searchable by meaning, living in your own accounts, connected to every AI tool you use. Pay once. It's yours.";
+  'An AI second brain that remembers what you know and hands it back the moment you need it. Your thoughts, email, and meetings — searchable by meaning, connected to every AI tool you use.';
 
-const LEASE_PARAGRAPHS = [
+const DEED_PARAGRAPHS = [
   {
-    lead: 'Every other second brain is a lease.',
-    rest: 'Notion, Mem, Reflect — $10–20 a month, forever, with your most personal data living on their servers, subject to their pivots, price hikes, and shutdowns.',
+    lead: 'Every other second brain keeps your memory.',
+    rest: 'Your most personal data lives on their servers, in their format, subject to their pivots and shutdowns. Getting it out — if you can at all — means a scrape, a zip of orphaned markdown, and a week of your life.',
   },
   {
-    lead: 'Thoughtstead is a deed.',
-    rest: 'You pay once and get the whole product: a private memory that captures your thoughts, your Gmail, your calendar, and your imported notes, understands them with AI, and hands them back the moment you need them — by meaning, not keywords. It deploys to your own free-tier cloud accounts in minutes, uses your own AI keys (typical cost: under $2/month), and connects to Claude, ChatGPT, and Cursor so your AI tools finally remember what you know.',
+    lead: 'Thoughtstead hands it back.',
+    rest: 'Full export, any time, on any plan — every thought, contact, decision, and document, in formats you can actually read. We never train on your data and never sell it. If you leave, you leave with everything, and nothing about that depends on us still being here.',
   },
   {
     lead: 'And it works for you.',
@@ -26,7 +32,7 @@ const STEPS = [
   },
   {
     title: 'Understand',
-    body: 'AI enrichment links people, projects, and decisions — using your own keys, at cost.',
+    body: 'AI enrichment links people, projects, and decisions automatically. No API key to manage — it is included.',
   },
   {
     title: 'Recall',
@@ -50,43 +56,56 @@ const INCLUDED = [
 ];
 
 const COSTS = [
-  { name: 'Thoughtstead', value: '$299 once' },
-  { name: 'Vercel', value: '$0 (Hobby tier)' },
-  { name: 'Supabase', value: '$0 (free tier)' },
-  { name: 'AI usage', value: '~$1–2/mo (your own key)' },
+  { name: 'Thoughtstead', value: `${HOSTED_PRICE}/${HOSTED_PERIOD}` },
+  { name: 'Hosting', value: 'Included' },
+  { name: 'AI usage', value: 'Included — no key, no markup' },
+  { name: 'Export your data', value: 'Free, always' },
+];
+
+// Deliberately no price. Self-hosted is not built yet, and quoting a number for
+// something with no ship date is the kind of promise that turns into a refund.
+const SELF_HOSTED_BULLETS = [
+  'Runs on your own infrastructure',
+  'Your database, your keys',
+  'The same product, self-operated',
+  'Pricing announced at launch',
 ];
 
 const PRICING_BULLETS = [
-  'Full source code',
-  'Private repo access forever',
-  '12 months of updates',
-  'Deploy in ~10 minutes',
+  'Everything below, included',
+  'AI usage — no API key to manage',
+  'Full export, any time',
+  'Cancel whenever; your export outlives us',
 ];
 
 const FAQS = [
   {
     q: 'Do I need to be technical?',
-    a: "You don't need to write code, but you'll need to be comfortable following a setup guide — creating free Vercel and Supabase accounts, running one deploy command, and adding your own AI API key. If you can install a browser extension, you can do this.",
+    a: 'No. Sign in and start capturing — there is nothing to deploy, no account to create at another company, and no API key to manage. Connecting Gmail and Calendar is a normal permissions screen.',
   },
   {
-    q: 'What exactly do I get?',
-    a: 'A private GitHub repository with the full source, deployed to your own Vercel and Supabase accounts. That includes the web app, the MCP server for AI clients, Gmail and Calendar sync, the agent queue, import tools for Obsidian and ChatGPT exports, and 12 months of updates.',
+    q: 'What do I get?',
+    a: 'The whole product: capture from the web app, your phone, or your AI tools; semantic search and chat over everything; people, projects, and decisions memory; Gmail and Calendar sync; the MCP server so Claude, ChatGPT, and Cursor can recall what you know; the agent queue with receipts; and imports from Obsidian and ChatGPT.',
   },
   {
-    q: 'What are the running costs?',
-    a: "Vercel's Hobby tier and Supabase's free tier cover hosting at $0/month. The only real cost is AI usage on your own API key — typically $1–2/month depending on how much you capture and search.",
+    q: 'Is my data private?',
+    a: 'Your brain is yours. We never train on it and never sell it, every workspace is isolated at the database level, and outbound actions park for your explicit approval rather than firing on their own. Full export is always available.',
+  },
+  {
+    q: 'Can I get my data out?',
+    a: 'Any time, in one click, on any plan — thoughts, contacts, decisions, and documents in formats you can actually read. There is no retention trick here: the export exists so leaving is cheap.',
+  },
+  {
+    q: 'When is self-hosting available?',
+    a: 'After the hosted apps ship. Self-hosting means running Thoughtstead entirely on your own infrastructure — your database, your keys, your deployment. It is the same product, and it is coming; we would rather ship it properly than early. Join the waitlist and we will tell you the moment it is ready.',
   },
   {
     q: 'Can my team use it?',
-    a: "Yes. Invite your team into your deployed instance — that's covered by your purchase. You'd only buy another license if someone wants their own separate deployment and repo access.",
+    a: 'Individual accounts are what ship first. Team workspaces — shared contexts, roles, and seats — come after. If you need that now, email us and tell us what you need.',
   },
   {
-    q: 'What happens after 12 months?',
-    a: "You keep everything — the code, your repo, your live deployment — forever. After 12 months you stop receiving new updates unless you renew, but nothing you've already deployed stops working.",
-  },
-  {
-    q: 'Refunds?',
-    a: 'Yes — 14 days, no questions asked. Refunds are handled by Polar, our merchant of record.',
+    q: 'Can I cancel?',
+    a: 'Any time, and you can export everything on your way out. No lock-in period and no exit fee.',
   },
 ];
 
@@ -125,19 +144,23 @@ export default function Home() {
             {HERO_SUBLINE}
           </p>
           <div className="mt-8 flex justify-center">
-            <BuyButton large />
+            <HostedCta large />
           </div>
           <p className="mt-4 text-sm text-foreground/60">
-            One-time purchase &middot; 12 months of updates &middot; runs for ~$1–2/mo in your own
-            accounts
+            {/* Explicit {' '}: JSX trims each line of a multi-line text node, so a
+                literal space next to an expression is dropped — it rendered
+                "$20/month· AI included". */}
+            {`${HOSTED_PRICE}/${HOSTED_PERIOD}`}
+            {' '}
+            &middot; AI included &middot; export everything, any time
           </p>
         </Section>
 
-        {/* Lease vs deed */}
+        {/* Your memory, handed back */}
         <Section className="border-t border-foreground/10">
-          <h2 className="font-serif text-3xl md:text-4xl">Lease vs. deed</h2>
+          <h2 className="font-serif text-3xl md:text-4xl">Your memory, handed back</h2>
           <div className="mt-8 space-y-6 text-lg leading-relaxed text-foreground/85">
-            {LEASE_PARAGRAPHS.map((p) => (
+            {DEED_PARAGRAPHS.map((p) => (
               <p key={p.lead}>
                 <strong className="font-semibold text-foreground">{p.lead}</strong> {p.rest}
               </p>
@@ -173,7 +196,7 @@ export default function Home() {
 
         {/* Honest costs */}
         <Section className="border-t border-foreground/10">
-          <h2 className="font-serif text-3xl md:text-4xl">Honest costs</h2>
+          <h2 className="font-serif text-3xl md:text-4xl">What it costs</h2>
           <table className="mt-8 w-full border-collapse text-left">
             <tbody>
               {COSTS.map((row) => (
@@ -185,31 +208,61 @@ export default function Home() {
             </tbody>
           </table>
           <p className="mt-6 text-sm text-foreground/60">
-            No subscription to us. No markup on AI. Ever.
+            One price. No markup on AI. No charge to leave.
           </p>
         </Section>
 
         {/* Pricing */}
-        <Section className="border-t border-foreground/10 text-center">
+        <Section wide className="border-t border-foreground/10 text-center">
           <h2 className="font-serif text-3xl md:text-4xl">Pricing</h2>
-          <div className="mx-auto mt-10 max-w-md rounded-2xl border border-foreground/15 p-10">
-            <div className="flex items-baseline justify-center gap-3">
-              <s className="text-2xl text-foreground/40">$299</s>
-              <span className="font-serif text-5xl">$199</span>
+          <div className="mx-auto mt-10 grid max-w-3xl gap-6 md:grid-cols-2">
+            {/* Hosted — the product you can buy today */}
+            <div className="rounded-2xl border border-foreground/15 p-10">
+              <h3 className="font-serif text-xl">Hosted</h3>
+              <p className="mt-1 text-sm text-foreground/60">
+                {HOSTED_LIVE ? 'Available now' : 'Launching soon'}
+              </p>
+              <div className="mt-6 flex items-baseline justify-center gap-1">
+                <span className="font-serif text-5xl">{HOSTED_PRICE}</span>
+                <span className="text-foreground/60">/{HOSTED_PERIOD}</span>
+              </div>
+              <ul className="mx-auto mt-8 max-w-xs space-y-2 text-left text-sm text-foreground/80">
+                {PRICING_BULLETS.map((b) => (
+                  <li key={b} className="flex gap-2">
+                    <span className="text-accent">&mdash;</span>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 flex justify-center">
+                <HostedCta large />
+              </div>
             </div>
-            <p className="mt-2 text-sm text-foreground/60">with code LAUNCH</p>
-            <ul className="mx-auto mt-8 max-w-xs space-y-2 text-left text-sm text-foreground/80">
-              {PRICING_BULLETS.map((b) => (
-                <li key={b} className="flex gap-2">
-                  <span className="text-accent">&mdash;</span>
-                  {b}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex justify-center">
-              <BuyButton large />
+
+            {/* Self-hosted — deliberately no checkout; it does not exist yet */}
+            <div className="rounded-2xl border border-dashed border-foreground/20 p-10">
+              <h3 className="font-serif text-xl">Self-hosted</h3>
+              <p className="mt-1 text-sm text-foreground/60">
+                After the hosted apps ship
+              </p>
+              <div className="mt-6 flex items-baseline justify-center">
+                <span className="font-serif text-3xl text-foreground/50">Coming later</span>
+              </div>
+              <ul className="mx-auto mt-8 max-w-xs space-y-2 text-left text-sm text-foreground/70">
+                {SELF_HOSTED_BULLETS.map((b) => (
+                  <li key={b} className="flex gap-2">
+                    <span className="text-foreground/30">&mdash;</span>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 flex justify-center">
+                <WaitlistCta />
+              </div>
+              <p className="mt-4 text-sm text-foreground/60">
+                Nothing to pay until it ships.
+              </p>
             </div>
-            <p className="mt-4 text-sm text-foreground/60">Pay once. Remember forever.</p>
           </div>
         </Section>
 
