@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import {
   HostedCta,
-  WaitlistCta,
   HOSTED_PRICE,
   HOSTED_PERIOD,
   HOSTED_LIVE,
@@ -62,15 +61,6 @@ const COSTS = [
   { name: 'Export your data', value: 'Free, always' },
 ];
 
-// Deliberately no price. Self-hosted is not built yet, and quoting a number for
-// something with no ship date is the kind of promise that turns into a refund.
-const SELF_HOSTED_BULLETS = [
-  'Runs on your own infrastructure',
-  'Your database, your keys',
-  'The same product, self-operated',
-  'Pricing announced at launch',
-];
-
 const PRICING_BULLETS = [
   'Everything below, included',
   'AI usage — no API key to manage',
@@ -94,10 +84,6 @@ const FAQS = [
   {
     q: 'Can I get my data out?',
     a: 'Any time, in one click, on any plan — thoughts, contacts, decisions, and documents in formats you can actually read. There is no retention trick here: the export exists so leaving is cheap.',
-  },
-  {
-    q: 'When is self-hosting available?',
-    a: 'After the hosted apps ship. Self-hosting means running Thoughtstead entirely on your own infrastructure — your database, your keys, your deployment. It is the same product, and it is coming; we would rather ship it properly than early. Join the waitlist and we will tell you the moment it is ready.',
   },
   {
     q: 'Can my team use it?',
@@ -215,8 +201,8 @@ export default function Home() {
         {/* Pricing */}
         <Section wide className="border-t border-foreground/10 text-center">
           <h2 className="font-serif text-3xl md:text-4xl">Pricing</h2>
-          <div className="mx-auto mt-10 grid max-w-3xl gap-6 md:grid-cols-2">
-            {/* Hosted — the product you can buy today */}
+          <div className="mx-auto mt-10 max-w-md">
+            {/* One product, one price. */}
             <div className="rounded-2xl border border-foreground/15 p-10">
               <h3 className="font-serif text-xl">Hosted</h3>
               <p className="mt-1 text-sm text-foreground/60">
@@ -237,31 +223,6 @@ export default function Home() {
               <div className="mt-8 flex justify-center">
                 <HostedCta large />
               </div>
-            </div>
-
-            {/* Self-hosted — deliberately no checkout; it does not exist yet */}
-            <div className="rounded-2xl border border-dashed border-foreground/20 p-10">
-              <h3 className="font-serif text-xl">Self-hosted</h3>
-              <p className="mt-1 text-sm text-foreground/60">
-                After the hosted apps ship
-              </p>
-              <div className="mt-6 flex items-baseline justify-center">
-                <span className="font-serif text-3xl text-foreground/50">Coming later</span>
-              </div>
-              <ul className="mx-auto mt-8 max-w-xs space-y-2 text-left text-sm text-foreground/70">
-                {SELF_HOSTED_BULLETS.map((b) => (
-                  <li key={b} className="flex gap-2">
-                    <span className="text-foreground/30">&mdash;</span>
-                    {b}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-8 flex justify-center">
-                <WaitlistCta />
-              </div>
-              <p className="mt-4 text-sm text-foreground/60">
-                Nothing to pay until it ships.
-              </p>
             </div>
           </div>
         </Section>

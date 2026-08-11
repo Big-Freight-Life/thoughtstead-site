@@ -5,6 +5,16 @@
       "has": [{ "type": "host", "value": "www.thoughtstead.com" }],
       "destination": "https://thoughtstead.com/$1",
       "permanent": true
+    },
+    {
+      "source": "/docs/self-deploy",
+      "destination": "/docs",
+      "permanent": true
+    },
+    {
+      "source": "/docs/click-and-go",
+      "destination": "/docs",
+      "permanent": true
     }
   ]
 }
