@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
 
 // remark-gfm gives MDX GitHub Flavored Markdown — tables above all. Without it
 // every `| a | b |` table in app/docs rendered as a line of raw pipes; the
-// Costs pricing table and the self-deploy env-var table were both unreadable.
+// Costs pricing table was unreadable without it.
 //
 // The plugin is named as a STRING, not imported and passed as a function:
 // Turbopack has to serialize the config, so the function form silently fails

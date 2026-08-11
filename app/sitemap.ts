@@ -4,13 +4,11 @@ const BASE_URL = 'https://thoughtstead.com';
 
 const DOCS_SLUGS = [
   'agents',
-  'click-and-go',
   'connectors',
   'costs',
   'importers',
   'license',
   'mcp',
-  'self-deploy',
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
