@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('landing renders the pitch and hosted pricing', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /invoice knows which/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /only thing.*holding it together/i })).toBeVisible();
   // The category line. Thoughtstead is a life operating system, not an "AI
   // second brain" (undersold it, borrowed category) and not a "business OS"
   // (contested, and strands /health, /lifestyle, /maintenance, /warranties).

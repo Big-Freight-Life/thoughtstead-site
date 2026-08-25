@@ -28,8 +28,20 @@ import {
 // relation by hand; in QuickBooks the invoice knows nothing but money; in
 // Obsidian a backlink is a piece of text. That difference IS the pitch.
 //
-// So: lead with a chain nobody else can claim, name the islands by what they
-// each cannot do, then prove it. Do not go back to listing modules.
+// Third pass — Ray: "it's not about invoices." The second pass found the graph
+// and then illustrated it with the narrowest, most transactional edge on it,
+// which read as accounting software — the business-OS headline he had already
+// turned down. The invoice is one edge. It is not the point.
+//
+// The point is COMPLETENESS. Ray's framing, in his words: things are moving so
+// fast, your life needs to be complete, and the product helps you manage not
+// only the business but the life. Today the only thing making it complete is
+// the person, holding both halves in their head every morning.
+//
+// So the headline is that person's situation, the graph is the PROOF of how it
+// gets fixed, and the two halves stay balanced everywhere — if the work column
+// runs long and the home column runs short, the page is quietly saying
+// "business tool" no matter what the words claim.
 //
 // Audience is named by situation, never by label — founders, CEOs, operators.
 // "Solopreneur" was considered and dropped: it reads as marketer-speak to the
@@ -38,24 +50,28 @@ import {
 // and not an "AI second brain" (worn out, and it promised recall alone).
 
 const HERO_SUBLINE =
-  'Your books hold money with no context. Your notes hold context that cannot raise an invoice. Thoughtstead is one system where the meeting, the decision, the contract, the client and the invoice are the same connected record — wired as the work lands, by the AI, not by you.';
+  'The contract and the furnace warranty. The client who has not paid and the checkup you keep moving. Nothing you own will hold both halves of a life, so you hold them — every morning, out of your own head. Thoughtstead is a life operating system: it takes all of it, connects it as it lands, and does the chasing.';
 
 const ISLANDS = [
   {
+    lead: 'At two you are negotiating a contract. At four you are on hold about a warranty claim.',
+    rest: 'Same person, same day, same finite attention. Nobody splits into a work self and a home self at will, and the day does not politely separate itself either.',
+  },
+  {
     lead: 'Your accounting knows what you billed.',
-    rest: 'It does not know the meeting where you agreed the scope, that the contract renews on the 14th, or that this client has asked the same question twice.',
+    rest: 'Not the meeting where you agreed the scope, not that the contract renews on the 14th, not that this client has now asked the same question twice.',
   },
   {
     lead: 'Your notes app knows what you wrote.',
-    rest: 'It has never raised an invoice, chased a payment, or warned you about anything. Its links are text you typed, and it forgets the moment you stop maintaining it.',
+    rest: 'It has never chased a payment, booked anything, or warned you about a single thing. Its links are text you typed, and it forgets the moment you stop maintaining it.',
   },
   {
     lead: 'Your project tool knows the tasks.',
     rest: 'Not who is being paid, not what you decided in March, and not why. Ask it for the reasoning behind a call you made and it has nothing.',
   },
   {
-    lead: 'And none of them will touch your life.',
-    rest: 'The furnace warranty, the checkup you keep moving, the car service. No tool built for work wants them, so they live in your head with everything else.',
+    lead: 'And none of them want the rest of your life at all.',
+    rest: 'The furnace, the checkup, the car service, the thing you promised on Sunday. No tool built for work will take them, so they stay exactly where they have always been.',
   },
 ];
 
@@ -76,12 +92,15 @@ const WORK_THREAD = {
 
 const HOME_THREAD = {
   label: 'At home',
-  intro: 'The same engine, in the context next door.',
+  intro: 'The same engine, the same depth, in the context next door.',
   steps: [
-    'A receipt you photographed',
-    'The warranty it proves',
-    'The coverage window it opens',
-    'The reminder before that window shuts',
+    'A receipt you photographed in the driveway',
+    'Filed and categorised, without you naming it',
+    'The warranty it proves, and who provides it',
+    'The coverage window that opens',
+    'The service due before that window shuts',
+    'Which recurs, so next year is already handled',
+    'And a reminder, well before any of it lapses',
   ],
 };
 
@@ -236,8 +255,8 @@ export default function Home() {
         {/* Hero */}
         <Section className="pt-8 text-center md:pt-12">
           <h1 className="font-serif text-5xl leading-[1.1] tracking-tight md:text-6xl">
-            Your invoice knows which
-            <br className="hidden sm:block" /> meeting it came from.
+            You are the only thing
+            <br className="hidden sm:block" /> holding it together.
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/80 md:text-xl">
             {HERO_SUBLINE}
@@ -257,7 +276,7 @@ export default function Home() {
 
         {/* The competitive frame */}
         <Section className="border-t border-foreground/10">
-          <h2 className="font-serif text-3xl md:text-4xl">Everything you own is an island</h2>
+          <h2 className="font-serif text-3xl md:text-4xl">Nothing you own holds both halves</h2>
           <div className="mt-8 space-y-6 text-lg leading-relaxed text-foreground/85">
             {ISLANDS.map((p) => (
               <p key={p.lead}>
@@ -266,7 +285,7 @@ export default function Home() {
             ))}
           </div>
           <p className="mt-8 border-l-2 border-accent pl-5 text-lg leading-relaxed text-foreground">
-            You are the integration between them. Every morning, out of your own head.
+            Which leaves one system that holds all of it. You.
           </p>
         </Section>
 
@@ -274,8 +293,8 @@ export default function Home() {
         <Section wide className="border-t border-foreground/10">
           <h2 className="text-center font-serif text-3xl md:text-4xl">One thread, end to end</h2>
           <p className="mx-auto mt-4 max-w-xl text-center text-foreground/70">
-            Not modules that sit next to each other. One record that knows what it is attached
-            to — and you wired none of it.
+            Not modules sitting next to each other. One record that knows what it is attached to —
+            at work and at home alike, and you wired none of it.
           </p>
           <div className="mt-12 grid gap-12 md:grid-cols-2">
             <Thread {...WORK_THREAD} />
@@ -284,7 +303,8 @@ export default function Home() {
           <p className="mx-auto mt-10 max-w-2xl text-center text-foreground/85">
             Ask why you decided something in March and you get the meeting it came out of and the
             thinking behind it. Open a contact and you get every contract, every project, every
-            conversation, and every promise you have not kept yet.
+            conversation, and every promise you have not kept yet. Ask what is coming and you get
+            both halves in one answer, because there was never really more than one day.
           </p>
         </Section>
 
