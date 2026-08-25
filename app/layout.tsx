@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     'Nothing you own holds both halves of a life, so you hold them. Thoughtstead is a life operating system: it takes the contract and the furnace warranty alike, connects it all as it lands, and does the chasing. Business and personal stay walled off. Full export, any time.',
   openGraph: {
     title: 'Thoughtstead',
-    description: 'You are the only thing holding it together.',
+    description: "You're the only thing holding it together.",
     url: 'https://thoughtstead.com',
     siteName: 'Thoughtstead',
   },

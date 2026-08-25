@@ -357,6 +357,33 @@ test('the nav marks Docs as current only on docs pages', async ({ page }) => {
   expect(unlabelled, 'nav landmarks without an aria-label').toBe(0);
 });
 
+// The social card must quote the headline correctly.
+//
+// The hero was changed from "You are" to "You're" and the og:description was
+// not — so every link shared to Slack, iMessage or LinkedIn previewed with a
+// sentence the page itself no longer says. Nothing catches that by eye, since
+// the tag is invisible on the page it describes.
+test('the social card quotes the headline it describes', async ({ page }) => {
+  await page.goto('/');
+  const og = await page.locator('meta[property="og:description"]').getAttribute('content');
+  // innerText, not textContent: the headline is two block spans, and
+  // textContent concatenates them into "thingholding" with no boundary.
+  const h1 = await page.evaluate(
+    () => (document.querySelector('h1') as HTMLElement).innerText,
+  );
+
+  // Compare on words. The page renders a curly apostrophe (&rsquo;) and the
+  // meta tag carries a straight one, and the meta sentence ends in a full stop
+  // the headline does not have — neither is a mismatch worth failing on.
+  const norm = (v: string) =>
+    v
+      .toLowerCase()
+      .replace(/[\u2018\u2019]/g, "'")
+      .replace(/[^a-z']+/g, ' ')
+      .trim();
+  expect(norm(og || ''), `og:description "${og}" does not match h1 "${h1}"`).toBe(norm(h1));
+});
+
 test('docs sidebar navigates every page without 404', async ({ page }) => {
   await page.goto('/docs');
   // Only same-origin routes. The shared footer added a mailto:, whose pathname
