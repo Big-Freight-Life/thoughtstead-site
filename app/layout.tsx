@@ -12,10 +12,10 @@ export const metadata: Metadata = {
     template: '%s · Thoughtstead',
   },
   description:
-    'One place that runs your business and the rest of your life. Invoices, clients, contracts and meetings alongside health, home upkeep and warranties — captured, connected, and acted on by AI. Business and personal stay separate. Full export, any time.',
+    'One system where the meeting, the decision, the contract, the client and the invoice are the same connected record — wired by AI as work lands, not by you. It runs your household on the same engine, behind a wall. Full export, any time.',
   openGraph: {
     title: 'Thoughtstead',
-    description: 'You run a business. You also have a life. Thoughtstead runs both.',
+    description: 'Your invoice knows which meeting it came from.',
     url: 'https://thoughtstead.com',
     siteName: 'Thoughtstead',
   },
