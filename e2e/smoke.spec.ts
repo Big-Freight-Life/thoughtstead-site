@@ -211,6 +211,30 @@ for (const { w, h, name } of WIDTHS) {
   });
 }
 
+// Tap targets, at phone width.
+//
+// Measured on the live preview 2026-08-25: nav links were 20px tall, FAQ
+// question rows 26px, the logo link 24px — against a 44px minimum that both
+// Apple's HIG and WCAG 2.5.5 put at the centre of mobile usability. Contrast
+// and heading order were already clean; this was the one real defect.
+//
+// 40px not 44: the assertion is a floor against regression, and a couple of
+// inline links legitimately sit slightly under while still being comfortably
+// tappable. Anything materially small fails.
+test('interactive elements are big enough to tap on a phone', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.waitForTimeout(4000);
+
+  const small = await page.evaluate(() =>
+    [...document.querySelectorAll('a, button, summary')]
+      .map((el) => ({ el, r: el.getBoundingClientRect() }))
+      .filter(({ r }) => r.width > 0 && r.height > 0 && r.height < 40)
+      .map(({ el, r }) => `${Math.round(r.width)}x${Math.round(r.height)} "${(el.textContent || '').trim().slice(0, 28)}"`),
+  );
+  expect(small, `tap targets under 40px tall: ${small.join(' | ')}`).toEqual([]);
+});
+
 test('docs sidebar navigates every page without 404', async ({ page }) => {
   await page.goto('/docs');
   const hrefs = await page

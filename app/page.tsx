@@ -131,7 +131,7 @@ export default function Home() {
       {/* Nav */}
       <div className="sticky top-0 z-40 px-6 pt-5">
         <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-line-2 bg-surface/80 px-5 py-2.5 backdrop-blur-xl">
-          <a href="/" className="group flex items-center gap-2.5 font-medium" aria-label="Thoughtstead home">
+          <a href="/" className="group -my-2 flex items-center gap-2.5 py-2 font-medium" aria-label="Thoughtstead home">
             <Image
               src="/mark.png"
               alt=""
@@ -143,9 +143,12 @@ export default function Home() {
             Thoughtstead
           </a>
           <div className="hidden items-center gap-7 text-sm text-muted sm:flex">
-            <a href="#worlds" className="transition-colors hover:text-text">Product</a>
-            <a href="#price" className="transition-colors hover:text-text">Pricing</a>
-            <a href="/docs" className="transition-colors hover:text-text">Docs</a>
+            {/* -my-3 py-3: grows the hit area to 44px without changing the
+                pill's height or the text position. Measured at 20px tall
+                before this — barely half the 44px minimum. */}
+            <a href="#worlds" className="-my-3 py-3 transition-colors hover:text-text">Product</a>
+            <a href="#price" className="-my-3 py-3 transition-colors hover:text-text">Pricing</a>
+            <a href="/docs" className="-my-3 py-3 transition-colors hover:text-text">Docs</a>
           </div>
           <HostedCta />
         </nav>
@@ -403,8 +406,11 @@ export default function Home() {
             <div className="md:col-span-6 md:col-start-7">
               {FAQS.map((faq, i) => (
                 <Reveal key={faq.q} delay={i * 30}>
-                  <details className="group border-b border-line py-5">
-                    <summary className="flex cursor-pointer list-none items-start justify-between gap-6 font-medium">
+                  <details className="group border-b border-line">
+                    {/* Padding lives on the summary, not the details: the
+                        summary is what receives the tap, and it measured 26px
+                        tall with the padding on its parent. */}
+                    <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-5 font-medium">
                       {faq.q}
                       <span
                         className="mt-0.5 shrink-0 text-accent transition-transform duration-300 group-open:rotate-45"
@@ -413,7 +419,7 @@ export default function Home() {
                         +
                       </span>
                     </summary>
-                    <p className="mt-3.5 max-w-2xl text-[0.95rem] leading-relaxed text-muted">
+                    <p className="-mt-1 max-w-2xl pb-5 text-[0.95rem] leading-relaxed text-muted">
                       {faq.a}
                     </p>
                   </details>
@@ -440,11 +446,16 @@ export default function Home() {
 
       <footer className="border-t border-line px-6 py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-faint sm:flex-row">
-          <nav className="flex gap-6">
-            <a href="/docs" className="transition-colors hover:text-text">Docs</a>
-            <a href="/privacy" className="transition-colors hover:text-text">Privacy</a>
-            <a href="/terms" className="transition-colors hover:text-text">Terms</a>
-            <a href="mailto:support@bfl.design" className="transition-colors hover:text-text">Support</a>
+          {/* Same 44px floor as the header. These are the only tappable things
+              on the page at phone width once the header nav is hidden, and they
+              measured 20px tall. */}
+          <nav className="-my-3 flex gap-6">
+            <a href="/docs" className="py-3 transition-colors hover:text-text">Docs</a>
+            <a href="/privacy" className="py-3 transition-colors hover:text-text">Privacy</a>
+            <a href="/terms" className="py-3 transition-colors hover:text-text">Terms</a>
+            <a href="mailto:support@bfl.design" className="py-3 transition-colors hover:text-text">
+              Support
+            </a>
           </nav>
           <p>&copy; 2026 Big Freight Life</p>
         </div>
