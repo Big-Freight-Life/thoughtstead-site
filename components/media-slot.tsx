@@ -19,6 +19,7 @@ const RATIO = {
   hero: 'aspect-[16/10]',
   square: 'aspect-square',
   portrait: 'aspect-[4/5]',
+  panorama: 'aspect-[21/9]',
 } as const;
 
 export function MediaSlot({
@@ -26,23 +27,32 @@ export function MediaSlot({
   kind,
   brief,
   ratio = 'wide',
+  bleed = false,
   className = '',
 }: {
   id: string;
   kind: MediaKind;
   brief: string;
   ratio?: keyof typeof RATIO;
+  // Full-bleed scenes run edge to edge with no card chrome. A boxed image reads
+  // as an illustration OF the product; one that reaches the viewport edge reads
+  // as the product.
+  bleed?: boolean;
   className?: string;
 }) {
   return (
     <figure
       data-media-slot={id}
       data-media-kind={kind}
-      className={`frame relative w-full overflow-hidden ${RATIO[ratio]} ${className}`}
+      className={`relative w-full overflow-hidden ${RATIO[ratio]} ${
+        bleed ? 'bleed-media' : 'frame'
+      } ${className}`}
     >
       <span
         aria-hidden="true"
-        className="absolute inset-4 rounded-lg border border-dashed border-line-2"
+        className={`absolute inset-4 border border-dashed border-line-2 ${
+          bleed ? '' : 'rounded-lg'
+        }`}
       />
       <figcaption className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 px-10 text-center">
         <span className="rounded-full border border-line-2 bg-accent-soft px-3 py-1 text-[0.7rem] font-medium text-accent">

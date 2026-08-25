@@ -30,8 +30,12 @@ const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-display',
   display: 'swap',
-  // 600 only — .display is Outfit's sole consumer and is set at 600, never 400.
-  weight: ['600'],
+  // 500 and 600. 500 carries the display scale — at 84px+ a lighter weight
+  // reads as confidence rather than shouting, which is the single biggest
+  // difference between a considered page and a loud one. bfl.design's warning
+  // is against 400, not 500: Outfit is monolinear, so 400 goes weak, but 500
+  // holds at large sizes. 600 stays for smaller headings that need presence.
+  weight: ['500', '600'],
 });
 
 export const metadata: Metadata = {

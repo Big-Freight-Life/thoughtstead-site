@@ -72,6 +72,35 @@ const CHAIN = [
   ['The invoice', 'and what is still owed'],
 ];
 
+// A single ordinary day, in the order it actually arrives. Haven runs a "Meet
+// Alex" persona story here; a real Tuesday is stronger, because every line is
+// something the product genuinely holds and a fictional person is not.
+const TUESDAY = [
+  ['07:40', 'The Mac hears the standup and files it against the client.'],
+  ['09:15', 'A contract renewal you did not diarise surfaces before it renews.'],
+  ['11:02', 'You say one sentence into your phone. It lands linked to a project.'],
+  ['13:30', 'The garage calls. The service is logged where you will find it again.'],
+  ['16:45', 'An invoice ages past thirty days and drafts its own chase.'],
+  ['21:10', 'Nothing is waiting for you, because none of it was waiting on you.'],
+];
+
+// Named by situation, never by label — the same rule the rest of the page
+// follows. Each one names surfaces that actually ship.
+const FOR = [
+  {
+    who: 'You run the company and do the books',
+    what: 'Invoices out, bills in, contracts and their renewals — beside the meetings and decisions that produced them, not in another tool that has never heard of them.',
+  },
+  {
+    who: 'You run more than one thing',
+    what: 'A second company, a side project, a household. Each is a context of its own, walled off, on the same subscription and the same brain.',
+  },
+  {
+    who: 'You are the last line for everyone',
+    what: 'The board pack and the boiler service. The client who has not paid and the checkup you keep moving. One system that will hold both without judging you for it.',
+  },
+];
+
 const FAQS = [
   {
     q: 'How is this different from Notion?',
@@ -131,10 +160,15 @@ export default function Home() {
         {/* ── Hero ─────────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden px-6 pt-20 pb-24 text-center md:pt-28">
           <div className="aurora" aria-hidden="true" />
-          <div className="relative mx-auto max-w-4xl">
+          {/* Drawn corner frame — gives the opening a deliberate edge instead of
+              letting the type float in space. */}
+          <div className="brackets" aria-hidden="true">
+            <span /><span /><span /><span />
+          </div>
+          <div className="relative mx-auto max-w-5xl">
             <h1 className="display rise" style={{ animationDelay: '60ms' }}>
-              You are the only thing{' '}
-              <span className="quote">holding it together</span>
+              <span className="block">You are the only thing</span>
+              <span className="quote block">holding it together</span>
             </h1>
 
             <p
@@ -162,15 +196,17 @@ export default function Home() {
             </div>
           </div>
 
-          <Reveal className="relative mx-auto mt-20 max-w-6xl">
-            <MediaSlot
-              id="hero-film"
-              kind="video"
-              ratio="hero"
-              brief="Silent 20-30s loop. One spoken capture on the Mac landing, enriching, and appearing already linked to a person, a project and a contract. It has to show the graph building itself."
-            />
-          </Reveal>
         </section>
+
+        <Reveal className="relative">
+          <MediaSlot
+            id="hero-film"
+            kind="video"
+            ratio="panorama"
+            bleed
+            brief="Silent 20-30s loop, shot to run edge to edge. One spoken capture on the Mac landing, enriching, and appearing already linked to a person, a project and a contract. It has to show the graph building itself — this is the asset that carries the page."
+          />
+        </Reveal>
 
         {/* ── Two worlds ───────────────────────────────────────────────── */}
         <Section id="worlds" className="border-t border-line">
@@ -213,12 +249,13 @@ export default function Home() {
             <span className="eyebrow shrink-0 text-accent">The wall</span>
           </Reveal>
 
-          <Reveal className="mt-14" delay={60}>
+          <Reveal className="bleed mt-20" delay={60}>
             <MediaSlot
               id="context-switch"
               kind="video"
-              ratio="wide"
-              brief="8-12s. The context switcher moving Business to Personal, the whole nav and every record changing with it. Nobody believes the wall until they watch it happen."
+              ratio="panorama"
+              bleed
+              brief="8-12s, edge to edge. The context switcher moving Business to Personal, the whole nav and every record changing with it. Nobody believes the wall until they watch it happen."
             />
           </Reveal>
         </Section>
@@ -252,6 +289,50 @@ export default function Home() {
                 </Reveal>
               ))}
             </div>
+          </div>
+        </Section>
+
+        {/* ── A Tuesday ────────────────────────────────────────────────── */}
+        <Section className="border-t border-line">
+          <div className="grid gap-14 md:grid-cols-12">
+            <Reveal className="md:col-span-5">
+              <h2 className="display text-[length:var(--h2)]">
+                An ordinary{' '}
+                <span className="quote">Tuesday</span>
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-muted">
+                Not a demo script. The day as it actually arrives — work and home
+                interleaved, because that is the only way either of them ever happens.
+              </p>
+            </Reveal>
+            <div className="md:col-span-6 md:col-start-7">
+              {TUESDAY.map(([time, line], i) => (
+                <Reveal key={time} delay={i * 60} className="flex gap-6 border-t border-line py-5">
+                  <span className="w-14 shrink-0 pt-0.5 text-sm text-accent tabular-nums">
+                    {time}
+                  </span>
+                  <span className="text-[1.05rem] leading-relaxed text-muted">{line}</span>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </Section>
+
+        {/* ── Who it is for ────────────────────────────────────────────── */}
+        <Section className="border-t border-line">
+          <Reveal className="max-w-3xl">
+            <h2 className="display text-[length:var(--h2)]">
+              For anyone holding{' '}
+              <span className="quote">more than one life</span>
+            </h2>
+          </Reveal>
+          <div className="mt-14 grid gap-5 md:grid-cols-3">
+            {FOR.map((f, i) => (
+              <Reveal key={f.who} delay={i * 80} className="frame p-8">
+                <h3 className="text-[1.05rem] font-medium leading-snug">{f.who}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{f.what}</p>
+              </Reveal>
+            ))}
           </div>
         </Section>
 
