@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { HostedCta, HOSTED_PRICE, HOSTED_PERIOD, HOSTED_LIVE } from '@/components/cta';
 import { Reveal } from '@/components/reveal';
+import Image from 'next/image';
 import { MediaSlot } from '@/components/media-slot';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -130,10 +131,17 @@ export default function Home() {
       {/* Nav */}
       <div className="sticky top-0 z-40 px-6 pt-5">
         <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-line-2 bg-surface/80 px-5 py-2.5 backdrop-blur-xl">
-          <span className="flex items-center gap-2.5 font-medium">
-            <span className="size-2 rotate-45 bg-accent" aria-hidden="true" />
+          <a href="/" className="group flex items-center gap-2.5 font-medium" aria-label="Thoughtstead home">
+            <Image
+              src="/mark.png"
+              alt=""
+              width={28}
+              height={28}
+              priority
+              className="size-6 transition-opacity duration-200 group-hover:opacity-80"
+            />
             Thoughtstead
-          </span>
+          </a>
           <div className="hidden items-center gap-7 text-sm text-muted sm:flex">
             <a href="#worlds" className="transition-colors hover:text-text">Product</a>
             <a href="#price" className="transition-colors hover:text-text">Pricing</a>
