@@ -153,8 +153,8 @@ test('no content is left invisible after a fast scroll to the bottom', async ({ 
 test('every marketing media slot is present and labelled', async ({ page }) => {
   await page.goto('/');
   const slots = page.locator('[data-media-slot]');
-  await expect(slots).toHaveCount(4);
-  for (const id of ['hero-film', 'context-switch', 'approval-queue', 'mac-capture']) {
+  await expect(slots).toHaveCount(3);
+  for (const id of ['context-switch', 'approval-queue', 'mac-capture']) {
     await expect(page.locator(`[data-media-slot="${id}"]`)).toHaveCount(1);
   }
 });

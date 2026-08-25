@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import Image from 'next/image';
 import { HostedCta, HOSTED_PRICE, HOSTED_PERIOD, HOSTED_LIVE } from '@/components/cta';
 import { Reveal } from '@/components/reveal';
 import { MediaSlot } from '@/components/media-slot';
@@ -199,13 +200,20 @@ export default function Home() {
         </section>
 
         <Reveal className="relative">
-          <MediaSlot
+          <figure
             id="hero-film"
-            kind="video"
-            ratio="panorama"
-            bleed
-            brief="Silent 20-30s loop, shot to run edge to edge. One spoken capture on the Mac landing, enriching, and appearing already linked to a person, a project and a contract. It has to show the graph building itself — this is the asset that carries the page."
-          />
+            className="bleed-media relative aspect-[21/9] w-full overflow-hidden"
+          >
+            <Image
+              src="/hero-human.png"
+              alt="A person at home balancing work documents with everyday household responsibilities"
+              fill
+              preload
+              quality={90}
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+          </figure>
         </Reveal>
 
         {/* ── Two worlds ───────────────────────────────────────────────── */}
