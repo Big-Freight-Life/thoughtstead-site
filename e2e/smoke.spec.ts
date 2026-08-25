@@ -326,6 +326,37 @@ test('the page renders fully with JavaScript disabled', async ({ browser }) => {
   await context.close();
 });
 
+// The nav says where you are.
+//
+// Product and Pricing are anchors within the landing page; Docs is a real
+// destination. Before this, all three looked identical everywhere, so /docs
+// gave no sense of place at all.
+test('the nav marks Docs as current only on docs pages', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+
+  // Scoped to the main nav. The docs sidebar marks its own current page too,
+  // which is correct — hence the distinct landmark labels.
+  const mainNav = page.locator('nav[aria-label="Main"]');
+
+  await page.goto('/docs');
+  await expect(mainNav.locator('a[aria-current="page"]')).toHaveText('Docs');
+
+  await page.goto('/docs/mcp');
+  await expect(mainNav.locator('a[aria-current="page"]')).toHaveText('Docs');
+
+  // Anchors are not destinations, so nothing is current on the landing page.
+  await page.goto('/');
+  await expect(mainNav.locator('a[aria-current="page"]')).toHaveCount(0);
+
+  // And every nav landmark is named, so a screen reader is not offered two
+  // identical "navigation" entries to choose between.
+  await page.goto('/docs');
+  const unlabelled = await page.evaluate(
+    () => [...document.querySelectorAll('nav')].filter((n) => !n.getAttribute('aria-label')).length,
+  );
+  expect(unlabelled, 'nav landmarks without an aria-label').toBe(0);
+});
+
 test('docs sidebar navigates every page without 404', async ({ page }) => {
   await page.goto('/docs');
   // Only same-origin routes. The shared footer added a mailto:, whose pathname
