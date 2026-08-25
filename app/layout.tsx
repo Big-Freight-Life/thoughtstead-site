@@ -1,26 +1,33 @@
 import type { Metadata } from 'next';
-import { Instrument_Sans, Instrument_Serif } from 'next/font/google';
+import { Outfit, DM_Sans } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 
-// Instrument Sans: a modern grotesque with slightly narrow proportions, so
-// large headlines set tight without the generic-geometric look. Not Inter, not
-// Space Grotesk.
-const sans = Instrument_Sans({
+// The bfl.design pairing, adopted 2026-08-25 so the two properties read as one
+// house. Two brand faces, not four — their tokens file is explicit about that,
+// and it replaced Schibsted Grotesk + Georgia there on 2026-08-02.
+
+// Body + UI. DM Sans is a rounded geometric with real optical sizes, so one
+// family sets 14px labels and a 1.2rem standfirst without the small sizes
+// inheriting display-cut spacing.
+const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
+  weight: ['400', '500', '600', '700'],
 });
 
-// Its serif companion, used ONLY italic and only for the emphasised phrase in
-// a headline. One warm note against an otherwise cold, tight typeface — it is
-// what keeps the page from reading as another dark SaaS template.
-const quote = Instrument_Serif({
+// Display. Outfit is a pure geometric — circular bowls, monolinear strokes,
+// terminals NOT softened. Round without being soft, which is the point.
+//
+// It is set at 600, never 400: bfl.design's tokens carry the warning and it is
+// real. Being monolinear, Outfit has no stroke contrast to carry it, so a
+// regular weight goes visibly weak at headline scale.
+const outfit = Outfit({
   subsets: ['latin'],
-  weight: '400',
-  style: 'italic',
-  variable: '--font-quote',
+  variable: '--font-display',
   display: 'swap',
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -41,7 +48,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${quote.variable}`}>
+    <html lang="en" className={`${dmSans.variable} ${outfit.variable}`}>
       <body className="bg-bg text-text antialiased">
         {children}
         <Analytics />

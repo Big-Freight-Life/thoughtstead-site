@@ -45,7 +45,7 @@
   --color-background: var(--background);
 
   --font-sans: var(--font-sans);
-  --font-quote: var(--font-quote);
+  --font-display: var(--font-display);
 }
 
 html { scroll-behavior: smooth; }
@@ -94,12 +94,13 @@ body {
   opacity: 0.55;
 }
 
-/* Headline: tight, large, with a soft top-down falloff so the type feels lit
-   rather than painted flat. */
+/* Headline: Outfit at 600 — never 400, see layout.tsx — tight, with a soft
+   top-down falloff so the type reads lit rather than painted flat. */
 .display {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-size: var(--display);
-  line-height: 0.98;
-  letter-spacing: -0.035em;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
   font-weight: 600;
   background: linear-gradient(180deg, var(--text) 30%, rgba(245, 241, 232, 0.66));
   -webkit-background-clip: text;
@@ -107,11 +108,14 @@ body {
   color: transparent;
 }
 
+/* The emphasised phrase in a headline. Two brand faces means the emphasis
+   cannot be a third one, so it is carried by colour instead — the accent, with
+   the same weight and cut as the rest of the line. */
 .quote {
-  font-family: var(--font-quote), Georgia, serif;
-  font-style: italic;
-  letter-spacing: -0.02em;
-  font-weight: 400;
+  background: linear-gradient(180deg, var(--accent), rgba(168, 206, 73, 0.72));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .eyebrow {
