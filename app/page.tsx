@@ -49,8 +49,18 @@ import {
 // business OS (which strands /health, /warranties, /maintenance, /lifestyle)
 // and not an "AI second brain" (worn out, and it promised recall alone).
 
+// Three jobs, three elements — do not merge them again. The kicker names the
+// category, the headline is the hook, the subline pays off its own nouns.
+//
+// The version before this did all three in the subline and did each badly: it
+// restated the headline ("so you hold them"), announced the category mid-
+// sentence, then closed on three abstract verbs — takes, connects, does. Ray
+// liked the two opening sentences and nothing after them, which is exactly the
+// seam between the concrete half and the filler half.
+const HERO_KICKER = 'A life operating system';
+
 const HERO_SUBLINE =
-  'The contract and the furnace warranty. The client who has not paid and the checkup you keep moving. Nothing you own will hold both halves of a life, so you hold them — every morning, out of your own head. Thoughtstead is a life operating system: it takes all of it, connects it as it lands, and does the chasing.';
+  'The contract and the furnace warranty. The client who has not paid and the checkup you keep moving. Thoughtstead holds all of it, works out how it connects, and brings you what the day needs — instead of sitting there waiting to be searched.';
 
 const ISLANDS = [
   {
@@ -254,6 +264,7 @@ export default function Home() {
       <main>
         {/* Hero */}
         <Section className="pt-8 text-center md:pt-12">
+          <p className="mb-5 text-xs uppercase tracking-[0.22em] text-accent">{HERO_KICKER}</p>
           <h1 className="font-serif text-5xl leading-[1.1] tracking-tight md:text-6xl">
             You are the only thing
             <br className="hidden sm:block" /> holding it together.
