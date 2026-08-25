@@ -99,13 +99,20 @@ body {
 .display {
   font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-size: var(--display);
-  line-height: 1.02;
+  /* 1.02 collided the descenders of one line with the caps of the next. */
+  line-height: 1.08;
   letter-spacing: -0.03em;
   font-weight: 600;
   background: linear-gradient(180deg, var(--text) 30%, rgba(245, 241, 232, 0.66));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* background-clip: text paints only within the element's box, and the tails
+     of g/y/p fall BELOW that box at a tight line-height — so they were being
+     sliced off. The padding extends the paint area; the negative margin gives
+     back the space so nothing in the layout moves. */
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
 }
 
 /* The emphasised phrase in a headline. Two brand faces means the emphasis
@@ -116,6 +123,9 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* Same clipping as .display. This one is inline, so vertical padding paints
+     without disturbing the line box — no negative margin needed. */
+  padding-bottom: 0.16em;
 }
 
 .eyebrow {

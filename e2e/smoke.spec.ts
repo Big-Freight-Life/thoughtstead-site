@@ -151,6 +151,66 @@ test('every marketing media slot is present and labelled', async ({ page }) => {
   }
 });
 
+// Nothing may overflow its box or the viewport, at any width people use.
+//
+// Added 2026-08-25 after "Reasonable doubts" was found overflowing its own
+// column — a single word wider than the grid track it sat in at display scale.
+// Nobody had loaded this page at phone width at all, which for a marketing
+// page is the wrong way round.
+const WIDTHS = [
+  { w: 390, h: 844, name: 'iPhone' },
+  { w: 768, h: 1024, name: 'tablet' },
+  { w: 1024, h: 800, name: 'small laptop' },
+  { w: 1440, h: 900, name: 'desktop' },
+];
+
+for (const { w, h, name } of WIDTHS) {
+  test(`layout holds with no clipping at ${w}px (${name})`, async ({ page }) => {
+    await page.setViewportSize({ width: w, height: h });
+    await page.goto('/');
+    // Let the reveals settle so measurements are of the final layout.
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(4000);
+
+    // 1. The page itself must not scroll sideways.
+    const bleeds = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    );
+    expect(bleeds, `page scrolls horizontally by ${bleeds}px at ${w}px`).toBeLessThanOrEqual(1);
+
+    // 2. No text may paint outside the box that is supposed to contain it.
+    //
+    // NOT scrollWidth > clientWidth. That was the first attempt and it is
+    // useless here: for an overflow:visible block, a word too wide for the box
+    // simply paints outside it and scrollWidth never moves. Negative-controlled
+    // on 2026-08-25 — with the real "Reasonable doubts" overflow reintroduced,
+    // the scrollWidth version passed at all four widths.
+    //
+    // Range.getBoundingClientRect() measures where the text actually lands, so
+    // it sees a spill that scrollWidth cannot.
+    //
+    // ⚠ UNPROVEN. The one real overflow this was written for — "Reasonable
+    // doubts" in a col-span-4 track — could not be reproduced under Playwright
+    // at 1280/1440/1512/1600 (text 418px inside a 452px box, no spill), though
+    // the live browser reported it. Web font metrics differ between the two
+    // environments. So assertion 1 below is the load-bearing one; treat this as
+    // a net that has never caught anything, not as proof the page is clean.
+    const clipped = await page.evaluate(() =>
+      [...document.querySelectorAll('h1,h2,h3,p,dt,dd,summary,li')]
+        .filter((el) => {
+          const box = el.getBoundingClientRect();
+          if (box.width <= 0) return false;
+          const range = document.createRange();
+          range.selectNodeContents(el);
+          const text = range.getBoundingClientRect();
+          return text.width > 0 && (text.right > box.right + 1.5 || text.left < box.left - 1.5);
+        })
+        .map((el) => `${el.tagName}: ${(el.textContent || '').trim().slice(0, 40)}`),
+    );
+    expect(clipped, `clipped at ${w}px: ${clipped.join(' | ')}`).toEqual([]);
+  });
+}
+
 test('docs sidebar navigates every page without 404', async ({ page }) => {
   await page.goto('/docs');
   const hrefs = await page

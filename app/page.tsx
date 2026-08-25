@@ -196,8 +196,7 @@ export default function Home() {
         <Section className="border-t border-line">
           <div id="worlds" className="scroll-mt-28" />
           <Reveal className="max-w-3xl">
-            <Pill>One system, two worlds</Pill>
-            <h2 className="display mt-6 text-[length:var(--h2)] leading-[1.03]">
+            <h2 className="display text-[length:var(--h2)] leading-[1.03]">
               Your company and{' '}
               <span className="quote">the rest of your life</span>
             </h2>
@@ -249,8 +248,7 @@ export default function Home() {
         <Section className="border-t border-line">
           <div className="grid gap-14 md:grid-cols-12">
             <Reveal className="md:col-span-5">
-              <Pill>It connects itself</Pill>
-              <h2 className="display mt-6 text-[length:var(--h2)] leading-[1.03]">
+              <h2 className="display text-[length:var(--h2)] leading-[1.03]">
                 You wired{' '}
                 <span className="quote">none of it</span>
               </h2>
@@ -282,8 +280,7 @@ export default function Home() {
         <Section className="border-t border-line">
           <div className="grid items-center gap-14 md:grid-cols-12">
             <Reveal className="md:col-span-5">
-              <Pill>It does the work</Pill>
-              <h2 className="display mt-6 text-[length:var(--h2)] leading-[1.03]">
+              <h2 className="display text-[length:var(--h2)] leading-[1.03]">
                 And it shows{' '}
                 <span className="quote">the receipts</span>
               </h2>
@@ -311,8 +308,7 @@ export default function Home() {
 
           <div className="mt-20 grid items-center gap-14 md:grid-cols-12">
             <Reveal className="md:col-span-6 md:order-2">
-              <Pill>Where it lives</Pill>
-              <h2 className="display mt-6 text-[length:var(--h2)] leading-[1.03]">
+              <h2 className="display text-[length:var(--h2)] leading-[1.03]">
                 It starts on{' '}
                 <span className="quote">your Mac</span>
               </h2>
@@ -338,8 +334,7 @@ export default function Home() {
           <div id="price" className="scroll-mt-28" />
           <div className="grid items-center gap-12 md:grid-cols-2">
             <Reveal>
-              <Pill>One price</Pill>
-              <h2 className="display mt-6 text-[length:var(--h2)] leading-[1.03]">
+              <h2 className="display text-[length:var(--h2)] leading-[1.03]">
                 No tiers, no{' '}
                 <span className="quote">asterisk</span>
               </h2>
@@ -384,13 +379,20 @@ export default function Home() {
         {/* ── FAQ ──────────────────────────────────────────────────────── */}
         <Section className="border-t border-line">
           <div className="grid gap-12 md:grid-cols-12">
-            <Reveal className="md:col-span-4">
-              <h2 className="display text-[length:var(--h2)] leading-[1.03]">
+            {/* The live browser reported this heading overflowing its column at
+                col-span-4 / full --h2. It could NOT be reproduced under
+                Playwright at any width (text 418px inside a 452px box), so the
+                cause is a web-font metric difference between the two, and the
+                overflow is real in a real browser. Wider column AND a smaller
+                clamp: a sidebar heading does not need full display scale, and
+                the column alone would break again the moment the copy changes. */}
+            <Reveal className="md:col-span-5">
+              <h2 className="display text-[clamp(1.85rem,3.1vw,2.6rem)] leading-[1.06]">
                 Reasonable{' '}
                 <span className="quote">doubts</span>
               </h2>
             </Reveal>
-            <div className="md:col-span-7 md:col-start-6">
+            <div className="md:col-span-6 md:col-start-7">
               {FAQS.map((faq, i) => (
                 <Reveal key={faq.q} delay={i * 30}>
                   <details className="group border-b border-line py-5">
