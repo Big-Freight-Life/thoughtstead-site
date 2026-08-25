@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { HostedCta, HOSTED_PRICE, HOSTED_PERIOD, HOSTED_LIVE } from '@/components/cta';
 import { Reveal } from '@/components/reveal';
 import Image from 'next/image';
+import Link from 'next/link';
 import { MediaSlot } from '@/components/media-slot';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -101,14 +102,6 @@ const FAQS = [
 
 /* ── primitives ─────────────────────────────────────────────────────────── */
 
-function Pill({ children }: { children: ReactNode }) {
-  return (
-    <span className="eyebrow inline-flex items-center gap-2 rounded-full border border-line-2 bg-accent-soft px-3.5 py-1.5 text-accent">
-      {children}
-    </span>
-  );
-}
-
 function Section({
   children,
   className = '',
@@ -131,7 +124,7 @@ export default function Home() {
       {/* Nav */}
       <div className="sticky top-0 z-40 px-6 pt-5">
         <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-line-2 bg-surface/80 px-5 py-2.5 backdrop-blur-xl">
-          <a href="/" className="group -my-2 flex items-center gap-2.5 py-2 font-medium" aria-label="Thoughtstead home">
+          <Link href="/" className="group -my-2 flex items-center gap-2.5 py-2 font-medium" aria-label="Thoughtstead home">
             <Image
               src="/mark.png"
               alt=""
@@ -141,7 +134,7 @@ export default function Home() {
               className="size-6 transition-opacity duration-200 group-hover:opacity-80"
             />
             Thoughtstead
-          </a>
+          </Link>
           <div className="hidden items-center gap-7 text-sm text-muted sm:flex">
             {/* -my-3 py-3: grows the hit area to 44px without changing the
                 pill's height or the text position. Measured at 20px tall
@@ -159,18 +152,14 @@ export default function Home() {
         <section className="relative overflow-hidden px-6 pt-20 pb-24 text-center md:pt-28">
           <div className="aurora" aria-hidden="true" />
           <div className="relative mx-auto max-w-4xl">
-            <div className="rise" style={{ animationDelay: '60ms' }}>
-              <Pill>Life is serious business</Pill>
-            </div>
-
-            <h1 className="display rise mt-8" style={{ animationDelay: '160ms' }}>
+            <h1 className="display rise" style={{ animationDelay: '60ms' }}>
               You are the only thing{' '}
               <span className="quote">holding it together</span>
             </h1>
 
             <p
               className="rise mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-muted"
-              style={{ animationDelay: '280ms' }}
+              style={{ animationDelay: '180ms' }}
             >
               The contract and the furnace warranty. The client who has not paid and the checkup
               you keep moving. Thoughtstead holds all of it, works out how it connects, and
@@ -179,7 +168,7 @@ export default function Home() {
 
             <div
               className="rise mt-10 flex flex-col items-center gap-3.5"
-              style={{ animationDelay: '400ms' }}
+              style={{ animationDelay: '300ms' }}
             >
               <HostedCta large />
               {/* Explicit {' '}: JSX trims each line of a multi-line text node, so
