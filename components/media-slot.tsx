@@ -1,0 +1,65 @@
+// Designed placeholders for marketing media, not grey boxes.
+//
+// Every slot is a real, sized, composed frame so the page's rhythm is correct
+// NOW and dropping an asset in later changes nothing about the layout. Each
+// states what belongs in it, so whoever shoots the footage has the brief.
+//
+// TO FILL ONE: replace <MediaSlot> with an <Image>/<video> at the same ratio
+// inside the same .frame wrapper. Keep the `id` stable — the asset list and the
+// e2e count both refer to it.
+
+export type MediaKind = 'video' | 'image';
+
+// `as const` and NOT Record<string, string>: the annotation erases the literal
+// key union, so `ratio` would accept any string and an unknown one renders the
+// literal class "undefined" — no aspect-ratio, a zero-height frame, and the
+// slot-count test stays green on it.
+const RATIO = {
+  wide: 'aspect-[16/9]',
+  hero: 'aspect-[16/10]',
+  square: 'aspect-square',
+  portrait: 'aspect-[4/5]',
+  panorama: 'aspect-[21/9]',
+} as const;
+
+export function MediaSlot({
+  id,
+  kind,
+  brief,
+  ratio = 'wide',
+  bleed = false,
+  className = '',
+}: {
+  id: string;
+  kind: MediaKind;
+  brief: string;
+  ratio?: keyof typeof RATIO;
+  // Full-bleed scenes run edge to edge with no card chrome. A boxed image reads
+  // as an illustration OF the product; one that reaches the viewport edge reads
+  // as the product.
+  bleed?: boolean;
+  className?: string;
+}) {
+  return (
+    <figure
+      data-media-slot={id}
+      data-media-kind={kind}
+      className={`relative w-full overflow-hidden ${RATIO[ratio]} ${
+        bleed ? 'bleed-media' : 'frame'
+      } ${className}`}
+    >
+      <span
+        aria-hidden="true"
+        className={`absolute inset-4 border border-dashed border-line-2 ${
+          bleed ? '' : 'rounded-lg'
+        }`}
+      />
+      <figcaption className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 px-10 text-center">
+        <span className="rounded-full border border-line-2 bg-accent-soft px-3 py-1 text-[0.7rem] font-medium text-accent">
+          {kind === 'video' ? 'Video' : 'Image'} &middot; {id}
+        </span>
+        <span className="max-w-md text-sm leading-relaxed text-muted">{brief}</span>
+      </figcaption>
+    </figure>
+  );
+}

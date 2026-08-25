@@ -3,6 +3,13 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
+  images: {
+    // Next 16 gates `quality` behind an allowlist; a value that is not listed
+    // is silently ignored and falls back to 75. The hero was asking for 90 and
+    // shipping q=75 in every srcset entry — no error, no warning, just a
+    // quieter image than intended on the largest asset on the page.
+    qualities: [75, 90],
+  },
 };
 
 // remark-gfm gives MDX GitHub Flavored Markdown — tables above all. Without it

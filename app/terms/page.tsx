@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { SiteNav, SiteFooter } from '@/components/site-chrome';
 import { HOSTED_PRICE, HOSTED_PERIOD } from '@/components/cta';
 
 export const metadata: Metadata = {
@@ -10,19 +11,12 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <>
-      <header className="mx-auto max-w-5xl px-6 pt-8">
-        <Link
-          href="/"
-          className="text-sm lowercase tracking-wide text-foreground/70 hover:text-accent"
-        >
-          thoughtstead
-        </Link>
-      </header>
+      <SiteNav />
 
-      <main className="mx-auto max-w-2xl px-6 py-10 md:py-16">
-        <article className="prose prose-neutral min-w-0 max-w-2xl prose-headings:font-serif prose-headings:tracking-tight prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-hr:border-foreground/15">
+      <main className="mx-auto max-w-3xl px-6 py-16 md:py-24">
+        <article className="prose doc-prose min-w-0 max-w-2xl prose-a:no-underline hover:prose-a:underline prose-code:before:content-none prose-code:after:content-none prose-code:rounded prose-code:bg-surface-2 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-normal">
           <h1>Terms</h1>
-          <p className="text-sm text-foreground/60">Last updated 2026-08-09</p>
+          <p className="text-sm text-faint">Last updated 2026-08-09</p>
 
           <p>
             These are the terms for subscribing to and using Thoughtstead, written in plain
@@ -85,14 +79,6 @@ export default function TermsPage() {
             export your data.
           </p>
 
-          <h2>Self-hosted</h2>
-          <p>
-            A self-hosted edition — running Thoughtstead on your own infrastructure — is planned
-            and is not available yet. Nothing on this page is a commitment to a date, a price, or
-            specific terms for it. When it ships it will have its own licence, and these terms
-            will not govern it.
-          </p>
-
           <h2>Availability and warranty</h2>
           <p>
             We work to keep Thoughtstead running and your data safe, but the service is provided{' '}
@@ -126,29 +112,11 @@ export default function TermsPage() {
           </p>
 
           <hr />
-          <p className="text-sm text-foreground/60">&copy; 2026 Big Freight Life</p>
+          <p className="text-sm text-faint">&copy; 2026 Big Freight Life</p>
         </article>
       </main>
 
-      <footer className="border-t border-foreground/10">
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 py-10 text-sm text-foreground/60 sm:flex-row">
-          <nav className="flex gap-6">
-            <Link href="/" className="hover:text-accent">
-              Home
-            </Link>
-            <Link href="/docs" className="hover:text-accent">
-              Docs
-            </Link>
-            <Link href="/privacy" className="hover:text-accent">
-              Privacy
-            </Link>
-            <a href="mailto:support@bfl.design" className="hover:text-accent">
-              Support
-            </a>
-          </nav>
-          <p>&copy; 2026 Big Freight Life</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

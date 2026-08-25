@@ -1,21 +1,271 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Thoughtstead — dark, warm, cinematic.
+   Reflect and most premium SaaS run cool violet on indigo. Going warm — deep
+   charcoal with a bright olive — reads as the same tier of polish while being
+   instantly distinguishable from every site in the category, and olive was
+   already the brand accent so nothing is invented. */
 :root {
-  --background: #faf7f2;
-  --foreground: #1a1714;
-  --accent: #3f6212;
+  --bg: #0b0a08;
+  --surface: #14120e;
+  --surface-2: #1c1914;
+  --text: #f5f1e8;
+  --muted: rgba(245, 241, 232, 0.56);
+  /* 0.36 composited to rgb(95,93,89) on --bg = 3.01:1, failing WCAG AA (4.5:1)
+     for normal text — and it carries the CTA label, the hero price line and the
+     whole footer. 0.50 measures 4.88:1. The earlier audit that reported "zero
+     failures" passed rgba() to a luminance function that ignored alpha, so it
+     measured near-white on black and always passed. */
+  --faint: rgba(245, 241, 232, 0.5);
+  --line: rgba(245, 241, 232, 0.09);
+  --line-2: rgba(245, 241, 232, 0.16);
+  --accent: #a8ce49;
+  --accent-soft: rgba(168, 206, 73, 0.13);
+
+  /* Compatibility aliases. /docs, /privacy and /terms were written against
+     foreground/background/accent and still use them. Mapping them onto the
+     dark palette keeps those pages correct without rewriting every utility in
+     them — and without which they render dark text on a dark background,
+     which is exactly what happened when this palette landed. */
+  --foreground: var(--text);
+  --background: var(--bg);
+
+  /* Bigger and lighter. Cinematic scale is most of what separates a page that
+     looks expensive from one that looks competent. */
+  --display: clamp(2.9rem, 7.6vw, 6.75rem);
+  --h2: clamp(2.15rem, 4.4vw, 3.6rem);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
   --color-accent: var(--accent);
-  --font-serif: var(--font-serif);
+  --color-accent-soft: var(--accent-soft);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+}
+
+/* Anchor links only. Applied to :root it also animates window.scrollTo(), which
+   turned the fast-scroll reveal test's deliberate instant jump into a smooth
+   crawl — dragging every element through the viewport so the observer caught
+   them all, and making the one regression test guarding a bug that already
+   shipped completely inert. */
+@media (prefers-reduced-motion: no-preference) {
+  html:focus-within { scroll-behavior: smooth; }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-serif), Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.011em;
+}
+
+/* Atmosphere behind the hero: one warm olive bloom plus a faint grid that
+   fades out. Depth without the purple mesh every competitor is using. */
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.aurora::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -28%;
+  width: min(120rem, 190%);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(168, 206, 73, 0.16),
+    rgba(168, 206, 73, 0.05) 32%,
+    transparent 62%
+  );
+}
+.aurora::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 68px 68px;
+  -webkit-mask-image: radial-gradient(ellipse 78% 62% at 50% 32%, black, transparent 76%);
+  mask-image: radial-gradient(ellipse 78% 62% at 50% 32%, black, transparent 76%);
+  opacity: 0.55;
+}
+
+/* These live in @layer components so Tailwind utilities can override them.
+   Unlayered CSS beats ANY layered CSS regardless of specificity (CSS Cascade 5),
+   and Tailwind v4 puts utilities in @layer utilities — so while .display was
+   unlayered its font-size silently beat every text- and leading- utility on
+   the same element. Verified in the built bundle: @layer utilities spanned bytes
+   10937-34943 and .display sat at 36048. Every h2 rendered at --display instead
+   of --h2, and the FAQ overflow fix had no effect whatsoever. Do not unwrap. */
+@layer components {
+
+/* Headline: Outfit at 600 — never 400, see layout.tsx — tight, with a soft
+   top-down falloff so the type reads lit rather than painted flat. */
+.display {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  /* Stops a single word being orphaned on the last line of a heading. */
+  text-wrap: balance;
+  font-size: var(--display);
+  /* 1.02 collided the descenders of one line with the caps of the next. */
+  line-height: 1.05;
+  letter-spacing: -0.032em;
+  /* 500, not 600 — see layout.tsx. */
+  font-weight: 500;
+  background: linear-gradient(180deg, var(--text) 30%, rgba(245, 241, 232, 0.66));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* background-clip: text paints only within the element's box, and the tails
+     of g/y/p fall BELOW that box at a tight line-height — so they were being
+     sliced off. The padding extends the paint area; the negative margin gives
+     back the space so nothing in the layout moves. */
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+}
+
+/* The emphasised phrase in a headline. Two brand faces means the emphasis
+   cannot be a third one, so it is carried by colour instead — the accent, with
+   the same weight and cut as the rest of the line. */
+.quote {
+  background: linear-gradient(180deg, var(--accent), rgba(168, 206, 73, 0.72));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Same clipping as .display. This one is inline, so vertical padding paints
+     without disturbing the line box — no negative margin needed. */
+  padding-bottom: 0.16em;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+
+/* Product frames: a lifted surface with a hairline and a long shadow, the
+   idiom that makes a screenshot read as a window rather than an image. */
+.frame {
+  border: 1px solid var(--line-2);
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border-radius: 14px;
+  box-shadow:
+    0 1px 0 0 rgba(245, 241, 232, 0.06) inset,
+    0 40px 90px -30px rgba(0, 0, 0, 0.9);
+}
+
+} /* @layer components */
+
+/* Scoped to html.js, which is set by an inline script in layout.tsx before
+   first paint. Without that scope, .reveal{opacity:0} applies to EVERY visitor
+   and only JS ever removes it — so a blocked bundle, a CSP hiccup or a
+   hydration error thrown early leaves 16 blocks permanently invisible and the
+   page is a hero over emptiness. This is the third route to that failure; the
+   first two were fast-scroll and dead scroll events. Inverting the default
+   closes the class rather than the instance. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  html.js .reveal.is-in { opacity: 1; transform: none; }
+
+  .rise { opacity: 0; animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+  }
+}
+
+::selection { background: rgba(168, 206, 73, 0.28); }
+
+/* Long-form pages (/docs, /privacy, /terms). Typography plugin defaults are
+   built for a light theme and a serif stack that no longer exists here, so the
+   two brand faces and the dark tokens are asserted explicitly. */
+.doc-prose {
+  --tw-prose-body: var(--muted);
+  --tw-prose-headings: var(--text);
+  --tw-prose-bold: var(--text);
+  --tw-prose-links: var(--accent);
+  --tw-prose-counters: var(--faint);
+  --tw-prose-bullets: var(--line-2);
+  --tw-prose-hr: var(--line);
+  --tw-prose-quotes: var(--text);
+  --tw-prose-quote-borders: var(--accent);
+  --tw-prose-code: var(--text);
+  --tw-prose-th-borders: var(--line-2);
+  --tw-prose-td-borders: var(--line);
+}
+.doc-prose :is(h1, h2, h3, h4) {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+.doc-prose h1 {
+  font-size: clamp(2.1rem, 4.2vw, 3rem);
+  line-height: 1.08;
+}
+.doc-prose :is(pre, code) {
+  font-size: 0.875em;
+}
+.doc-prose pre {
+  border: 1px solid var(--line-2);
+  background: var(--surface-2);
+}
+
+/* Full-bleed. Breaks a child out of its centred container to the viewport
+   edges without a wrapper — images that stop short of the edge read as
+   illustrations of a product; images that run to it read as the product. */
+.bleed {
+  width: 100vw;
+  margin-left: 50%;
+  translate: -50% 0;
+}
+
+/* Corner brackets: a thin drawn frame inset from the viewport edge, sitting
+   over the hero. It gives the opening a deliberate edge instead of letting
+   type float in space. Decorative only — aria-hidden at the call site. */
+.brackets {
+  position: absolute;
+  inset: 2.25rem 1.75rem;
+  pointer-events: none;
+}
+.brackets span {
+  position: absolute;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-color: var(--line-2);
+  border-style: solid;
+  border-width: 0;
+}
+.brackets span:nth-child(1) { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; border-top-left-radius: 10px; }
+.brackets span:nth-child(2) { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; border-top-right-radius: 10px; }
+.brackets span:nth-child(3) { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; border-bottom-left-radius: 10px; }
+.brackets span:nth-child(4) { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; border-bottom-right-radius: 10px; }
+
+/* A full-bleed media band: no rounded corners, no card shadow — the frame
+   idiom is for boxed screenshots, and these are meant to be scenes. */
+.bleed-media {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
 }

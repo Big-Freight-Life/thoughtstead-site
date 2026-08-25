@@ -5,16 +5,16 @@ export const metadata = {
 # Agents & approval
 
 Thoughtstead's built-in agents can draft you a morning brief, tidy up
-duplicate people and entities, and work through a queue of small chores —
-all without you lifting a finger. This page explains the boundary around
+duplicate people and entities, chase what is owed, and work through a queue
+of small chores — all without you lifting a finger. This page explains the boundary around
 what they're allowed to do on their own, and why you can trust it.
 
 ## Agents propose. You approve.
 
 Every agent in Thoughtstead runs on the same loop: it claims a task, does
-the work, and if that work would touch anything outside your own brain —
-sending an email, posting somewhere, taking any outbound or otherwise
-irreversible action — it doesn't just do it. It parks the task with a
+the work, and if that work would leave Thoughtstead — sending an email,
+posting somewhere, taking any outbound or otherwise irreversible action — it
+doesn't just do it. It parks the task with a
 proposal attached and waits in your review queue, in the app, for you to
 approve or reject it.
 
@@ -52,6 +52,8 @@ should produce zero outbound action without human approval, full stop.
 
 ## In practice
 
+- An agent runs inside one context and can only see that context. A Business
+  agent has no reach into Personal, and the reverse holds too.
 - Read-only and internal work (search, summarizing, linking a person to a
   thought) generally completes on its own.
 - Anything outbound or destructive lands in your review queue with a

@@ -1,18 +1,54 @@
 import type { Metadata } from 'next';
-import { Source_Serif_4 } from 'next/font/google';
+import { Outfit, DM_Sans } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 
-const serif = Source_Serif_4({ subsets: ['latin'], variable: '--font-serif' });
+// The bfl.design pairing, adopted 2026-08-25 so the two properties read as one
+// house. Two brand faces, not four — their tokens file is explicit about that,
+// and it replaced Schibsted Grotesk + Georgia there on 2026-08-02.
+
+// Body + UI. DM Sans is a rounded geometric with real optical sizes, so one
+// family sets 14px labels and a 1.2rem standfirst without the small sizes
+// inheriting display-cut spacing.
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+  // 400 and 500 only. next/font preloads every declared weight, and nothing in
+  // app/ or components/ uses font-semibold or font-bold — 600 and 700 were two
+  // files competing with the LCP hero for bandwidth and rendering nothing.
+  weight: ['400', '500'],
+});
+
+// Display. Outfit is a pure geometric — circular bowls, monolinear strokes,
+// terminals NOT softened. Round without being soft, which is the point.
+//
+// It is set at 600, never 400: bfl.design's tokens carry the warning and it is
+// real. Being monolinear, Outfit has no stroke contrast to carry it, so a
+// regular weight goes visibly weak at headline scale.
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-display',
+  display: 'swap',
+  // 500 and 600. 500 carries the display scale — at 84px+ a lighter weight
+  // reads as confidence rather than shouting, which is the single biggest
+  // difference between a considered page and a loud one. bfl.design's warning
+  // is against 400, not 500: Outfit is monolinear, so 400 goes weak, but 500
+  // holds at large sizes. 600 stays for smaller headings that need presence.
+  weight: ['500', '600'],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://thoughtstead.com'),
-  title: { default: 'Thoughtstead — an AI second brain that remembers', template: '%s · Thoughtstead' },
+  title: {
+    default: 'Thoughtstead — a life operating system',
+    template: '%s · Thoughtstead',
+  },
   description:
-    'An AI second brain that remembers what you know and hands it back when you need it. Capture thoughts, email, and meetings into a private, semantically searchable memory — connected to Claude, ChatGPT, and Cursor. Full export, any time.',
+    'Nothing you own holds both halves of a life, so you hold them. Thoughtstead is a life operating system: it takes the contract and the furnace warranty alike, connects it all as it lands, and does the chasing. Business and personal stay walled off. Full export, any time.',
   openGraph: {
     title: 'Thoughtstead',
-    description: 'A homestead for your thoughts.',
+    description: 'You are the only thing holding it together.',
     url: 'https://thoughtstead.com',
     siteName: 'Thoughtstead',
   },
@@ -20,8 +56,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={serif.variable}>
-      <body className="bg-[#FAF7F2] text-[#1A1714] antialiased">
+    <html lang="en" className={`${dmSans.variable} ${outfit.variable}`}>
+      <head>
+        {/* Marks the document as JS-capable BEFORE first paint, which is what
+            licenses .reveal to start hidden. If this never runs, nothing is
+            ever hidden and the page renders complete without animation. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
+        />
+      </head>
+      <body className="bg-bg text-text antialiased">
         {children}
         <Analytics />
       </body>

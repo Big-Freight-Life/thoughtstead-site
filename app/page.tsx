@@ -1,272 +1,506 @@
 import type { ReactNode } from 'react';
-import {
-  HostedCta,
-  HOSTED_PRICE,
-  HOSTED_PERIOD,
-  HOSTED_LIVE,
-} from '@/components/cta';
+import Image from 'next/image';
+import { HostedCta, HOSTED_PRICE, HOSTED_PERIOD, HOSTED_LIVE } from '@/components/cta';
+import { Reveal } from '@/components/reveal';
+import { MediaSlot } from '@/components/media-slot';
+import { SiteNav, SiteFooter } from '@/components/site-chrome';
 
-const HERO_SUBLINE =
-  'An AI second brain that remembers what you know and hands it back the moment you need it. Your thoughts, email, and meetings — searchable by meaning, connected to every AI tool you use.';
+// ─────────────────────────────────────────────────────────────────────────────
+// POSITIONING — settled over several passes on 2026-08-25. Each rule is a
+// mistake already made; read before editing a word.
+//
+// 1. NOT an "AI second brain". Worn out, borrowed, and it promised recall alone
+//    from a product that runs invoices and agents.
+// 2. NOT a "business OS". Contested, and it strands /health, /warranties,
+//    /maintenance, /lifestyle — which ship.
+// 3. It IS a life operating system. Promise is the whole life; proof is
+//    business-grade, in that order — nobody subscribes for their life.
+// 4. It is NOT about invoices. An invoice is one edge of the graph; leading on
+//    it reads as accounting software, which is (2) by another route.
+// 5. The point is COMPLETENESS: things move faster than anyone can hold, and
+//    today the only thing making a life complete is the person holding it.
+// 6. Audience named by SITUATION, never by label. No "solopreneur".
+// 7. BALANCE THE HALVES. A long work column beside a short home column says
+//    "business tool" however loudly the words claim otherwise.
+// 8. KEEP IT SHORT. The previous version ran eight bands and Ray's note was
+//    "way too long". Five sections. If something new goes in, something comes
+//    out.
+//
+// EVIDENCE RULE: every concrete claim is an edge or column in the schema —
+// ar_invoices→contracts→ar_clients+people, decisions→decision_meetings+
+// decision_thoughts, warranties.document_id/expires_at, home_tasks.recurrence,
+// research_assignments→agent_tasks→findings→evidence, agent_tasks→
+// agent_receipts. capture/deps.ts calls link_thought_people during enrichment,
+// which licenses "you wired none of it". A plausible claim no foreign key backs
+// is how this page starts lying.
+//
+// DESIGN: dark, warm, cinematic. Reflect and most of the category run cool
+// violet on indigo; warm charcoal with a bright olive hits the same tier of
+// polish while being instantly distinguishable — and olive was already the
+// brand accent. Do not drift this toward purple.
+// ─────────────────────────────────────────────────────────────────────────────
 
-const DEED_PARAGRAPHS = [
+const WORLDS = [
   {
-    lead: 'Every other second brain keeps your memory.',
-    rest: 'Your most personal data lives on their servers, in their format, subject to their pivots and shutdowns. Getting it out — if you can at all — means a scrape, a zip of orphaned markdown, and a week of your life.',
+    name: 'Business',
+    items: [
+      ['Receivable', 'Invoices and line items, per client, against the contract they belong to.'],
+      ['Payable', 'Bills and vendors, and what you owe against which agreement.'],
+      ['Contracts', 'Renewals, amendments, and every event on the record.'],
+      ['Meetings', 'Recorded, transcribed, and tied to what they decided.'],
+      ['Decisions', 'Kept with the meeting and the thinking that produced them.'],
+      ['Research', 'Hand over a question; get findings back with the evidence attached.'],
+    ],
   },
   {
-    lead: 'Thoughtstead hands it back.',
-    rest: 'Full export, any time, on any plan — every thought, contact, decision, and document, in formats you can actually read. We never train on your data and never sell it. If you leave, you leave with everything, and nothing about that depends on us still being here.',
-  },
-  {
-    lead: 'And it works for you.',
-    rest: "Built-in agents brief you each morning and tidy your records — but nothing leaves your Thoughtstead without your explicit approval. That's enforced in the database, not in a promise.",
+    name: 'Personal',
+    items: [
+      ['Health', 'Appointments and checkups, and what is actually due.'],
+      ['Home & auto', 'Recurring upkeep you would otherwise remember late.'],
+      ['Warranties', 'Coverage windows, and the receipt that proves each one.'],
+      ['Lifestyle', 'The plans that never survive a busy quarter.'],
+      ['Calendar', 'Alongside the rest of it, not in another tab.'],
+      ['Documents', 'Filed and categorised on arrival, searchable by meaning.'],
+    ],
   },
 ];
 
-const STEPS = [
-  {
-    title: 'Capture',
-    body: "From the app, your phone's share sheet, Claude or Cursor, Gmail and Calendar sync, or a bulk import of your existing notes.",
-  },
-  {
-    title: 'Understand',
-    body: 'AI enrichment links people, projects, and decisions automatically. No API key to manage — it is included.',
-  },
-  {
-    title: 'Recall',
-    body: 'Search by meaning, in the app or from any connected AI tool.',
-  },
-  {
-    title: 'Work',
-    body: 'Agents draft briefs and tidy records; every action leaves a receipt, and nothing goes out without your OK.',
-  },
+const CHAIN = [
+  ['A meeting', 'recorded and transcribed'],
+  ['The decision', 'that came out of it'],
+  ['The contract', 'that covers the work'],
+  ['The client', 'and the person who signed'],
+  ['The invoice', 'and what is still owed'],
 ];
 
-const INCLUDED = [
-  'Semantic search',
-  'Chat over your brain',
-  'People & decisions memory',
-  'Agent queue with receipts',
-  'Gmail + Calendar sync',
-  'Obsidian & ChatGPT import',
-  'MCP server for AI clients',
-  'Full export, always',
+// A single ordinary day, in the order it actually arrives. Haven runs a "Meet
+// Alex" persona story here; a real Tuesday is stronger, because every line is
+// something the product genuinely holds and a fictional person is not.
+const TUESDAY = [
+  ['07:40', 'The Mac hears the standup and files it against the client.'],
+  ['09:15', 'A contract renewal you did not diarise surfaces before it renews.'],
+  ['11:02', 'You say one sentence into your phone. It lands linked to a project.'],
+  ['13:30', 'The garage calls. The service is logged where you will find it again.'],
+  ['16:45', 'An invoice ages past thirty days and drafts its own chase.'],
+  ['21:10', 'Nothing is waiting for you, because none of it was waiting on you.'],
 ];
 
-const COSTS = [
-  { name: 'Thoughtstead', value: `${HOSTED_PRICE}/${HOSTED_PERIOD}` },
-  { name: 'Hosting', value: 'Included' },
-  { name: 'AI usage', value: 'Included — no key, no markup' },
-  { name: 'Export your data', value: 'Free, always' },
-];
-
-const PRICING_BULLETS = [
-  'Everything below, included',
-  'AI usage — no API key to manage',
-  'Full export, any time',
-  'Cancel whenever; your export outlives us',
+// Named by situation, never by label — the same rule the rest of the page
+// follows. Each one names surfaces that actually ship.
+const FOR = [
+  {
+    who: 'You run the company and do the books',
+    what: 'Invoices out, bills in, contracts and their renewals — beside the meetings and decisions that produced them, not in another tool that has never heard of them.',
+  },
+  {
+    who: 'You run more than one thing',
+    what: 'A second company, a side project, a household. Each is a context of its own, walled off, on the same subscription and the same brain.',
+  },
+  {
+    who: 'You are the last line for everyone',
+    what: 'The board pack and the boiler service. The client who has not paid and the checkup you keep moving. One system that will hold both without judging you for it.',
+  },
 ];
 
 const FAQS = [
   {
-    q: 'Do I need to be technical?',
-    a: 'No. Sign in and start capturing — there is nothing to deploy, no account to create at another company, and no API key to manage. Connecting Gmail and Calendar is a normal permissions screen.',
+    q: 'How is this different from Notion?',
+    a: 'Notion gives you the parts and expects you to build the system — every relation wired by hand, every template maintained forever, and it does nothing while you are not looking. Thoughtstead ships the system already built and connects records itself as work lands. It also does what Notion structurally cannot: raise an invoice, track what a client owes against a contract, and act on any of it.',
   },
   {
-    q: 'What do I get?',
-    a: 'The whole product: capture from the web app, your phone, or your AI tools; semantic search and chat over everything; people, projects, and decisions memory; Gmail and Calendar sync; the MCP server so Claude, ChatGPT, and Cursor can recall what you know; the agent queue with receipts; and imports from Obsidian and ChatGPT.',
+    q: 'How is this different from my accounting software?',
+    a: 'Your books know the number. They do not know the meeting where the scope was agreed, the decision behind the discount, or the person who actually signed. Thoughtstead keeps the invoice attached to all of it — and the books are one surface of it, not the whole product.',
   },
   {
-    q: 'Is my data private?',
-    a: 'Your brain is yours. We never train on it and never sell it, every workspace is isolated at the database level, and outbound actions park for your explicit approval rather than firing on their own. Full export is always available.',
+    q: 'What does "life operating system" mean?',
+    a: 'That it does not stop at the office door. The same system that tracks what a client owes tracks when your car is due for service and when the warranty on your furnace runs out — one capture, one search, one set of agents doing the follow-through across both.',
   },
   {
-    q: 'Can I get my data out?',
-    a: 'Any time, in one click, on any plan — thoughts, contacts, decisions, and documents in formats you can actually read. There is no retention trick here: the export exists so leaving is cheap.',
+    q: 'Does my personal life get mixed into my business?',
+    a: 'No. Business and Personal are separate contexts, isolated from each other at the database level. Searching in one never returns the other, and an agent working in one cannot see into the other. Add as many as you need — a second company, a side project, a household.',
   },
   {
-    q: 'Can my team use it?',
-    a: 'Individual accounts are what ship first. Team workspaces — shared contexts, roles, and seats — come after. If you need that now, email us and tell us what you need.',
+    q: 'Do I have to organise any of it?',
+    a: 'No, and that is the point. Capture the thing. Enrichment reads it, links the people, projects and decisions it touches, and files it. The graph is built for you, which is the difference between a system that works and a template you maintain.',
   },
   {
-    q: 'Can I cancel?',
-    a: 'Any time, and you can export everything on your way out. No lock-in period and no exit fee.',
+    q: 'Is my data private, and can I get it out?',
+    a: 'It is yours. We never train on it and never sell it, every context is isolated at the database level, and outbound actions park for your approval rather than firing on their own. Full export, one click, any time, on any plan — the export exists so leaving is cheap.',
   },
 ];
 
+/* ── primitives ─────────────────────────────────────────────────────────── */
+
 function Section({
-  wide = false,
-  className = '',
+  id,
   children,
+  className = '',
 }: {
-  wide?: boolean;
-  className?: string;
+  id?: string;
   children: ReactNode;
+  className?: string;
 }) {
   return (
-    <section
-      className={`mx-auto px-6 py-16 md:py-24 ${wide ? 'max-w-5xl' : 'max-w-3xl'} ${className}`}
-    >
-      {children}
+    // scroll-mt clears the sticky nav. It lives here so the offset is defined
+    // once; both anchors used to be empty sentinel divs planted inside the
+    // section body, each carrying its own copy of that number.
+    <section id={id} className={`relative scroll-mt-24 px-6 py-24 md:py-32 ${className}`}>
+      <div className="mx-auto max-w-6xl">{children}</div>
     </section>
   );
 }
 
+/* ── page ───────────────────────────────────────────────────────────────── */
+
 export default function Home() {
   return (
     <>
-      <header className="mx-auto max-w-5xl px-6 pt-8">
-        <span className="text-sm lowercase tracking-wide text-foreground/70">thoughtstead</span>
-      </header>
+      <SiteNav />
 
       <main>
-        {/* Hero */}
-        <Section className="pt-8 text-center md:pt-12">
-          <h1 className="font-serif text-5xl leading-[1.1] tracking-tight md:text-6xl">
-            A homestead for your thoughts.
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/80 md:text-xl">
-            {HERO_SUBLINE}
-          </p>
-          <div className="mt-8 flex justify-center">
-            <HostedCta large />
+        {/* ── Hero ─────────────────────────────────────────────────────── */}
+        <section className="relative overflow-hidden px-6 pt-20 pb-24 text-center md:pt-28">
+          <div className="aurora" aria-hidden="true" />
+          {/* Drawn corner frame — gives the opening a deliberate edge instead of
+              letting the type float in space. */}
+          <div className="brackets" aria-hidden="true">
+            <span /><span /><span /><span />
           </div>
-          <p className="mt-4 text-sm text-foreground/60">
-            {/* Explicit {' '}: JSX trims each line of a multi-line text node, so a
-                literal space next to an expression is dropped — it rendered
-                "$20/month· AI included". */}
-            {`${HOSTED_PRICE}/${HOSTED_PERIOD}`}
-            {' '}
-            &middot; AI included &middot; export everything, any time
-          </p>
-        </Section>
+          <div className="relative mx-auto max-w-5xl">
+            <h1 className="display rise" style={{ animationDelay: '60ms' }}>
+              <span className="block">You are the only thing</span>
+              <span className="quote block">holding it together</span>
+            </h1>
 
-        {/* Your memory, handed back */}
-        <Section className="border-t border-foreground/10">
-          <h2 className="font-serif text-3xl md:text-4xl">Your memory, handed back</h2>
-          <div className="mt-8 space-y-6 text-lg leading-relaxed text-foreground/85">
-            {DEED_PARAGRAPHS.map((p) => (
-              <p key={p.lead}>
-                <strong className="font-semibold text-foreground">{p.lead}</strong> {p.rest}
+            <p
+              className="rise mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-muted"
+              style={{ animationDelay: '180ms' }}
+            >
+              The contract and the furnace warranty. The client who has not paid and the checkup
+              you keep moving. Thoughtstead holds all of it, works out how it connects, and
+              brings you what the day needs.
+            </p>
+
+            <div
+              className="rise mt-10 flex flex-col items-center gap-3.5"
+              style={{ animationDelay: '300ms' }}
+            >
+              <HostedCta large />
+              {/* Explicit {' '}: JSX trims each line of a multi-line text node, so
+                  a literal space beside an expression is dropped and this renders
+                  "$20/month· AI included". */}
+              <p className="text-sm text-faint">
+                {`${HOSTED_PRICE}/${HOSTED_PERIOD}`}
+                {' '}
+                &middot; AI included &middot; Export any time
               </p>
+            </div>
+          </div>
+
+        </section>
+
+        <Reveal className="relative">
+          <figure
+            id="hero-film"
+            className="bleed-media relative aspect-[21/9] w-full overflow-hidden"
+          >
+            <Image
+              src="/hero-human.png"
+              alt="A person at home balancing work documents with everyday household responsibilities"
+              fill
+              preload
+              quality={90}
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+          </figure>
+        </Reveal>
+
+        {/* ── Two worlds ───────────────────────────────────────────────── */}
+        <Section id="worlds" className="border-t border-line">
+          <Reveal className="max-w-3xl">
+            <h2 className="display text-[length:var(--h2)] leading-[1.03]">
+              Your company and{' '}
+              <span className="quote">the rest of your life</span>
+            </h2>
+            <p className="mt-6 text-lg leading-relaxed text-muted">
+              Nothing else will hold both. Your books do not know the meeting. Your notes app has
+              never chased a payment. And none of them want the furnace warranty at all — so it
+              lives in your head with everything else.
+            </p>
+          </Reveal>
+
+          <div className="mt-16 grid gap-5 md:grid-cols-2">
+            {WORLDS.map((w, wi) => (
+              <Reveal key={w.name} delay={wi * 90} className="frame p-7 md:p-9">
+                <div className="flex items-center gap-3">
+                  <span className="size-1.5 rotate-45 bg-accent" aria-hidden="true" />
+                  <h3 className="text-lg font-medium">{w.name}</h3>
+                </div>
+                <dl className="mt-7 space-y-5">
+                  {w.items.map(([term, desc]) => (
+                    <div key={term}>
+                      <dt className="text-[0.95rem] font-medium">{term}</dt>
+                      <dd className="mt-1 text-sm leading-relaxed text-muted">{desc}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </Reveal>
             ))}
           </div>
+
+          <Reveal className="mt-6 flex flex-col gap-4 rounded-2xl border border-line-2 bg-accent-soft p-7 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-2xl leading-relaxed">
+              They never touch. A context is isolated at the database level — search in one never
+              returns the other, and an agent in one cannot see into the other.
+            </p>
+            <span className="eyebrow shrink-0 text-accent">The wall</span>
+          </Reveal>
+
+          <Reveal className="bleed mt-20" delay={60}>
+            <MediaSlot
+              id="context-switch"
+              kind="video"
+              ratio="panorama"
+              bleed
+              brief="8-12s, edge to edge. The context switcher moving Business to Personal, the whole nav and every record changing with it. Nobody believes the wall until they watch it happen."
+            />
+          </Reveal>
         </Section>
 
-        {/* How it works */}
-        <Section wide className="border-t border-foreground/10">
-          <h2 className="text-center font-serif text-3xl md:text-4xl">How it works</h2>
-          <div className="mt-12 grid gap-10 sm:grid-cols-2 md:grid-cols-4">
-            {STEPS.map((step, i) => (
-              <div key={step.title}>
-                <div className="text-sm text-accent">0{i + 1}</div>
-                <h3 className="mt-2 font-serif text-xl">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-foreground/70">{step.body}</p>
-              </div>
-            ))}
-          </div>
-        </Section>
+        {/* ── It connects itself ───────────────────────────────────────── */}
+        <Section className="border-t border-line">
+          <div className="grid gap-14 md:grid-cols-12">
+            <Reveal className="md:col-span-5">
+              <h2 className="display text-[length:var(--h2)] leading-[1.03]">
+                You wired{' '}
+                <span className="quote">none of it</span>
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-muted">
+                Capture the thing and enrichment does the rest — reading it, linking the people and
+                projects it touches, filing it where it belongs. Ask why you decided something in
+                March and you get the meeting it came out of and the thinking behind it.
+              </p>
+            </Reveal>
 
-        {/* What's included */}
-        <Section wide className="border-t border-foreground/10">
-          <h2 className="text-center font-serif text-3xl md:text-4xl">What&rsquo;s included</h2>
-          <ul className="mt-12 grid gap-x-8 gap-y-5 text-base sm:grid-cols-2 md:grid-cols-4">
-            {INCLUDED.map((item) => (
-              <li key={item} className="border-t border-foreground/15 pt-4 text-foreground/85">
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        {/* Honest costs */}
-        <Section className="border-t border-foreground/10">
-          <h2 className="font-serif text-3xl md:text-4xl">What it costs</h2>
-          <table className="mt-8 w-full border-collapse text-left">
-            <tbody>
-              {COSTS.map((row) => (
-                <tr key={row.name} className="border-t border-foreground/15">
-                  <td className="py-3 text-foreground/85">{row.name}</td>
-                  <td className="py-3 text-right text-foreground/70">{row.value}</td>
-                </tr>
+            <div className="md:col-span-6 md:col-start-7">
+              {CHAIN.map(([head, tail], i) => (
+                <Reveal key={head} delay={i * 70} className="flex items-start gap-5">
+                  <div className="flex flex-col items-center" aria-hidden="true">
+                    <span className="mt-2.5 block size-1.5 shrink-0 rotate-45 bg-accent" />
+                    {i < CHAIN.length - 1 && <span className="w-px flex-1 bg-line-2" />}
+                  </div>
+                  <p className="pb-6 text-[1.05rem] leading-relaxed">
+                    <span className="font-medium">{head}</span>{' '}
+                    <span className="text-muted">{tail}</span>
+                  </p>
+                </Reveal>
               ))}
-            </tbody>
-          </table>
-          <p className="mt-6 text-sm text-foreground/60">
-            One price. No markup on AI. No charge to leave.
-          </p>
-        </Section>
-
-        {/* Pricing */}
-        <Section wide className="border-t border-foreground/10 text-center">
-          <h2 className="font-serif text-3xl md:text-4xl">Pricing</h2>
-          <div className="mx-auto mt-10 max-w-md">
-            {/* One product, one price. */}
-            <div className="rounded-2xl border border-foreground/15 p-10">
-              <h3 className="font-serif text-xl">Hosted</h3>
-              <p className="mt-1 text-sm text-foreground/60">
-                {HOSTED_LIVE ? 'Available now' : 'Launching soon'}
-              </p>
-              <div className="mt-6 flex items-baseline justify-center gap-1">
-                <span className="font-serif text-5xl">{HOSTED_PRICE}</span>
-                <span className="text-foreground/60">/{HOSTED_PERIOD}</span>
-              </div>
-              <ul className="mx-auto mt-8 max-w-xs space-y-2 text-left text-sm text-foreground/80">
-                {PRICING_BULLETS.map((b) => (
-                  <li key={b} className="flex gap-2">
-                    <span className="text-accent">&mdash;</span>
-                    {b}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-8 flex justify-center">
-                <HostedCta large />
-              </div>
             </div>
           </div>
         </Section>
 
-        {/* FAQ */}
-        <Section className="border-t border-foreground/10">
-          <h2 className="font-serif text-3xl md:text-4xl">FAQ</h2>
-          <div className="mt-10 divide-y divide-foreground/15 border-t border-b border-foreground/15">
-            {FAQS.map((faq) => (
-              <details key={faq.q} className="group py-5">
-                <summary className="flex cursor-pointer list-none items-start justify-between gap-4 font-serif text-lg">
-                  {faq.q}
-                  <span className="mt-1 shrink-0 text-accent transition-transform group-open:rotate-45">
-                    +
+        {/* ── A Tuesday ────────────────────────────────────────────────── */}
+        <Section className="border-t border-line">
+          <div className="grid gap-14 md:grid-cols-12">
+            <Reveal className="md:col-span-5">
+              <h2 className="display text-[length:var(--h2)]">
+                An ordinary{' '}
+                <span className="quote">Tuesday</span>
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-muted">
+                Not a demo script. The day as it actually arrives — work and home
+                interleaved, because that is the only way either of them ever happens.
+              </p>
+            </Reveal>
+            <div className="md:col-span-6 md:col-start-7">
+              {TUESDAY.map(([time, line], i) => (
+                <Reveal key={time} delay={i * 60} className="flex gap-6 border-t border-line py-5">
+                  <span className="w-14 shrink-0 pt-0.5 text-sm text-accent tabular-nums">
+                    {time}
                   </span>
-                </summary>
-                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-foreground/75">
-                  {faq.a}
-                </p>
-              </details>
+                  <span className="text-[1.05rem] leading-relaxed text-muted">{line}</span>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </Section>
+
+        {/* ── Who it is for ────────────────────────────────────────────── */}
+        <Section className="border-t border-line">
+          <Reveal className="max-w-3xl">
+            <h2 className="display text-[length:var(--h2)]">
+              For anyone holding{' '}
+              <span className="quote">more than one life</span>
+            </h2>
+          </Reveal>
+          <div className="mt-14 grid gap-5 md:grid-cols-3">
+            {FOR.map((f, i) => (
+              <Reveal key={f.who} delay={i * 80} className="frame p-8">
+                <h3 className="text-[1.05rem] font-medium leading-snug">{f.who}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{f.what}</p>
+              </Reveal>
             ))}
           </div>
         </Section>
+
+        {/* ── It does the work ─────────────────────────────────────────── */}
+        <Section className="border-t border-line">
+          <div className="grid items-center gap-14 md:grid-cols-12">
+            <Reveal className="md:col-span-5">
+              <h2 className="display text-[length:var(--h2)] leading-[1.03]">
+                And it shows{' '}
+                <span className="quote">the receipts</span>
+              </h2>
+              <div className="mt-6 space-y-5 text-lg leading-relaxed text-muted">
+                <p>
+                  Brief me on this morning. Chase what is overdue. Find out what we know about this
+                  company. Every step an agent takes leaves a record you can read back.
+                </p>
+                <p>
+                  <span className="text-text">Nothing leaves without your approval.</span> Anything
+                  outbound parks in a queue with its proposal attached — enforced in the database,
+                  not requested in a prompt.
+                </p>
+              </div>
+            </Reveal>
+            <Reveal className="md:col-span-6 md:col-start-7" delay={80}>
+              <MediaSlot
+                id="approval-queue"
+                kind="image"
+                ratio="wide"
+                brief="The approval queue with one outbound draft parked in it — proposal visible, Approve and Decline in reach."
+              />
+            </Reveal>
+          </div>
+
+          <div className="mt-20 grid items-center gap-14 md:grid-cols-12">
+            <Reveal className="md:col-span-6 md:order-2">
+              <h2 className="display text-[length:var(--h2)] leading-[1.03]">
+                It starts on{' '}
+                <span className="quote">your Mac</span>
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-muted">
+                A browser tab cannot sit in your meeting and listen. The Mac app records what is
+                said, transcribes it, and files it against the client it belongs to. The web app is
+                there for a machine that is not yours.
+              </p>
+            </Reveal>
+            <Reveal className="md:col-span-5 md:order-1" delay={80}>
+              <MediaSlot
+                id="mac-capture"
+                kind="image"
+                ratio="square"
+                brief="The Mac app mid-meeting: live transcription running, quick-capture open over it. Real desk, real light."
+              />
+            </Reveal>
+          </div>
+        </Section>
+
+        {/* ── Price ────────────────────────────────────────────────────── */}
+        <Section id="price" className="border-t border-line">
+          <div className="grid items-center gap-12 md:grid-cols-2">
+            <Reveal>
+              <h2 className="display text-[length:var(--h2)] leading-[1.03]">
+                No tiers, no{' '}
+                <span className="quote">asterisk</span>
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-muted">
+                Hosting, AI usage and every context you need are in the price. No API key to
+                manage, no per-token bill, no second tier waiting to upsell you — and no charge to
+                leave with everything.
+              </p>
+            </Reveal>
+
+            <Reveal delay={80} className="frame p-9 text-center">
+              <h3 className="text-lg font-medium">Hosted</h3>
+              <p className="mt-1 text-sm text-faint">
+                {HOSTED_LIVE ? 'Available now' : 'Launching soon'}
+              </p>
+              <p className="display mt-6 text-6xl">
+                {HOSTED_PRICE}
+                <span className="ml-1 align-middle text-base font-normal text-faint">
+                  /{HOSTED_PERIOD}
+                </span>
+              </p>
+              <ul className="mx-auto mt-8 max-w-xs space-y-3 text-left text-sm text-muted">
+                {[
+                  'The whole system, business and personal',
+                  'AI usage, no API key to manage',
+                  'As many contexts as you need',
+                  'Full export, any time',
+                ].map((b) => (
+                  <li key={b} className="flex gap-3">
+                    <span className="mt-[0.45rem] size-1.5 shrink-0 rotate-45 bg-accent" aria-hidden="true" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-9 flex justify-center">
+                <HostedCta large />
+              </div>
+            </Reveal>
+          </div>
+        </Section>
+
+        {/* ── FAQ ──────────────────────────────────────────────────────── */}
+        <Section className="border-t border-line">
+          <div className="grid gap-12 md:grid-cols-12">
+            {/* The live browser reported this heading overflowing its column at
+                col-span-4 / full --h2. It could NOT be reproduced under
+                Playwright at any width (text 418px inside a 452px box), so the
+                cause is a web-font metric difference between the two, and the
+                overflow is real in a real browser. Wider column AND a smaller
+                clamp: a sidebar heading does not need full display scale, and
+                the column alone would break again the moment the copy changes. */}
+            <Reveal className="md:col-span-5">
+              <h2 className="display text-[clamp(1.85rem,3.1vw,2.6rem)] leading-[1.06]">
+                Reasonable{' '}
+                <span className="quote">doubts</span>
+              </h2>
+            </Reveal>
+            <div className="md:col-span-6 md:col-start-7">
+              {FAQS.map((faq, i) => (
+                <Reveal key={faq.q} delay={i * 30}>
+                  <details className="group border-b border-line">
+                    {/* Padding lives on the summary, not the details: the
+                        summary is what receives the tap, and it measured 26px
+                        tall with the padding on its parent. */}
+                    <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-5 font-medium">
+                      {faq.q}
+                      <span
+                        className="mt-0.5 shrink-0 text-accent transition-transform duration-300 group-open:rotate-45"
+                        aria-hidden="true"
+                      >
+                        +
+                      </span>
+                    </summary>
+                    <p className="-mt-1 max-w-2xl pb-5 text-[0.95rem] leading-relaxed text-muted">
+                      {faq.a}
+                    </p>
+                  </details>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </Section>
+
+        {/* ── Close ────────────────────────────────────────────────────── */}
+        <Section className="relative overflow-hidden border-t border-line text-center">
+          <div className="aurora" aria-hidden="true" />
+          <Reveal className="relative">
+            <h2 className="display mx-auto max-w-3xl text-[length:var(--h2)] leading-[1.03]">
+              Stop being the only thing{' '}
+              <span className="quote">holding it together</span>
+            </h2>
+            <div className="mt-9 flex justify-center">
+              <HostedCta large />
+            </div>
+          </Reveal>
+        </Section>
       </main>
 
-      <footer className="border-t border-foreground/10">
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 py-10 text-sm text-foreground/60 sm:flex-row">
-          <nav className="flex gap-6">
-            <a href="/docs" className="hover:text-accent">
-              Docs
-            </a>
-            <a href="/privacy" className="hover:text-accent">
-              Privacy
-            </a>
-            <a href="/terms" className="hover:text-accent">
-              Terms
-            </a>
-            <a href="mailto:support@bfl.design" className="hover:text-accent">
-              Support
-            </a>
-          </nav>
-          <p>&copy; 2026 Big Freight Life</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }
