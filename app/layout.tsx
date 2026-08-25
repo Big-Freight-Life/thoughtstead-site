@@ -7,12 +7,15 @@ const serif = Source_Serif_4({ subsets: ['latin'], variable: '--font-serif' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://thoughtstead.com'),
-  title: { default: 'Thoughtstead — an AI second brain that remembers', template: '%s · Thoughtstead' },
+  title: {
+    default: 'Thoughtstead — a life operating system',
+    template: '%s · Thoughtstead',
+  },
   description:
-    'An AI second brain that remembers what you know and hands it back when you need it. Capture thoughts, email, and meetings into a private, semantically searchable memory — connected to Claude, ChatGPT, and Cursor. Full export, any time.',
+    'One place that runs your business and the rest of your life. Invoices, clients, contracts and meetings alongside health, home upkeep and warranties — captured, connected, and acted on by AI. Business and personal stay separate. Full export, any time.',
   openGraph: {
     title: 'Thoughtstead',
-    description: 'A homestead for your thoughts.',
+    description: 'You run a business. You also have a life. Thoughtstead runs both.',
     url: 'https://thoughtstead.com',
     siteName: 'Thoughtstead',
   },

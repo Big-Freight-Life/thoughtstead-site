@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const alt = 'Thoughtstead — a homestead for your thoughts';
+export const alt = 'Thoughtstead — a life operating system';
 export const size = {
   width: 1200,
   height: 630,
@@ -41,7 +41,7 @@ export default async function Image() {
             opacity: 0.7,
           }}
         >
-          A homestead for your thoughts.
+          A life operating system.
         </div>
       </div>
     ),

@@ -2,7 +2,12 @@ import { expect, test } from '@playwright/test';
 
 test('landing renders the pitch and hosted pricing', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /homestead for your thoughts/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /You run a business/i })).toBeVisible();
+  // The category line. Thoughtstead is a life operating system, not an "AI
+  // second brain" (undersold it, borrowed category) and not a "business OS"
+  // (contested, and strands /health, /lifestyle, /maintenance, /warranties).
+  await expect(page.getByText(/life operating system/i).first()).toBeVisible();
+  await expect(page.getByText(/second brain/i)).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Hosted' })).toBeVisible();
   await expect(page.getByText('$20').first()).toBeVisible();
 });

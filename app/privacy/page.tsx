@@ -89,7 +89,7 @@ export default function PrivacyPage() {
 
           <h3>Staff access</h3>
           <p>
-            Hosting your second brain means our staff could technically read it. We treat that as
+            Hosting everything you put in Thoughtstead means our staff could technically read it. We treat that as
             a serious responsibility: access is limited to what is needed to operate the service
             or to fix a problem you have asked us to fix, and we would rather ask you than look.
             If you want a stricter guarantee than any hosted service can give, the self-hosted
