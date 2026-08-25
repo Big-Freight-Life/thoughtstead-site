@@ -92,9 +92,10 @@ export default function PrivacyPage() {
             Hosting everything you put in Thoughtstead means our staff could technically read it. We treat that as
             a serious responsibility: access is limited to what is needed to operate the service
             or to fix a problem you have asked us to fix, and we would rather ask you than look.
-            If you want a stricter guarantee than any hosted service can give, the self-hosted
-            edition — running Thoughtstead entirely on your own infrastructure — is planned and
-            will be the honest answer for that.
+            We will not pretend this is the same guarantee as data that never leaves your own
+            machine. It is not, and no hosted service can offer that one. What we offer instead
+            is a narrow reason to look, a free export so that leaving is always cheap, and this
+            page saying so plainly.
           </p>
 
           <h3>Connected accounts</h3>
@@ -110,8 +111,8 @@ export default function PrivacyPage() {
             enable in settings if you&rsquo;d like to help us catch regressions across releases.
             When enabled, it sends only: the app version, a small set of pass/fail booleans from
             internal health checks, and a randomly generated install ID that isn&rsquo;t tied to
-            your name or email. It never includes your thoughts, messages, contacts, or any other
-            content from your brain. You can turn it off at any time.
+            your name or email. It never includes your thoughts, messages, contacts, invoices,
+            or any other content you have put into Thoughtstead. You can turn it off at any time.
           </p>
 
           <h2>Support correspondence</h2>

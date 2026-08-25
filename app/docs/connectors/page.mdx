@@ -4,68 +4,45 @@ export const metadata = {
 
 # Gmail & Calendar
 
-Thoughtstead can sync your Gmail and Google Calendar into your brain
-automatically, so meetings and messages show up alongside everything else
-you've captured.
+Thoughtstead syncs your Gmail and Google Calendar so messages and meetings show
+up alongside everything else you capture.
 
-## Why you bring your own Google OAuth app
+## Connecting
 
-Gmail and Calendar sync run on a Google OAuth app **you** create in your own
-Google Cloud account — not a shared one Thoughtstead operates. That means
-your mail and calendar data flow directly between Google and your own
-deployment; it never routes through anyone else's servers, and no third
-party (including us) ever sees it in transit.
+1. Go to **Settings → Connectors**.
+2. Click **Connect** next to Gmail, Google Calendar, or both.
+3. Google asks which account you want to use and what Thoughtstead may see.
+   Approve it, and you land back in the app connected.
 
-Setting this up takes about five minutes.
+That is the whole setup. There is no Google Cloud project to create, no OAuth
+client to register, and no environment variable to set — Thoughtstead is a
+hosted service and that plumbing is ours to run.
 
-## Walkthrough
+## What it asks for, and why
 
-1. Go to [console.cloud.google.com](https://console.cloud.google.com) and
-   create a new project (or use an existing one you're comfortable using).
-2. Enable the **Gmail API** and **Google Calendar API** for that project.
-3. Under **OAuth consent screen**, configure it as **External**, and leave it
-   in **Testing** mode.
-4. Add yourself (the Google account you want to sync) as a **test user** on
-   the consent screen.
-5. Under **Credentials**, create an **OAuth client ID** of type
-   **Web application**, and add this redirect URI:
-   ```text
-   https://YOUR-APP.vercel.app/api/connectors/google/callback
-   ```
-6. Set these environment variables on your deployment:
-   - `GOOGLE_CONNECTOR_CLIENT_ID`
-   - `GOOGLE_CONNECTOR_CLIENT_SECRET`
-   - `GOOGLE_CONNECTOR_REDIRECT_URI` — the same redirect URI you just
-     registered
-   - `CONNECTOR_TOKEN_KEY` — a base64, 32-byte key used to encrypt your
-     connector tokens at rest. Generate one with:
-     ```bash
-     node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
-     ```
-7. Redeploy so the new environment variables take effect.
-8. In the app: **Settings → Connectors → Connect** for Gmail and/or Google
-   Calendar.
+- **Gmail** — read access, so your mail can be captured and searched, and send
+  access, so a draft you have approved can actually go out. Nothing is ever
+  sent without your explicit approval; see
+  [Agents & approval](/docs/agents).
+- **Google Calendar** — read access, so meetings and their attendees line up
+  with what you capture.
 
-<div className="not-prose my-6 rounded-lg border border-accent/30 bg-accent/5 p-4 text-sm">
-  While your OAuth app is in Testing mode, Google will show a warning screen
-  that says <strong>"Google hasn't verified this app."</strong> This is
-  expected — click <strong>Continue</strong>. Testing mode also means only
-  the Google accounts you explicitly added as test users can connect; anyone
-  else attempting to connect will be rejected by Google.
-</div>
+Disconnect at any time from the same page. Thoughtstead discards the tokens
+Google issued when you do.
 
-## After connecting
+## Which context it syncs into
 
-Sync runs automatically once a day. If you want your latest messages or
-events pulled in right away, use **Sync now** on the Connectors settings
-page for an on-demand pull.
+Mail and calendar sync into the context you connected them from. Connect from
+Business and your work mail stays in Business. If you want your personal
+calendar in your Personal context, switch contexts first and connect it there —
+the two never merge.
 
-If you haven't set up the environment variables yet, the Connectors page
-will show a **"Connectors need one-time setup"** notice with a link back to
-this guide — that's expected, and everything else in Thoughtstead works
-fine without it.
+## Keeping it current
+
+Sync runs automatically once a day. For an immediate pull, use **Sync now** on
+the Connectors page.
 
 ## Next
 
 - [Import your notes](/docs/importers) — bring in your existing history
-  alongside your live Gmail/Calendar sync.
+  alongside your live Gmail and Calendar sync.

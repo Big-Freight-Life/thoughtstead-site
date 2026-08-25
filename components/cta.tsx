@@ -9,6 +9,15 @@
 
 // Set once hosted signup is public. Until then every hosted CTA reads
 // "Launching soon" — the same fallback the old Polar button used.
+//
+// DELIBERATE STUB (Ray, 2026-08-25): unset is the intended state right now and
+// the button is meant to stay non-clickable. Do not "fix" it by pointing it at
+// a placeholder, a mailto, or an email-capture form — there is no transactional
+// mail provider behind this site to capture into. Checked 2026-08-25: no Resend
+// (or any other provider) in this repo or in system-1, and the site project's
+// only Vercel env var is the long-dead NEXT_PUBLIC_POLAR_CHECKOUT_URL, which
+// nothing reads. Wiring a capture form is its own piece of work with its own
+// decision about where the address goes.
 const SIGNUP_URL = process.env.NEXT_PUBLIC_HOSTED_SIGNUP_URL;
 
 // The single source of truth for the advertised price. Changing it here changes

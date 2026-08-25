@@ -6,7 +6,7 @@ export const metadata = {
 
 Thoughtstead speaks [MCP](https://modelcontextprotocol.io) — the protocol
 Claude, Cursor, and a growing list of AI tools use to read and act on
-outside data. Once connected, your AI tools can search your brain, list
+outside data. Once connected, your AI tools can search Thoughtstead, list
 recent captures, look up people and decisions, and capture new thoughts —
 all scoped to exactly what you allow.
 
@@ -33,19 +33,22 @@ behind a permission check.
 
 ## Connect a client
 
-The MCP endpoint for your deployment is:
+The MCP endpoint is the same for everyone:
 
 ```text
-https://YOUR-APP.vercel.app/api/mcp/mcp
+https://app.thoughtstead.com/api/mcp/mcp
 ```
 
-Replace `YOUR-APP.vercel.app` with your actual deployment URL. Every request
-needs your key as a bearer token: `Authorization: Bearer YOUR_KEY`.
+Every request needs your key as a bearer token:
+`Authorization: Bearer YOUR_KEY`.
+
+A key belongs to the context you created it in. A key made in Business can
+never read your Personal context, whatever the connected tool asks for.
 
 ### Claude Code
 
 ```bash
-claude mcp add --transport http thoughtstead https://YOUR-APP.vercel.app/api/mcp/mcp --header "Authorization: Bearer YOUR_KEY"
+claude mcp add --transport http thoughtstead https://app.thoughtstead.com/api/mcp/mcp --header "Authorization: Bearer YOUR_KEY"
 ```
 
 ### Claude Desktop
@@ -61,7 +64,7 @@ header to a remote MCP server. Add this to your `claude_desktop_config.json`:
       "args": [
         "-y",
         "mcp-remote",
-        "https://YOUR-APP.vercel.app/api/mcp/mcp",
+        "https://app.thoughtstead.com/api/mcp/mcp",
         "--header",
         "Authorization:Bearer ${THOUGHTSTEAD_MCP_KEY}"
       ],
@@ -82,7 +85,7 @@ Cursor talks to remote MCP servers directly. Add this to `.cursor/mcp.json`
 {
   "mcpServers": {
     "thoughtstead": {
-      "url": "https://YOUR-APP.vercel.app/api/mcp/mcp",
+      "url": "https://app.thoughtstead.com/api/mcp/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_KEY"
       }

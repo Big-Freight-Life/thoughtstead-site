@@ -85,14 +85,6 @@ export default function TermsPage() {
             export your data.
           </p>
 
-          <h2>Self-hosted</h2>
-          <p>
-            A self-hosted edition — running Thoughtstead on your own infrastructure — is planned
-            and is not available yet. Nothing on this page is a commitment to a date, a price, or
-            specific terms for it. When it ships it will have its own licence, and these terms
-            will not govern it.
-          </p>
-
           <h2>Availability and warranty</h2>
           <p>
             We work to keep Thoughtstead running and your data safe, but the service is provided{' '}
