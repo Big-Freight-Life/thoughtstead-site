@@ -57,7 +57,7 @@ import {
 // sentence, then closed on three abstract verbs — takes, connects, does. Ray
 // liked the two opening sentences and nothing after them, which is exactly the
 // seam between the concrete half and the filler half.
-const HERO_KICKER = 'A life operating system';
+const HERO_KICKER = 'Life is serious business';
 
 const HERO_SUBLINE =
   'The contract and the furnace warranty. The client who has not paid and the checkup you keep moving. Thoughtstead holds all of it, works out how it connects, and brings you what the day needs — instead of sitting there waiting to be searched.';
