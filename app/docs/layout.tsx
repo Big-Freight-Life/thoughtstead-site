@@ -16,7 +16,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
           <DocsNav />
         </aside>
 
-        <article className="prose prose-neutral min-w-0 max-w-2xl prose-headings:font-serif prose-headings:tracking-tight prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-code:before:content-none prose-code:after:content-none prose-code:rounded prose-code:bg-foreground/5 prose-code:px-1 prose-code:py-0.5 prose-code:font-normal prose-strong:text-foreground prose-hr:border-foreground/15 prose-pre:bg-foreground prose-pre:text-background">
+        <article className="prose prose-invert min-w-0 max-w-2xl prose-headings:font-serif prose-headings:tracking-tight prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-code:before:content-none prose-code:after:content-none prose-code:rounded prose-code:bg-foreground/5 prose-code:px-1 prose-code:py-0.5 prose-code:font-normal prose-strong:text-foreground prose-hr:border-foreground/15 prose-pre:bg-surface-2 prose-pre:text-text prose-pre:border prose-pre:border-line-2">
           {children}
         </article>
       </div>

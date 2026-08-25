@@ -2,7 +2,9 @@ import { expect, test } from '@playwright/test';
 
 test('landing renders the pitch and hosted pricing', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /only thing.*holding it together/i })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { level: 1, name: /only thing.*holding it together/i }),
+  ).toBeVisible();
   // The category line. Thoughtstead is a life operating system, not an "AI
   // second brain" (undersold it, borrowed category) and not a "business OS"
   // (contested, and strands /health, /lifestyle, /maintenance, /warranties).
@@ -98,6 +100,55 @@ test('the signup CTA is either a real link or an honest non-clickable stub', asy
 
   // And the page must not claim availability above a button nobody can press.
   await expect(page.getByText(/available now/i)).toHaveCount(0);
+});
+
+// Scroll-reveal must survive a FAST scroll.
+//
+// The first reveal implementation revealed only on IntersectionObserver's
+// isIntersecting. A flick scroll, Page Down, anchor jump or scroll restore
+// moves an element from below the viewport to above it between two frames — it
+// is never observed intersecting, never gets the class, and stays at opacity 0
+// permanently. On 2026-08-25 that left 31 of 68 elements invisible on a page
+// where tsc, the build and every other test in this file were green.
+//
+// So: jump straight to the bottom the way a real flick does, then assert that
+// nothing anywhere on the page is still transparent.
+test('no content is left invisible after a fast scroll to the bottom', async ({ page }) => {
+  await page.goto('/');
+
+  // One jump, not a smooth crawl — a smooth scroll would let the observer
+  // catch every element and the test would pass on the broken implementation.
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(1200);
+
+  const hidden = await page.evaluate(() =>
+    [...document.querySelectorAll('.reveal')]
+      .filter((el) => Number(getComputedStyle(el).opacity) < 0.9)
+      .map((el) => (el.textContent || '').trim().slice(0, 60)),
+  );
+  expect(hidden, `still invisible after scrolling to the bottom: ${hidden.join(' | ')}`).toEqual([]);
+
+  // And the same going back up, which is where scroll-restore lands people.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(300);
+  const hiddenTop = await page.evaluate(() =>
+    [...document.querySelectorAll('.reveal')].filter(
+      (el) => Number(getComputedStyle(el).opacity) < 0.9,
+    ).length,
+  );
+  expect(hiddenTop).toBe(0);
+});
+
+// Media placeholders are deliberate and must stay countable, so nobody ships
+// with a slot they forgot to fill — and so replacing one with a real asset is
+// a visible change to this number rather than a silent drift.
+test('every marketing media slot is present and labelled', async ({ page }) => {
+  await page.goto('/');
+  const slots = page.locator('[data-media-slot]');
+  await expect(slots).toHaveCount(4);
+  for (const id of ['hero-film', 'context-switch', 'approval-queue', 'mac-capture']) {
+    await expect(page.locator(`[data-media-slot="${id}"]`)).toHaveCount(1);
+  }
 });
 
 test('docs sidebar navigates every page without 404', async ({ page }) => {

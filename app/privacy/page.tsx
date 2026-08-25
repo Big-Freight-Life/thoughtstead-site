@@ -20,7 +20,7 @@ export default function PrivacyPage() {
       </header>
 
       <main className="mx-auto max-w-2xl px-6 py-10 md:py-16">
-        <article className="prose prose-neutral min-w-0 max-w-2xl prose-headings:font-serif prose-headings:tracking-tight prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-hr:border-foreground/15">
+        <article className="prose prose-invert min-w-0 max-w-2xl prose-headings:font-serif prose-headings:tracking-tight prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-hr:border-foreground/15">
           <h1>Privacy</h1>
           <p className="text-sm text-foreground/60">Last updated 2026-08-09</p>
 

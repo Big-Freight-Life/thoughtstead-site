@@ -1,9 +1,27 @@
 import type { Metadata } from 'next';
-import { Source_Serif_4 } from 'next/font/google';
+import { Instrument_Sans, Instrument_Serif } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 
-const serif = Source_Serif_4({ subsets: ['latin'], variable: '--font-serif' });
+// Instrument Sans: a modern grotesque with slightly narrow proportions, so
+// large headlines set tight without the generic-geometric look. Not Inter, not
+// Space Grotesk.
+const sans = Instrument_Sans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+// Its serif companion, used ONLY italic and only for the emphasised phrase in
+// a headline. One warm note against an otherwise cold, tight typeface — it is
+// what keeps the page from reading as another dark SaaS template.
+const quote = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: 'italic',
+  variable: '--font-quote',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://thoughtstead.com'),
@@ -23,8 +41,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={serif.variable}>
-      <body className="bg-[#FAF7F2] text-[#1A1714] antialiased">
+    <html lang="en" className={`${sans.variable} ${quote.variable}`}>
+      <body className="bg-bg text-text antialiased">
         {children}
         <Analytics />
       </body>

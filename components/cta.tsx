@@ -31,10 +31,14 @@ export const HOSTED_PERIOD = 'month';
 export const HOSTED_LIVE = Boolean(SIGNUP_URL);
 
 export function HostedCta({ large = false }: { large?: boolean }) {
-  const size = large ? 'px-7 py-3.5 text-lg' : 'px-5 py-2.5 text-sm';
+  const size = large ? 'px-6 py-3 text-[0.95rem]' : 'px-4 py-2 text-sm';
+  const base = `inline-block rounded-full font-medium ${size}`;
+
   if (!SIGNUP_URL) {
+    // The deliberate stub: reads as "not yet", is not a control, and cannot be
+    // clicked, hovered into, or focused.
     return (
-      <span className={`inline-block rounded-md border border-[#1A1714]/20 opacity-60 ${size}`}>
+      <span className={`${base} border border-dashed border-line-2 text-faint`}>
         Launching soon
       </span>
     );
@@ -43,7 +47,7 @@ export function HostedCta({ large = false }: { large?: boolean }) {
     <a
       href={SIGNUP_URL}
       data-testid="hosted-cta"
-      className={`inline-block rounded-md bg-[#1A1714] text-[#FAF7F2] transition-colors hover:bg-[#3F6212] ${size}`}
+      className={`${base} bg-accent text-bg transition-transform duration-200 hover:-translate-y-0.5`}
     >
       Start your Thoughtstead
     </a>
