@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
 import { HostedCta, HOSTED_PRICE, HOSTED_PERIOD, HOSTED_LIVE } from '@/components/cta';
 import { Reveal } from '@/components/reveal';
-import Image from 'next/image';
-import Link from 'next/link';
 import { MediaSlot } from '@/components/media-slot';
+import { SiteNav, SiteFooter } from '@/components/site-chrome';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // POSITIONING — settled over several passes on 2026-08-25. Each rule is a
@@ -103,14 +102,19 @@ const FAQS = [
 /* ── primitives ─────────────────────────────────────────────────────────── */
 
 function Section({
+  id,
   children,
   className = '',
 }: {
+  id?: string;
   children: ReactNode;
   className?: string;
 }) {
   return (
-    <section className={`relative px-6 py-24 md:py-32 ${className}`}>
+    // scroll-mt clears the sticky nav. It lives here so the offset is defined
+    // once; both anchors used to be empty sentinel divs planted inside the
+    // section body, each carrying its own copy of that number.
+    <section id={id} className={`relative scroll-mt-24 px-6 py-24 md:py-32 ${className}`}>
       <div className="mx-auto max-w-6xl">{children}</div>
     </section>
   );
@@ -121,31 +125,7 @@ function Section({
 export default function Home() {
   return (
     <>
-      {/* Nav */}
-      <div className="sticky top-0 z-40 px-6 pt-5">
-        <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-line-2 bg-surface/80 px-5 py-2.5 backdrop-blur-xl">
-          <Link href="/" className="group -my-2 flex items-center gap-2.5 py-2 font-medium" aria-label="Thoughtstead home">
-            <Image
-              src="/mark.png"
-              alt=""
-              width={28}
-              height={28}
-              priority
-              className="size-6 transition-opacity duration-200 group-hover:opacity-80"
-            />
-            Thoughtstead
-          </Link>
-          <div className="hidden items-center gap-7 text-sm text-muted sm:flex">
-            {/* -my-3 py-3: grows the hit area to 44px without changing the
-                pill's height or the text position. Measured at 20px tall
-                before this — barely half the 44px minimum. */}
-            <a href="#worlds" className="-my-3 py-3 transition-colors hover:text-text">Product</a>
-            <a href="#price" className="-my-3 py-3 transition-colors hover:text-text">Pricing</a>
-            <a href="/docs" className="-my-3 py-3 transition-colors hover:text-text">Docs</a>
-          </div>
-          <HostedCta />
-        </nav>
-      </div>
+      <SiteNav />
 
       <main>
         {/* ── Hero ─────────────────────────────────────────────────────── */}
@@ -193,8 +173,7 @@ export default function Home() {
         </section>
 
         {/* ── Two worlds ───────────────────────────────────────────────── */}
-        <Section className="border-t border-line">
-          <div id="worlds" className="scroll-mt-28" />
+        <Section id="worlds" className="border-t border-line">
           <Reveal className="max-w-3xl">
             <h2 className="display text-[length:var(--h2)] leading-[1.03]">
               Your company and{' '}
@@ -330,8 +309,7 @@ export default function Home() {
         </Section>
 
         {/* ── Price ────────────────────────────────────────────────────── */}
-        <Section className="border-t border-line">
-          <div id="price" className="scroll-mt-28" />
+        <Section id="price" className="border-t border-line">
           <div className="grid items-center gap-12 md:grid-cols-2">
             <Reveal>
               <h2 className="display text-[length:var(--h2)] leading-[1.03]">
@@ -433,22 +411,7 @@ export default function Home() {
         </Section>
       </main>
 
-      <footer className="border-t border-line px-6 py-10">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-faint sm:flex-row">
-          {/* Same 44px floor as the header. These are the only tappable things
-              on the page at phone width once the header nav is hidden, and they
-              measured 20px tall. */}
-          <nav className="-my-3 flex gap-6">
-            <a href="/docs" className="py-3 transition-colors hover:text-text">Docs</a>
-            <a href="/privacy" className="py-3 transition-colors hover:text-text">Privacy</a>
-            <a href="/terms" className="py-3 transition-colors hover:text-text">Terms</a>
-            <a href="mailto:support@bfl.design" className="py-3 transition-colors hover:text-text">
-              Support
-            </a>
-          </nav>
-          <p>&copy; 2026 Big Freight Life</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

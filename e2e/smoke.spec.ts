@@ -51,6 +51,16 @@ test('pricing offers exactly one plan, and it is hosted', async ({ page }) => {
 //
 // So: enumerate the pages, and enumerate the dead framings. A new page or a new
 // retired phrase is one line each.
+// Text a reader could actually encounter: includes content inside collapsed
+// <details> (which innerText omits), excludes <script>/<style> (which
+// textContent includes — Next inlines its RSC flight payload there, and it is
+// full of "$1", "$13" and every string on the page a second time).
+const VISIBLE_TEXT = `(() => {
+  const clone = document.body.cloneNode(true);
+  clone.querySelectorAll('script, style, noscript, template').forEach((n) => n.remove());
+  return clone.textContent || '';
+})()`;
+
 const PAGES = ['/', '/privacy', '/terms', '/docs', '/docs/mcp', '/docs/connectors',
                '/docs/importers', '/docs/agents', '/docs/costs', '/docs/license'] as const;
 
@@ -67,9 +77,7 @@ const RETIRED = [
 test('no page carries a retired framing', async ({ page }) => {
   for (const path of PAGES) {
     await page.goto(path);
-    // Body text only. Comments in the source are not rendered, and the point
-    // is what a reader sees.
-    const body = await page.locator('body').innerText();
+    const body: string = await page.evaluate(VISIBLE_TEXT);
     for (const { pattern, why } of RETIRED) {
       expect(body, `${path} matches ${pattern} — ${why}`).not.toMatch(pattern);
     }
@@ -169,7 +177,9 @@ for (const { w, h, name } of WIDTHS) {
     await page.setViewportSize({ width: w, height: h });
     await page.goto('/');
     // Let the reveals settle so measurements are of the final layout.
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.evaluate(() =>
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' }),
+    );
     await page.waitForTimeout(4000);
 
     // 1. The page itself must not scroll sideways.
@@ -223,23 +233,115 @@ for (const { w, h, name } of WIDTHS) {
 // tappable. Anything materially small fails.
 test('interactive elements are big enough to tap on a phone', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
-  await page.waitForTimeout(4000);
+
+  // Every page, not just '/'. Checking one page is the exact mistake the
+  // retired-framing sweep above was written to stop, repeated four tests later.
+  for (const path of PAGES) {
+  await page.goto(path);
+  // The 3.5s reveal failsafe only exists where .reveal does — the landing page.
+  // Waiting it out on all ten pages blew the 30s test budget.
+  if (await page.locator('.reveal').count()) await page.waitForTimeout(4000);
+  else await page.waitForTimeout(250);
 
   const small = await page.evaluate(() =>
     [...document.querySelectorAll('a, button, summary')]
+      // Inline links inside a sentence are exempt, and that is the standard's
+      // own wording, not a convenience: both WCAG 2.5.5 and 2.5.8 carve out a
+      // target "in a sentence or block of text". Padding "support@bfl.design"
+      // to 44px would break the paragraph it sits in.
+      .filter((el) => !el.closest('p, li, dd, blockquote'))
       .map((el) => ({ el, r: el.getBoundingClientRect() }))
       .filter(({ r }) => r.width > 0 && r.height > 0 && r.height < 40)
       .map(({ el, r }) => `${Math.round(r.width)}x${Math.round(r.height)} "${(el.textContent || '').trim().slice(0, 28)}"`),
   );
-  expect(small, `tap targets under 40px tall: ${small.join(' | ')}`).toEqual([]);
+  expect(small, `${path}: tap targets under 40px tall: ${small.join(' | ')}`).toEqual([]);
+  }
+});
+
+// Words must not be glued to the link before them.
+//
+// JSX drops the literal space between a closing tag and text that wraps onto
+// the next source line. It has produced this bug three times on this site:
+// "$20/month\u00b7 AI included" in the hero, and "Vercel Analyticsto see" on
+// /privacy — which was shipped and is live on production. Reviewing the JSX by
+// eye clearly does not catch it, so detect it in the rendered DOM instead.
+test('no word is glued to the link before it', async ({ page }) => {
+  const glued: string[] = [];
+  for (const path of PAGES) {
+    await page.goto(path);
+    const hits = await page.evaluate(() =>
+      [...document.querySelectorAll('a')]
+        .filter((a) => {
+          const next = a.nextSibling;
+          if (!next || next.nodeType !== Node.TEXT_NODE) return false;
+          const linkEndsWithWord = /[\w.]$/.test(a.textContent || '');
+          // A letter or digit immediately after the link, with no space.
+          return linkEndsWithWord && /^[A-Za-z0-9]/.test(next.textContent || '');
+        })
+        .map((a) => `"${(a.textContent || '').slice(-18)}" + "${(a.nextSibling!.textContent || '').slice(0, 14)}"`),
+    );
+    hits.forEach((h) => glued.push(`${path} ${h}`));
+  }
+  expect(glued, `missing space after a link: ${glued.join(' | ')}`).toEqual([]);
+});
+
+// Every page quotes the same price.
+//
+// HOSTED_PRICE calls itself "the single source of truth for the advertised
+// price", but /docs/costs and /docs/license hardcoded $20 in Markdown the
+// constant could not reach. They import it now — this asserts nobody undoes
+// that, since the failure is a pricing contradiction on the two pages a
+// prospect reads BEFORE subscribing.
+test('no page contradicts the advertised price', async ({ page }) => {
+  const wrong: string[] = [];
+  for (const path of PAGES) {
+    await page.goto(path);
+    const text: string = await page.evaluate(VISIBLE_TEXT);
+    const prices = [...new Set(text.match(/\$\d+(?:\.\d{2})?/g) || [])];
+    prices.filter((p) => p !== '$20').forEach((p) => wrong.push(`${path} quotes ${p}`));
+  }
+  expect(wrong, `pages disagreeing with HOSTED_PRICE: ${wrong.join(' | ')}`).toEqual([]);
+});
+
+// Content must be visible with JavaScript disabled.
+//
+// .reveal starts at opacity:0 and only JS removes it, so this is the third
+// route to "the page is blank" found on this branch. The rule is scoped to
+// html.js — set by an inline script — so with JS off nothing is ever hidden.
+test('the page renders fully with JavaScript disabled', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto('/');
+
+  const hidden = await page.evaluate(() =>
+    [...document.querySelectorAll('.reveal')].filter(
+      (el) => Number(getComputedStyle(el).opacity) < 0.9,
+    ).length,
+  );
+  expect(hidden, 'blocks invisible with JS disabled').toBe(0);
+
+  // And the substance is actually there, not just un-hidden.
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.getByText(/Warranties/).first()).toBeVisible();
+  await context.close();
 });
 
 test('docs sidebar navigates every page without 404', async ({ page }) => {
   await page.goto('/docs');
+  // Only same-origin routes. The shared footer added a mailto:, whose pathname
+  // is "support@bfl.design" — not a route, and a guaranteed 404.
   const hrefs = await page
     .locator('aside a, nav a')
-    .evaluateAll((as) => [...new Set(as.map((a) => (a as HTMLAnchorElement).pathname))]);
+    .evaluateAll((as) =>
+      [
+        ...new Set(
+          (as as HTMLAnchorElement[])
+            .filter((a) => a.protocol === 'http:' || a.protocol === 'https:')
+            .filter((a) => a.origin === window.location.origin)
+            .map((a) => a.pathname),
+        ),
+      ],
+    );
   expect(hrefs.filter((h) => h.startsWith('/docs')).length).toBeGreaterThanOrEqual(7);
   for (const href of hrefs) {
     const res = await page.goto(href);

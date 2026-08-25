@@ -10,12 +10,16 @@
 
 export type MediaKind = 'video' | 'image';
 
-const RATIO: Record<string, string> = {
+// `as const` and NOT Record<string, string>: the annotation erases the literal
+// key union, so `ratio` would accept any string and an unknown one renders the
+// literal class "undefined" — no aspect-ratio, a zero-height frame, and the
+// slot-count test stays green on it.
+const RATIO = {
   wide: 'aspect-[16/9]',
   hero: 'aspect-[16/10]',
   square: 'aspect-square',
   portrait: 'aspect-[4/5]',
-};
+} as const;
 
 export function MediaSlot({
   id,

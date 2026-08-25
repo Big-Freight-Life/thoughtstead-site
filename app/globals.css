@@ -12,7 +12,12 @@
   --surface-2: #1c1914;
   --text: #f5f1e8;
   --muted: rgba(245, 241, 232, 0.56);
-  --faint: rgba(245, 241, 232, 0.36);
+  /* 0.36 composited to rgb(95,93,89) on --bg = 3.01:1, failing WCAG AA (4.5:1)
+     for normal text — and it carries the CTA label, the hero price line and the
+     whole footer. 0.50 measures 4.88:1. The earlier audit that reported "zero
+     failures" passed rgba() to a luminance function that ignored alpha, so it
+     measured near-white on black and always passed. */
+  --faint: rgba(245, 241, 232, 0.5);
   --line: rgba(245, 241, 232, 0.09);
   --line-2: rgba(245, 241, 232, 0.16);
   --accent: #a8ce49;
@@ -48,7 +53,14 @@
   --font-display: var(--font-display);
 }
 
-html { scroll-behavior: smooth; }
+/* Anchor links only. Applied to :root it also animates window.scrollTo(), which
+   turned the fast-scroll reveal test's deliberate instant jump into a smooth
+   crawl — dragging every element through the viewport so the observer caught
+   them all, and making the one regression test guarding a bug that already
+   shipped completely inert. */
+@media (prefers-reduced-motion: no-preference) {
+  html:focus-within { scroll-behavior: smooth; }
+}
 
 body {
   background: var(--bg);
@@ -94,10 +106,21 @@ body {
   opacity: 0.55;
 }
 
+/* These live in @layer components so Tailwind utilities can override them.
+   Unlayered CSS beats ANY layered CSS regardless of specificity (CSS Cascade 5),
+   and Tailwind v4 puts utilities in @layer utilities — so while .display was
+   unlayered its font-size silently beat every text- and leading- utility on
+   the same element. Verified in the built bundle: @layer utilities spanned bytes
+   10937-34943 and .display sat at 36048. Every h2 rendered at --display instead
+   of --h2, and the FAQ overflow fix had no effect whatsoever. Do not unwrap. */
+@layer components {
+
 /* Headline: Outfit at 600 — never 400, see layout.tsx — tight, with a soft
    top-down falloff so the type reads lit rather than painted flat. */
 .display {
   font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  /* Stops a single word being orphaned on the last line of a heading. */
+  text-wrap: balance;
   font-size: var(--display);
   /* 1.02 collided the descenders of one line with the caps of the next. */
   line-height: 1.08;
@@ -145,14 +168,23 @@ body {
     0 40px 90px -30px rgba(0, 0, 0, 0.9);
 }
 
+} /* @layer components */
+
+/* Scoped to html.js, which is set by an inline script in layout.tsx before
+   first paint. Without that scope, .reveal{opacity:0} applies to EVERY visitor
+   and only JS ever removes it — so a blocked bundle, a CSP hiccup or a
+   hydration error thrown early leaves 16 blocks permanently invisible and the
+   page is a hero over emptiness. This is the third route to that failure; the
+   first two were fast-scroll and dead scroll events. Inverting the default
+   closes the class rather than the instance. */
 @media (prefers-reduced-motion: no-preference) {
-  .reveal {
+  html.js .reveal {
     opacity: 0;
     transform: translateY(16px);
     transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
                 transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .reveal.is-in { opacity: 1; transform: none; }
+  html.js .reveal.is-in { opacity: 1; transform: none; }
 
   .rise { opacity: 0; animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
   @keyframes rise {
@@ -162,3 +194,37 @@ body {
 }
 
 ::selection { background: rgba(168, 206, 73, 0.28); }
+
+/* Long-form pages (/docs, /privacy, /terms). Typography plugin defaults are
+   built for a light theme and a serif stack that no longer exists here, so the
+   two brand faces and the dark tokens are asserted explicitly. */
+.doc-prose {
+  --tw-prose-body: var(--muted);
+  --tw-prose-headings: var(--text);
+  --tw-prose-bold: var(--text);
+  --tw-prose-links: var(--accent);
+  --tw-prose-counters: var(--faint);
+  --tw-prose-bullets: var(--line-2);
+  --tw-prose-hr: var(--line);
+  --tw-prose-quotes: var(--text);
+  --tw-prose-quote-borders: var(--accent);
+  --tw-prose-code: var(--text);
+  --tw-prose-th-borders: var(--line-2);
+  --tw-prose-td-borders: var(--line);
+}
+.doc-prose :is(h1, h2, h3, h4) {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+.doc-prose h1 {
+  font-size: clamp(2.1rem, 4.2vw, 3rem);
+  line-height: 1.08;
+}
+.doc-prose :is(pre, code) {
+  font-size: 0.875em;
+}
+.doc-prose pre {
+  border: 1px solid var(--line-2);
+  background: var(--surface-2);
+}

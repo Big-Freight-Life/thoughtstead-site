@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { SiteNav, SiteFooter } from '@/components/site-chrome';
 
 export const metadata: Metadata = {
   title: 'Privacy',
@@ -10,19 +10,12 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <>
-      <header className="mx-auto max-w-5xl px-6 pt-8">
-        <Link
-          href="/"
-          className="text-sm lowercase tracking-wide text-foreground/70 hover:text-accent"
-        >
-          thoughtstead
-        </Link>
-      </header>
+      <SiteNav />
 
-      <main className="mx-auto max-w-2xl px-6 py-10 md:py-16">
-        <article className="prose prose-invert min-w-0 max-w-2xl prose-headings:font-serif prose-headings:tracking-tight prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-hr:border-foreground/15">
+      <main className="mx-auto max-w-3xl px-6 py-16 md:py-24">
+        <article className="prose doc-prose min-w-0 max-w-2xl prose-a:no-underline hover:prose-a:underline prose-code:before:content-none prose-code:after:content-none prose-code:rounded prose-code:bg-surface-2 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-normal">
           <h1>Privacy</h1>
-          <p className="text-sm text-foreground/60">Last updated 2026-08-09</p>
+          <p className="text-sm text-faint">Last updated 2026-08-09</p>
 
           <p>
             The short version: <strong>we do not train on your content and we never sell it</strong>,
@@ -38,8 +31,12 @@ export default function PrivacyPage() {
             there is nothing to consent to.
           </p>
           <p>
-            We use <a href="https://vercel.com/docs/analytics">Vercel Analytics</a> to see
-            anonymous, aggregate traffic — things like page views and which country a visit came
+            {/* Explicit {' '}: JSX drops the literal space between a closing tag
+                and text that wraps to the next line. This rendered "Vercel
+                Analyticsto see" — and still does on production today. */}
+            We use <a href="https://vercel.com/docs/analytics">Vercel Analytics</a>
+            {' '}
+            to see anonymous, aggregate traffic — things like page views and which country a visit came
             from. It doesn&rsquo;t identify you, doesn&rsquo;t use cookies, and we don&rsquo;t
             combine it with anything else about you.
           </p>
@@ -63,13 +60,14 @@ export default function PrivacyPage() {
               <strong>We do not train AI models on your content, and we never sell it.</strong>
             </li>
             <li>
-              <strong>Your workspace is isolated</strong> from every other customer at the
-              database level, not merely by application code.
+              <strong>Every context is isolated</strong> from every other customer &mdash; and
+              from your own other contexts &mdash; at the database level, not merely by
+              application code.
             </li>
             <li>
-              <strong>You can export everything, any time</strong> — thoughts, contacts,
-              decisions, and documents, in readable formats. That includes while you are
-              cancelling.
+              <strong>You can export everything, any time</strong> &mdash; from every context:
+              thoughts, contacts, decisions, invoices, and documents, in readable formats. That
+              includes while you are cancelling.
             </li>
             <li>
               <strong>Delete means delete.</strong> Ask us to delete your account and we remove
@@ -127,7 +125,7 @@ export default function PrivacyPage() {
           <p>
             Running Thoughtstead involves a small number of providers: our payment provider
             (billing), Vercel (hosting this site and the app, plus anonymous analytics for this
-            site), Supabase (the database your workspace lives in), Clerk (sign-in), and our AI
+            site), Supabase (the database your contexts live in), Clerk (sign-in), and our AI
             provider (embeddings and enrichment). They process data on our instructions in order
             to deliver the service, and none of them is permitted to use your content for their
             own purposes.
@@ -146,29 +144,11 @@ export default function PrivacyPage() {
           </p>
 
           <hr />
-          <p className="text-sm text-foreground/60">&copy; 2026 Big Freight Life</p>
+          <p className="text-sm text-faint">&copy; 2026 Big Freight Life</p>
         </article>
       </main>
 
-      <footer className="border-t border-foreground/10">
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 py-10 text-sm text-foreground/60 sm:flex-row">
-          <nav className="flex gap-6">
-            <Link href="/" className="hover:text-accent">
-              Home
-            </Link>
-            <Link href="/docs" className="hover:text-accent">
-              Docs
-            </Link>
-            <Link href="/terms" className="hover:text-accent">
-              Terms
-            </Link>
-            <a href="mailto:support@bfl.design" className="hover:text-accent">
-              Support
-            </a>
-          </nav>
-          <p>&copy; 2026 Big Freight Life</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

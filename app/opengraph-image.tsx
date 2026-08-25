@@ -18,15 +18,15 @@ export default async function Image() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#FAF7F2',
+          background: '#0b0a08',
         }}
       >
-        <div style={{ width: 96, height: 4, background: '#3F6212', display: 'flex' }} />
+        <div style={{ width: 96, height: 4, background: '#a8ce49', display: 'flex' }} />
         <div
           style={{
             marginTop: 36,
             fontSize: 104,
-            color: '#1A1714',
+            color: '#f5f1e8',
             fontWeight: 700,
             letterSpacing: -2,
           }}
@@ -37,8 +37,8 @@ export default async function Image() {
           style={{
             marginTop: 20,
             fontSize: 34,
-            color: '#1A1714',
-            opacity: 0.7,
+            color: '#f5f1e8',
+            opacity: 0.66,
           }}
         >
           A life operating system.

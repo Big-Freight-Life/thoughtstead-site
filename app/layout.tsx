@@ -14,7 +14,10 @@ const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
-  weight: ['400', '500', '600', '700'],
+  // 400 and 500 only. next/font preloads every declared weight, and nothing in
+  // app/ or components/ uses font-semibold or font-bold — 600 and 700 were two
+  // files competing with the LCP hero for bandwidth and rendering nothing.
+  weight: ['400', '500'],
 });
 
 // Display. Outfit is a pure geometric — circular bowls, monolinear strokes,
@@ -27,7 +30,8 @@ const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-display',
   display: 'swap',
-  weight: ['400', '500', '600', '700'],
+  // 600 only — .display is Outfit's sole consumer and is set at 600, never 400.
+  weight: ['600'],
 });
 
 export const metadata: Metadata = {
@@ -49,6 +53,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${outfit.variable}`}>
+      <head>
+        {/* Marks the document as JS-capable BEFORE first paint, which is what
+            licenses .reveal to start hidden. If this never runs, nothing is
+            ever hidden and the page renders complete without animation. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
+        />
+      </head>
       <body className="bg-bg text-text antialiased">
         {children}
         <Analytics />
