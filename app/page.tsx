@@ -168,7 +168,7 @@ export default function Home() {
           </div>
           <div className="relative mx-auto max-w-5xl">
             <h1 className="display rise" style={{ animationDelay: '60ms' }}>
-              <span className="block">You are the only thing</span>
+              <span className="block">You&rsquo;re the only thing</span>
               <span className="quote block">holding it together</span>
             </h1>
 
