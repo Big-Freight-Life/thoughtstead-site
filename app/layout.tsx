@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { DM_Sans, Geist_Mono, Newsreader } from 'next/font/google';
+import { DM_Sans, Geist_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 
@@ -23,20 +23,6 @@ const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
-});
-
-// Editorial. Newsreader is drawn for reading prose on a screen, and here it
-// carries exactly one thing: the wordmark.
-//
-// The comment this replaces described OUTFIT — "a pure geometric, circular
-// bowls, monolinear strokes" — in the block configuring Newsreader, a serif.
-// It survived a font change and then argued, in detail and with a citation,
-// for weights on a typeface the site had stopped using.
-const newsreader = Newsreader({
-  subsets: ['latin'],
-  variable: '--font-editorial',
-  display: 'swap',
-  style: ['normal', 'italic'],
 });
 
 const geistMono = Geist_Mono({
@@ -72,7 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     // children, so a real mismatch anywhere in the page still reports.
     <html
       lang="en"
-      className={`${dmSans.variable} ${newsreader.variable} ${geistMono.variable}`}
+      className={`${dmSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <head>

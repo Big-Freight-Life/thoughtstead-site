@@ -72,13 +72,13 @@
 }
 
 .titleMoment strong {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   /* Deliberately below --t-display: this is a moment inside a card, and it
      used to render larger than the page's own h1. */
   font-size: clamp(2.8rem, 5.6vw, 5.9rem);
   line-height: .9;
   letter-spacing: -.055em;
-  font-weight: 400;
+  font-weight: 600;
   text-shadow: 0 0 42px rgb(149 201 255 / .18);
 }
 

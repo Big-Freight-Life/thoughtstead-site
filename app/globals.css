@@ -71,7 +71,7 @@
   --color-accent: var(--accent); --color-accent-soft: var(--accent-soft);
   --color-foreground: var(--foreground); --color-background: var(--background);
   --font-sans: var(--font-sans); --font-display: var(--font-sans);
-  --font-editorial: var(--font-editorial); --font-mono: var(--font-mono);
+  --font-mono: var(--font-mono);
 }
 
 * { box-sizing: border-box; }
@@ -96,7 +96,7 @@ body { margin:0; background-color:var(--bg);
    by a single optical pixel on hover; the mark never spins or performs. */
 .thoughtstead-logo { display:inline-flex; align-items:center; gap:.65rem; color:var(--text); }
 .thoughtstead-logo__mark { width:2rem; height:2rem; flex:none; overflow:visible; }
-.thoughtstead-logo__wordmark { font-family:var(--font-editorial),ui-serif,serif; font-size:1.18rem; line-height:2rem; letter-spacing:-.026em; font-weight:500; transform:translateY(2px); }
+.thoughtstead-logo__wordmark { font-family:var(--font-sans),ui-sans-serif,system-ui,sans-serif; font-size:1.18rem; line-height:2rem; letter-spacing:-.02em; font-weight:500; }
 .thoughtstead-mark__vein { fill:none; stroke-width:1.35; stroke-linecap:round; stroke-linejoin:round; opacity:.8; }
 .thoughtstead-mark__crown,.thoughtstead-mark__left,.thoughtstead-mark__right { transform-box:fill-box; transform-origin:center; transition:transform .45s cubic-bezier(.16,1,.3,1); }
 @media (hover:hover) and (prefers-reduced-motion:no-preference) {
@@ -228,7 +228,7 @@ body::before { content:""; position:fixed; inset:0; z-index:60; pointer-events:n
 .context-stage-tabs button i { width:.5rem; height:.5rem; rotate:45deg; }
 .context-stage-body { min-height:36rem; display:grid; grid-template-columns:15rem minmax(0,1fr); animation:context-swap .5s cubic-bezier(.16,1,.3,1) both; }
 .context-stage-rail { display:flex; flex-direction:column; justify-content:space-between; padding:1.5rem 1rem; color:#aaaeba; background:#181920; border-right:1px solid #343640; }
-.context-stage-wordmark { font-family:var(--font-editorial); font-size:1.15rem; color:#fff; }.context-stage-context { margin-top:.35rem; font-family:var(--font-mono); font-size:.58rem; letter-spacing:.09em; text-transform:uppercase; color:var(--context-accent); }
+.context-stage-wordmark { font-family:var(--font-sans); font-size:1.15rem; letter-spacing:-.02em; font-weight:500; color:#fff; }.context-stage-context { margin-top:.35rem; font-family:var(--font-mono); font-size:.58rem; letter-spacing:.09em; text-transform:uppercase; color:var(--context-accent); }
 .context-stage-rail nav { display:grid; gap:.35rem; margin-block:2rem; }.context-stage-rail nav span { min-height:2.65rem; display:flex; align-items:center; gap:.65rem; padding:.55rem .7rem; color:#999ca7; font-size:.78rem; }.context-stage-rail nav span i { width:.4rem; height:.4rem; rotate:45deg; background:#525560; }.context-stage-rail nav span.is-active { color:#fff; background:#252731; }.context-stage-rail nav span.is-active i { background:var(--context-accent); box-shadow:0 0 0 4px color-mix(in srgb,var(--context-accent) 18%,transparent); }
 .context-stage-isolation { padding-top:1rem; border-top:1px solid #343640; color:#777b87; font-size:.67rem; line-height:1.5; }
 .context-stage-workspace { display:flex; flex-direction:column; min-width:0; padding:2rem; background:radial-gradient(circle at 85% 5%,color-mix(in srgb,var(--context-accent) 14%,transparent),transparent 31%),#12131a; }
@@ -1828,14 +1828,18 @@ summary::-webkit-details-marker { display:none; }
 }
 
 .contexts-section { padding-block:clamp(6rem,10vw,10rem); }
+/* Stacked, not the two-column heading/deck this band used to share with
+   fragmented-intro, matrix-intro, audience-intro and price-intro. Five bands
+   opening the same way is a page with one idea about how a band begins, and by
+   the fourth the reader stops reading the right-hand column at all. The deck
+   sits under its own heading here, where it is read as the sentence that
+   follows rather than as a caption parked across the page. */
 .contexts-intro {
-  display:grid;
-  grid-template-columns:minmax(0,1.2fr) minmax(18rem,.62fr);
-  align-items:end;
-  gap:clamp(2rem,7vw,7rem);
+  max-width:46rem;
   margin-bottom:clamp(3.5rem,7vw,6rem);
 }
-.contexts-intro h2 { max-width:12ch; }
+.contexts-intro h2 { max-width:18ch; }
+.contexts-intro>p { margin-top:clamp(1.4rem,2.4vw,1.9rem); }
 .contexts-section .context-stage-shell { min-height:42rem; }
 .contexts-section .context-stage-tabs button { min-height:44px; }
 .context-stage-kicker,
@@ -1996,8 +2000,10 @@ summary::-webkit-details-marker { display:none; }
 }
 
 @media (max-width:1023px) {
-  .fragmented-intro,
-  .contexts-intro { grid-template-columns:1fr; }
+  /* .fragmented-intro is still a two-column grid and must collapse here.
+     .contexts-intro used to share this declaration; it is stacked at every
+     width now, so it only keeps the measure below. */
+  .fragmented-intro { grid-template-columns:1fr; }
   .fragmented-intro>p,
   .contexts-intro>p { max-width:42rem; }
   .operating-story { grid-template-columns:1fr; }
