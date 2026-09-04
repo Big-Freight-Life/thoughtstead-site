@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Outfit, DM_Sans } from 'next/font/google';
+import { DM_Sans, Geist_Mono, Newsreader } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 
@@ -7,35 +7,42 @@ import './globals.css';
 // house. Two brand faces, not four — their tokens file is explicit about that,
 // and it replaced Schibsted Grotesk + Georgia there on 2026-08-02.
 
-// Body + UI. DM Sans is a rounded geometric with real optical sizes, so one
-// family sets 14px labels and a 1.2rem standfirst without the small sizes
+// Body + UI. DM Sans is variable with a real optical-size axis (9-40), so one
+// family sets an 11px label and a 95px headline without the small sizes
 // inheriting display-cut spacing.
+//
+// NO `weight` ARRAY, deliberately, and matching the app's own declaration:
+// pinning weights drops the variable font and the axis with it. The previous
+// comment here claimed 600 and 700 "rendered nothing" because nothing used
+// them. That was measured against app/ and components/ markup only, and it was
+// wrong: the weights live in globals.css, where the page asks for 550, 600,
+// 650, 700, 750 and 900. With only 400 and 500 loaded the browser SYNTHESISED
+// all six — including the 700 on a 95px h1, which is faux bold at display
+// scale and the most visible typographic defect a page can carry.
 const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
-  // 400 and 500 only. next/font preloads every declared weight, and nothing in
-  // app/ or components/ uses font-semibold or font-bold — 600 and 700 were two
-  // files competing with the LCP hero for bandwidth and rendering nothing.
-  weight: ['400', '500'],
 });
 
-// Display. Outfit is a pure geometric — circular bowls, monolinear strokes,
-// terminals NOT softened. Round without being soft, which is the point.
+// Editorial. Newsreader is drawn for reading prose on a screen, and here it
+// carries exactly one thing: the wordmark.
 //
-// It is set at 600, never 400: bfl.design's tokens carry the warning and it is
-// real. Being monolinear, Outfit has no stroke contrast to carry it, so a
-// regular weight goes visibly weak at headline scale.
-const outfit = Outfit({
+// The comment this replaces described OUTFIT — "a pure geometric, circular
+// bowls, monolinear strokes" — in the block configuring Newsreader, a serif.
+// It survived a font change and then argued, in detail and with a citation,
+// for weights on a typeface the site had stopped using.
+const newsreader = Newsreader({
   subsets: ['latin'],
-  variable: '--font-display',
+  variable: '--font-editorial',
   display: 'swap',
-  // 500 and 600. 500 carries the display scale — at 84px+ a lighter weight
-  // reads as confidence rather than shouting, which is the single biggest
-  // difference between a considered page and a loud one. bfl.design's warning
-  // is against 400, not 500: Outfit is monolinear, so 400 goes weak, but 500
-  // holds at large sizes. 600 stays for smaller headings that need presence.
-  weight: ['500', '600'],
+  style: ['normal', 'italic'],
+});
+
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -45,10 +52,10 @@ export const metadata: Metadata = {
     template: '%s · Thoughtstead',
   },
   description:
-    'Nothing you own holds both halves of a life, so you hold them. Thoughtstead is a life operating system: it takes the contract and the furnace warranty alike, connects it all as it lands, and does the chasing. Business and personal stay walled off. Full export, any time.',
+    'Get the whole product out of your head. Thoughtstead connects the brief, ticket, evidence, and system design behind an AI feature.',
   openGraph: {
     title: 'Thoughtstead',
-    description: "You're the only thing holding it together.",
+    description: 'Get the whole product out of your head.',
     url: 'https://thoughtstead.com',
     siteName: 'Thoughtstead',
   },
@@ -56,7 +63,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${outfit.variable}`}>
+    // suppressHydrationWarning is on the <html> element ONLY, and only because
+    // the inline script below deliberately adds a class to it before React
+    // hydrates. Without this, every page load logs "a tree hydrated but some
+    // attributes of the server rendered HTML didn't match" — the class list is
+    // the mismatch, by design. React's own guidance is to suppress on the
+    // element whose attributes are intentionally changed. It does not extend to
+    // children, so a real mismatch anywhere in the page still reports.
+    <html
+      lang="en"
+      className={`${dmSans.variable} ${newsreader.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         {/* Marks the document as JS-capable BEFORE first paint, which is what
             licenses .reveal to start hidden. If this never runs, nothing is

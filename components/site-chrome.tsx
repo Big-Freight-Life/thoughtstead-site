@@ -1,9 +1,9 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HostedCta } from '@/components/cta';
+import { ThoughtsteadLogo } from '@/components/thoughtstead-logo';
 
 // The nav and footer, in one place.
 //
@@ -25,7 +25,7 @@ import { HostedCta } from '@/components/cta';
 // links, while Product and Pricing had quietly become "go back to the other
 // page". The marker below appears only on the destination you are actually in.
 const LINKS = [
-  { href: '/#worlds', label: 'Product', section: null },
+  { href: '/#product', label: 'Product', section: null },
   { href: '/#price', label: 'Pricing', section: null },
   { href: '/docs', label: 'Docs', section: '/docs' },
 ] as const;
@@ -34,25 +34,17 @@ export function SiteNav() {
   const pathname = usePathname();
 
   return (
-    <div className="sticky top-0 z-40 px-6 pt-5">
+    <div className="sticky top-0 z-40 bg-[var(--bg)] px-6">
       <nav
         aria-label="Main"
-        className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-line-2 bg-surface/80 px-5 py-2.5 backdrop-blur-xl"
+        className="mx-auto flex max-w-7xl items-center justify-between py-3"
       >
         <Link
           href="/"
-          className="group -my-2 flex items-center gap-2.5 py-2 font-medium"
+          className="group -my-2 py-2"
           aria-label="Thoughtstead home"
         >
-          <Image
-            src="/mark.png"
-            alt=""
-            width={28}
-            height={28}
-            priority
-            className="size-6 transition-opacity duration-200 group-hover:opacity-80"
-          />
-          Thoughtstead
+          <ThoughtsteadLogo />
         </Link>
         <div className="hidden items-center gap-7 text-sm sm:flex">
           {LINKS.map((link) => {
@@ -87,7 +79,7 @@ export function SiteNav() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line px-6 py-10">
+    <footer className="bg-[var(--bg)] px-6 py-10">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-faint sm:flex-row">
         <nav aria-label="Footer" className="-my-3 flex gap-6">
           <Link href="/docs" className="py-3 transition-colors hover:text-text">Docs</Link>

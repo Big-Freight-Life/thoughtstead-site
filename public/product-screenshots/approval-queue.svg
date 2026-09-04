@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <rect width="1600" height="1000" fill="#fcfcfb"/>
+  <rect width="1600" height="34" fill="#11110f"/>
+  <rect y="34" width="1600" height="64" fill="#f0eee5"/>
+  <rect width="62" y="34" height="966" fill="#f0eee5"/>
+  <path d="M62 34V1000M0 98H1600" stroke="#d2cfc5"/>
+  <g transform="translate(90 145)" font-family="Arial, sans-serif">
+    <text fill="#11110f" font-size="52">Good morning.</text>
+    <text y="45" fill="#757977" font-size="14">Your context, assembled before you ask.</text>
+    <g transform="translate(1160 0)">
+      <rect width="125" height="86" fill="#f7f5ef" stroke="#d2cfc5"/><rect x="138" width="125" height="86" fill="#f7f5ef" stroke="#d2cfc5"/>
+      <text x="16" y="25" fill="#757977" font-size="12">DECISIONS</text><text x="16" y="60" fill="#11110f" font-size="30">3</text>
+      <text x="154" y="25" fill="#757977" font-size="12">ACTIONS</text><text x="154" y="60" fill="#1747e6" font-size="30">0</text>
+    </g>
+    <path d="M0 180H1420M0 330H1420" stroke="#d2cfc5"/>
+    <text y="382" fill="#11110f" font-size="16" font-weight="700">Needs you</text>
+    <g transform="translate(0 415)">
+      <rect width="1420" height="178" fill="#f7f5ef" stroke="#d2cfc5"/>
+      <rect x="22" y="24" width="9" height="9" fill="#f04c23"/>
+      <text x="54" y="35" fill="#11110f" font-size="16">Review an outbound action</text>
+      <text x="54" y="68" fill="#757977" font-size="14">Parked because this action leaves the system.</text>
+      <rect x="54" y="98" width="146" height="42" fill="#2457ff"/>
+      <text x="127" y="125" text-anchor="middle" fill="white" font-size="14">Open the draft</text>
+    </g>
+    <g fill="#f7f5ef" stroke="#d2cfc5"><rect y="613" width="1420" height="56"/><rect y="669" width="1420" height="56"/><rect y="725" width="1420" height="56"/></g>
+  </g>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <text x="800" y="940" fill="#11110f" font-size="24" font-weight="700">REAL PRODUCT SCREEN GOES HERE</text>
+    <text x="800" y="970" fill="#757977" font-size="14" letter-spacing="1.5">APPROVAL-QUEUE.PNG · 1600 × 1000</text>
+  </g>
+</svg>

@@ -1,17 +1,82 @@
 import { expect, test } from '@playwright/test';
+import { ADVERTISED_PRICES } from '../lib/pricing';
 
 test('landing renders the pitch and hosted pricing', async ({ page }) => {
   await page.goto('/');
+  // The pitch names the user's situation: every part of the product lives in a
+  // different tool, so it is only whole in their head.
   await expect(
-    page.getByRole('heading', { level: 1, name: /only thing.*holding it together/i }),
+    page.getByRole('heading', { level: 1, name: /Get the whole product out of your head/i }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: /Life is moving too fast to be the only one.*holding it together/i }),
   ).toBeVisible();
   // The category line. Thoughtstead is a life operating system, not an "AI
   // second brain" (undersold it, borrowed category) and not a "business OS"
   // (contested, and strands /health, /lifestyle, /maintenance, /warranties).
   await expect(page.getByText(/life operating system/i).first()).toBeVisible();
   await expect(page.getByText(/second brain/i)).toHaveCount(0);
-  await expect(page.getByRole('heading', { name: 'Hosted' })).toBeVisible();
-  await expect(page.getByText('$20').first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Individual' })).toBeVisible();
+  await expect(page.locator('.price-card-head p')).toHaveText(/Available now|Launching soon/);
+  await expect(page.getByText('$19.99').first()).toBeVisible();
+  // Both periods, and a derived saving rather than a literal.
+  await expect(page.getByText(/\$199\.99\/year/)).toBeVisible();
+});
+
+test('landing sections share one white canvas without divider rules', async ({ page }) => {
+  await page.goto('/');
+  const sectionStyles = await page.locator('main > section').evaluateAll((sections) =>
+    sections.map((section) => {
+      const style = getComputedStyle(section);
+      return {
+        background: style.backgroundColor,
+        borderTop: style.borderTopWidth,
+        borderBottom: style.borderBottomWidth,
+      };
+    }),
+  );
+
+  // rgb(240, 238, 229) is #f0eee5 — the bone ground taken from the bfl.design
+  // hero so the two properties read as one house. It was #fcfcfb when this
+  // guard was written; the guard is about the canvas being ONE colour across
+  // every band, not about which colour, so the expectation moves with --bg.
+  // If this fails after a palette change, update the value — do not widen it to
+  // accept any colour, which is the banded-slab page it exists to prevent.
+  expect(sectionStyles.every(({ background }) =>
+    background === 'rgb(240, 238, 229)' || background === 'rgba(0, 0, 0, 0)')).toBe(true);
+  expect(sectionStyles.every(({ borderTop, borderBottom }) => borderTop === '0px' && borderBottom === '0px')).toBe(true);
+
+  const chrome = await page.locator('nav[aria-label="Main"]').locator('..').evaluate((header) => {
+    const style = getComputedStyle(header);
+    return { background: style.backgroundColor, borderBottom: style.borderBottomWidth };
+  });
+  const footer = await page.getByRole('contentinfo').evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { background: style.backgroundColor, borderTop: style.borderTopWidth };
+  });
+  // Same bone ground as the sections above — the nav and footer share the page
+  // canvas rather than banding against it, which is the whole point of the check.
+  expect(chrome).toEqual({ background: 'rgb(240, 238, 229)', borderBottom: '0px' });
+  expect(footer).toEqual({ background: 'rgb(240, 238, 229)', borderTop: '0px' });
+  await expect(page.locator('main .eyebrow')).toHaveCount(0);
+});
+
+// Payable was advertised until 2026-09-03 and there has never been an /ap route
+// in the app or an /ap entry in NAV_ITEMS. Only AR ships. This is a claim test,
+// not a copy test: the page may say anything it likes about receivables.
+test('the page does not advertise accounts payable', async ({ page }) => {
+  await page.goto('/');
+  const body: string = await page.evaluate(VISIBLE_TEXT);
+  expect(body).not.toMatch(/payable/i);
+});
+
+// There is NO TRIAL. system-1's src/backend/billing/plan.ts is explicit that a
+// trial was specced and dropped on 2026-09-03, and that the Polar products
+// carry none — so any copy offering one is a promise the checkout will break.
+test('the page never offers a free trial', async ({ page }) => {
+  await page.goto('/');
+  const body: string = await page.evaluate(VISIBLE_TEXT);
+  expect(body).not.toMatch(/free trial|start.{0,12}trial|\d+[- ]day trial/i);
 });
 
 // One product, one price. The self-hosted tier was removed on 2026-08-11 —
@@ -21,7 +86,7 @@ test('landing renders the pitch and hosted pricing', async ({ page }) => {
 test('pricing offers exactly one plan, and it is hosted', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page.getByRole('heading', { name: 'Hosted' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Individual' })).toBeVisible();
   // Catches the FAQ answer and any prose remnant, not just a card heading.
   await expect(page.getByText(/self-host/i)).toHaveCount(0);
   await expect(page.getByTestId('waitlist-cta')).toHaveCount(0);
@@ -147,16 +212,112 @@ test('no content is left invisible after a fast scroll to the bottom', async ({ 
   expect(hiddenTop).toBe(0);
 });
 
-// Media placeholders are deliberate and must stay countable, so nobody ships
-// with a slot they forgot to fill — and so replacing one with a real asset is
-// a visible change to this number rather than a silent drift.
-test('every marketing media slot is present and labelled', async ({ page }) => {
+test('the product story replaces screenshot thumbnails with an interactive operating sequence', async ({ page }) => {
+  // Reduced motion, and it is the guard that needs it rather than the design.
+  //
+  // .phone-device carries `animation: phone-float 7s infinite`, so the handset
+  // and everything drawn inside it drift forever. Playwright will not click an
+  // element until its box is identical across two animation frames, which a
+  // continuous float never gives it — the Approve click burned 57 retries on
+  // "element is not stable" and then timed out. The float is deliberate and
+  // stays; a person tracks a 7-second drift without noticing it.
+  //
+  // Emulating reduced motion is the honest fix because the site already
+  // answers it: `@media (prefers-reduced-motion:reduce)` sets
+  // `.phone-device { animation: none !important }`, and OperatingStory reads
+  // the same query to stop its 5.2s autoplay. So this is a real configuration
+  // the site supports, not a test-only escape hatch, and it keeps the full
+  // actionability check — visible, enabled, receiving events — rather than
+  // reaching for `force: true`, which would let the button pass while covered.
+  //
+  // What this test guards is that the sequence is INTERACTIVE. It does not
+  // guard that the phone animates; nothing here should fail if the float were
+  // retuned. Do not "fix" a future failure of this test by deleting the line
+  // below without re-reading what is actually broken.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
-  const slots = page.locator('[data-media-slot]');
-  await expect(slots).toHaveCount(3);
-  for (const id of ['context-switch', 'approval-queue', 'mac-capture']) {
-    await expect(page.locator(`[data-media-slot="${id}"]`)).toHaveCount(1);
-  }
+  const story = page.locator('[data-operating-story]');
+  await expect(story).toBeAttached();
+  await expect(page.locator('.story-screen-stage')).toHaveCount(0);
+  await expect(page.locator('main img[src*="product-screenshots"]')).toHaveCount(0);
+
+  const tabs = story.getByRole('tab');
+  await expect(tabs).toHaveCount(3);
+  await tabs.nth(1).click();
+  await expect(story).toHaveAttribute('data-phase', 'method');
+  await expect(story.getByRole('tabpanel')).toContainText('seven connected surfaces');
+
+  await tabs.nth(2).click();
+  await expect(story).toHaveAttribute('data-phase', 'approval');
+  const panel = story.getByRole('tabpanel');
+  await expect(panel).toContainText('Outbound action parked');
+  await panel.getByRole('button', { name: 'Approve' }).click();
+  await expect(panel).toContainText('Approved');
+});
+
+test('animated showcase is responsive, accessible, and pauses outside the viewport', async ({ page }) => {
+  await page.goto('/');
+  const hero = page.locator('main > .hero');
+  const section = page.locator('[data-showcase-section]');
+  const card = page.locator('[data-showcase-card]');
+  const play = card.getByRole('button', { name: /play the Thoughtstead animated product introduction/i });
+
+  await expect(hero).toBeVisible();
+  await expect(section).toBeAttached();
+  await expect(card).toBeAttached();
+  await expect(play).toHaveText(/Play intro/i);
+  expect(await hero.evaluate((element) => element.nextElementSibling?.hasAttribute('data-showcase-section'))).toBe(true);
+
+  await card.scrollIntoViewIfNeeded();
+  await expect.poll(() => card.getAttribute('data-running')).toBe('true');
+  const geometry = await card.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    const canvas = element.querySelector('canvas');
+    return {
+      ratio: rect.width / rect.height,
+      canvasScale: canvas ? canvas.width / canvas.clientWidth : 0,
+    };
+  });
+  expect(geometry.ratio).toBeGreaterThan(1.76);
+  expect(geometry.ratio).toBeLessThan(1.79);
+  expect(geometry.canvasScale).toBeLessThanOrEqual(1.76);
+
+  await play.focus();
+  await expect(play).toBeFocused();
+  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
+  await expect.poll(() => card.getAttribute('data-running')).toBe('false');
+});
+
+test('animated showcase resolves to a static product frame with reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const card = page.locator('[data-showcase-card]');
+  await expect(card).toHaveAttribute('data-motion', 'reduced');
+  await expect(card).toHaveAttribute('data-running', 'false');
+  await expect(card).toHaveAttribute('data-phase', 'workspace');
+
+  const before = await card.getAttribute('style');
+  await page.waitForTimeout(250);
+  await expect(card).toHaveAttribute('style', before || '');
+});
+
+// No placeholder media ships.
+//
+// The page carried three, then four, dashed-outline MediaSlot frames standing in
+// for footage that was never shot. On 2026-09-03 Ray looked at the redesign and
+// the verdict was that it "doesn't look good at all" — and the largest single
+// offender was a full-bleed 21:9 empty box directly under the hero. An unfilled
+// placeholder reads as an unfinished site, so no media beats placeholder media.
+//
+// The component still exists and is still the right way to reserve a slot while
+// footage is being cut. This asserts only that none reaches the live page: put
+// one back and this fails, which is the reminder to fill it before shipping.
+test('the page ships no placeholder media', async ({ page }) => {
+  await page.goto('/');
+  const slots = await page.locator('[data-media-slot]').evaluateAll((nodes) =>
+    nodes.map((n) => n.getAttribute('data-media-slot')),
+  );
+  expect(slots, `unfilled media placeholders on the live page: ${slots.join(', ')}`).toEqual([]);
 });
 
 // Nothing may overflow its box or the viewport, at any width people use.
@@ -292,15 +453,38 @@ test('no word is glued to the link before it', async ({ page }) => {
 // constant could not reach. They import it now — this asserts nobody undoes
 // that, since the failure is a pricing contradiction on the two pages a
 // prospect reads BEFORE subscribing.
+//
+// Two changes on 2026-09-03:
+//
+//  - The allowed set is IMPORTED rather than written down. It read `p !== '$20'`
+//    and so had to be hand-edited the moment the price moved, which is not a
+//    guard. There are two advertised figures now, monthly and annual.
+//  - The playable Value Matrix is excluded. It renders dollar figures by the
+//    dozen — what a catch is worth, what a false alarm costs, the net, the
+//    break-even — and none of them are a price claim. Scoping this to
+//    everything OUTSIDE that band keeps the test about what it is about; a
+//    figure that escapes the band still fails.
+const TEXT_OUTSIDE_THE_DEMO = `(() => {
+  const clone = document.body.cloneNode(true);
+  clone.querySelectorAll('script, style, noscript, template').forEach((n) => n.remove());
+  clone.querySelectorAll('[data-testid="value-matrix-demo"]').forEach((n) => n.remove());
+  return clone.textContent || '';
+})()`;
+
 test('no page contradicts the advertised price', async ({ page }) => {
   const wrong: string[] = [];
   for (const path of PAGES) {
     await page.goto(path);
-    const text: string = await page.evaluate(VISIBLE_TEXT);
+    const text: string = await page.evaluate(TEXT_OUTSIDE_THE_DEMO);
     const prices = [...new Set(text.match(/\$\d+(?:\.\d{2})?/g) || [])];
-    prices.filter((p) => p !== '$20').forEach((p) => wrong.push(`${path} quotes ${p}`));
+    prices
+      .filter((p) => !ADVERTISED_PRICES.includes(p))
+      .forEach((p) => wrong.push(`${path} quotes ${p}`));
   }
-  expect(wrong, `pages disagreeing with HOSTED_PRICE: ${wrong.join(' | ')}`).toEqual([]);
+  expect(
+    wrong,
+    `pages quoting a figure that is not one of ${ADVERTISED_PRICES.join(' / ')}: ${wrong.join(' | ')}`,
+  ).toEqual([]);
 });
 
 // Content must be visible with JavaScript disabled.
@@ -322,7 +506,12 @@ test('the page renders fully with JavaScript disabled', async ({ browser }) => {
 
   // And the substance is actually there, not just un-hidden.
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(page.getByText(/Warranties/).first()).toBeVisible();
+  // Text from the LAST band, not a middle one. "Warranties" was the anchor
+  // until 2026-09-03, when it folded into a compact band and this failed for
+  // the wrong reason. The closing headline is the final content on the page, so
+  // seeing it proves the whole document rendered rather than merely that some
+  // .reveal block un-hid.
+  await expect(page.getByText(/holding it together/i).first()).toBeVisible();
   await context.close();
 });
 

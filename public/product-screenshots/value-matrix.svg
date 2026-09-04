@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <rect width="1600" height="1000" fill="#fcfcfb"/>
+  <rect width="1600" height="34" fill="#11110f"/>
+  <rect y="34" width="1600" height="64" fill="#f0eee5"/>
+  <rect x="0" y="98" width="360" height="902" fill="#f7f5ef"/>
+  <path d="M0 98H1600M360 98V1000" stroke="#d2cfc5"/>
+  <text x="82" y="74" fill="#11110f" font-family="Arial, sans-serif" font-size="24" font-weight="700">Value Matrix</text>
+  <g transform="translate(390 116)">
+    <rect width="1170" height="36" fill="#e5e2d8"/>
+    <path d="M0 0H390L420 18 390 36H0Z" fill="#2457ff"/>
+    <text x="195" y="24" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12">QUESTION</text>
+    <text x="585" y="24" text-anchor="middle" fill="#5d6270" font-family="Arial, sans-serif" font-size="12">OUTCOMES</text>
+    <text x="975" y="24" text-anchor="middle" fill="#5d6270" font-family="Arial, sans-serif" font-size="12">IMPACT</text>
+  </g>
+  <g transform="translate(390 190)" font-family="Arial, sans-serif">
+    <text fill="#11110f" font-size="22" font-weight="700">A decision worth testing</text>
+    <text y="32" fill="#757977" font-size="14">What precise question will the AI answer?</text>
+    <g transform="translate(0 75)">
+      <text fill="#11110f" font-size="15" font-weight="700">Can the data be got?</text>
+      <rect y="30" width="760" height="64" fill="#f7f5ef" stroke="#d2cfc5"/><rect y="94" width="760" height="64" fill="#f7f5ef" stroke="#d2cfc5"/>
+      <rect x="780" y="30" width="380" height="128" fill="#eef2ff" stroke="#d2cfc5"/>
+      <rect y="178" width="1160" height="70" fill="#fff8e8" stroke="#efb032"/>
+      <text x="18" y="219" fill="#7a5400" font-size="14">Impossible input is refused here—not quietly clamped.</text>
+      <text y="300" fill="#11110f" font-size="15" font-weight="700">What happens when it is wrong?</text>
+      <rect y="328" width="1160" height="82" fill="#f7f5ef" stroke="#d2cfc5"/><rect y="410" width="1160" height="82" fill="#f7f5ef" stroke="#d2cfc5"/><rect y="492" width="1160" height="82" fill="#f7f5ef" stroke="#d2cfc5"/>
+    </g>
+  </g>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <text x="800" y="920" fill="#11110f" font-size="24" font-weight="700">REAL PRODUCT SCREEN GOES HERE</text>
+    <text x="800" y="950" fill="#757977" font-size="14" letter-spacing="1.5">VALUE-MATRIX.PNG · 1600 × 1000</text>
+  </g>
+</svg>

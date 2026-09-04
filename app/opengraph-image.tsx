@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { ThoughtsteadMark } from '@/components/thoughtstead-logo';
 
 export const alt = 'Thoughtstead — a life operating system';
 export const size = {
@@ -18,15 +19,15 @@ export default async function Image() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#0b0a08',
+          background: '#f0eee5',
         }}
       >
-        <div style={{ width: 96, height: 4, background: '#a8ce49', display: 'flex' }} />
+        <ThoughtsteadMark style={{ width: 96, height: 96 }} />
         <div
           style={{
-            marginTop: 36,
+            marginTop: 28,
             fontSize: 104,
-            color: '#f5f1e8',
+            color: '#11110f',
             fontWeight: 700,
             letterSpacing: -2,
           }}
@@ -37,7 +38,7 @@ export default async function Image() {
           style={{
             marginTop: 20,
             fontSize: 34,
-            color: '#f5f1e8',
+            color: '#5d6270',
             opacity: 0.66,
           }}
         >
