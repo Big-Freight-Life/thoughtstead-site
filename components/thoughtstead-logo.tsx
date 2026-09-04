@@ -11,9 +11,14 @@ type ThoughtsteadMarkProps = Omit<SVGProps<SVGSVGElement>, 'children'> & {
  *
  * A T-shaped seam preserves the original mark's defining geometry: one mind,
  * three parts, no collapsed boundaries. The ink lower-left lobe is the human
- * anchor; cobalt carries the connected system around it. The lobe is a soft
- * near-black (#2f2e2a) rather than the page's #11110f: at mark scale a true
- * ink lobe next to saturated cobalt reads as a hole punched in the shape.
+ * anchor; the accent carries the connected system around it.
+ *
+ * These three values are the brand mark and are shared, deliberately, with the
+ * app's --mark-accent / --mark-ink / --mark-vein and with every favicon both
+ * properties serve. They were cobalt #2457ff on a near-black lobe until the
+ * mark moved onto the app's dark top bar, where that pairing went muddy. If
+ * you change one of them, change it in all three places or the site, the app
+ * and the browser tab stop agreeing — which is the state this replaced.
  *
  * `vein` is separate from `ink` on purpose. The two were the same value until
  * the veins were drawn in near-black, which cost the mark twice: on the dark
@@ -25,8 +30,8 @@ type ThoughtsteadMarkProps = Omit<SVGProps<SVGSVGElement>, 'children'> & {
  * built on.
  */
 export function ThoughtsteadMark({
-  accent = '#2457ff',
-  ink = '#2f2e2a',
+  accent = '#5f82ff',
+  ink = '#716f68',
   vein = '#f0eee5',
   className,
   style,
@@ -83,7 +88,7 @@ export function ThoughtsteadLogo({
   return (
     <span className={`thoughtstead-logo ${className ?? ''}`} aria-hidden="true">
       <ThoughtsteadMark
-        ink={inverse ? '#fcfcfb' : '#2f2e2a'}
+        ink={inverse ? '#f0eee5' : '#716f68'}
         className={`thoughtstead-logo__mark ${markClassName ?? ''}`}
       />
       <span className={`thoughtstead-logo__wordmark ${wordmarkClassName ?? ''}`}>
