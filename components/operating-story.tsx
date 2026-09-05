@@ -27,6 +27,20 @@ const PHASES = [
 
 const SURFACES = ['Research', 'Position', 'Concept', 'Value', 'Security', 'Show', 'Observe'];
 
+/**
+ * How long each phase holds before the band moves on.
+ *
+ * Sized against the copy, not picked for feel: the longest phase carries a
+ * title and a 35-word body, and the 5.2s this replaced gave that about 470
+ * words per minute to be read in — well past what anyone reads at, so the band
+ * moved on mid-sentence.
+ *
+ * This is the ONLY thing that paces the band. `.operating-progress` in
+ * globals.css carried an `animation: … 6.5s` that read like a second, competing
+ * dwell; nothing had rendered that element in a long time, so it has gone.
+ */
+const PHASE_DWELL_MS = 9000;
+
 type PhaseId = (typeof PHASES)[number]['id'];
 
 function PhoneChrome({ children }: { children: React.ReactNode }) {
@@ -208,7 +222,7 @@ export function OperatingStory() {
     if (!visible || reduced) return;
     const timer = window.setInterval(() => {
       setActive((current) => (current + 1) % PHASES.length);
-    }, 5200);
+    }, PHASE_DWELL_MS);
     return () => window.clearInterval(timer);
   }, [visible, reduced]);
 

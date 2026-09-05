@@ -734,28 +734,6 @@ summary::-webkit-details-marker { display:none; }
   from { opacity:0; transform:translateY(1.5rem) scale(.985); }
   to { opacity:1; transform:none; }
 }
-.operating-progress {
-  position:absolute;
-  z-index:3;
-  right:1rem;
-  bottom:1rem;
-  left:1rem;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:.4rem;
-}
-.operating-progress i { height:2px; background:#343640; }
-.operating-progress i.is-past { background:#6f7380; }
-.operating-progress i.is-active {
-  background:var(--operating-marker,var(--sky));
-  transform-origin:left;
-  animation:operating-progress 6.5s linear both;
-}
-.operating-story[data-playing=false] .operating-progress i.is-active {
-  animation:none;
-  transform:scaleX(1);
-}
-@keyframes operating-progress { from{transform:scaleX(0)}to{transform:scaleX(1)} }
 
 .journey-scene { position:relative; height:100%; min-height:34rem; }
 .journey-composer {
@@ -2133,7 +2111,6 @@ summary::-webkit-details-marker { display:none; }
   .operating-scene.is-active { transition:none !important; }
   .operating-copy>h2,
   .operating-copy>h2 span,
-  .operating-progress i,
   .journey-composer>i,
   .journey-capture svg path,
   .journey-records article,
