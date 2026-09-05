@@ -38,10 +38,10 @@ export const metadata: Metadata = {
     template: '%s · Thoughtstead',
   },
   description:
-    'Get the whole product out of your head. Thoughtstead connects the brief, ticket, evidence, and system design behind an AI feature.',
+    'Everything helps you build it. Nothing says if you should. Thoughtstead connects the brief, ticket, evidence, and system design behind an AI feature.',
   openGraph: {
     title: 'Thoughtstead',
-    description: 'Get the whole product out of your head.',
+    description: 'Everything helps you build it. Nothing says if you should.',
     url: 'https://thoughtstead.com',
     siteName: 'Thoughtstead',
   },

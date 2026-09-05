@@ -3,11 +3,14 @@ import { ADVERTISED_PRICES } from '../lib/pricing';
 
 test('landing renders the pitch and hosted pricing', async ({ page }) => {
   await page.goto('/');
-  // The pitch names the user's situation: every part of the product lives in a
-  // different tool, so it is only whole in their head.
+  // The pitch is the wedge, not the storage promise: every other tool helps you
+  // build the thing, and none of them will tell you whether you should.
   await expect(
-    page.getByRole('heading', { level: 1, name: /Get the whole product out of your head/i }),
+    page.getByRole('heading', { level: 1, name: /Everything helps you build it/i }),
   ).toBeVisible();
+  // The turn is a separate element from the headline, and it is the half that
+  // carries the argument — assert it by name, not just by the h1.
+  await expect(page.locator('.hero-turn')).toHaveText(/Nothing says if you should/i);
   await expect(
     page.getByRole('heading', { name: /Life is moving too fast to be the only one.*holding it together/i }),
   ).toBeVisible();
@@ -215,20 +218,20 @@ test('no content is left invisible after a fast scroll to the bottom', async ({ 
 test('the product story replaces screenshot thumbnails with an interactive operating sequence', async ({ page }) => {
   // Reduced motion, and it is the guard that needs it rather than the design.
   //
-  // .phone-device carries `animation: phone-float 7s infinite`, so the handset
-  // and everything drawn inside it drift forever. Playwright will not click an
-  // element until its box is identical across two animation frames, which a
-  // continuous float never gives it — the Approve click burned 57 retries on
-  // "element is not stable" and then timed out. The float is deliberate and
-  // stays; a person tracks a 7-second drift without noticing it.
+  // This was first needed because `.phone-device` carried
+  // `animation: phone-float 7s infinite` — the handset and everything drawn
+  // inside it drifted forever, and Playwright will not click an element until
+  // its box is identical across two animation frames, so the Approve click
+  // burned 57 retries on "element is not stable" and then timed out. The float
+  // was removed on request, but the line stays: OperatingStory reads the same
+  // query to stop its 5.2s autoplay, which would otherwise rotate the panel
+  // out from under the click.
   //
-  // Emulating reduced motion is the honest fix because the site already
-  // answers it: `@media (prefers-reduced-motion:reduce)` sets
-  // `.phone-device { animation: none !important }`, and OperatingStory reads
-  // the same query to stop its 5.2s autoplay. So this is a real configuration
-  // the site supports, not a test-only escape hatch, and it keeps the full
-  // actionability check — visible, enabled, receiving events — rather than
-  // reaching for `force: true`, which would let the button pass while covered.
+  // Emulating reduced motion is the honest fix because it is a real
+  // configuration the site answers, not a test-only escape hatch, and it keeps
+  // the full actionability check — visible, enabled, receiving events — rather
+  // than reaching for `force: true`, which would let the button pass while
+  // covered.
   //
   // What this test guards is that the sequence is INTERACTIVE. It does not
   // guard that the phone animates; nothing here should fail if the float were
@@ -555,11 +558,15 @@ test('the nav marks Docs as current only on docs pages', async ({ page }) => {
 test('the social card quotes the headline it describes', async ({ page }) => {
   await page.goto('/');
   const og = await page.locator('meta[property="og:description"]').getAttribute('content');
-  // innerText, not textContent: the headline is two block spans, and
-  // textContent concatenates them into "thingholding" with no boundary.
-  const h1 = await page.evaluate(
-    () => (document.querySelector('h1') as HTMLElement).innerText,
-  );
+  // The pitch is two elements now — the h1 and the cobalt turn under it — so
+  // the card is checked against both. Against the h1 alone, a card quoting only
+  // half the pitch would pass. innerText, not textContent: block boundaries
+  // matter, and textContent would run the two together with no space.
+  const h1 = await page.evaluate(() => {
+    const head = document.querySelector('h1') as HTMLElement;
+    const turn = document.querySelector('.hero-turn') as HTMLElement;
+    return `${head.innerText} ${turn.innerText}`;
+  });
 
   // Compare on words. The page renders a curly apostrophe (&rsquo;) and the
   // meta tag carries a straight one, and the meta sentence ends in a full stop

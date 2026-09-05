@@ -15,6 +15,10 @@
   --line: #d2cfc5;
   --line-2: #a9a59a;
   --accent: #1747e6;
+  /* The mark's blue. Shared with ThoughtsteadMark's `accent`, the context
+     stage and every favicon — change it in all of them or the site, the app
+     and the browser tab stop agreeing. */
+  --mark-accent: #5f82ff;
   --accent-fill: #2457ff;
   --accent-soft: #eef2ff;
   --on-accent: #122f8c;
@@ -257,7 +261,24 @@ body::before { content:""; position:fixed; inset:0; z-index:60; pointer-events:n
    coherent layer. */
 .hero-grid { min-height:min(760px,calc(100svh - 61px)); display:grid; grid-template-columns:minmax(0,1fr) minmax(18rem,.65fr); align-items:center; gap:4rem; }
 .hero-copy { max-width:45rem; padding-block:4.5rem; }
-.hero-title { max-width:10.5ch; margin-top:0; font-size:var(--t-display); line-height:.89; letter-spacing:-.062em; }
+.hero-title { max-width:16ch; margin-top:0; font-size:var(--t-display); line-height:.89; letter-spacing:-.062em; }
+/* The turn. Headline family — title weight, tight tracking — and deliberately
+   not the deck's size, or it reads as a lead paragraph in an odd colour.
+
+   --accent, NOT --mark-accent. The mark's blue was tried here so the line would
+   match the logo, and it measures 2.96:1 against the cream ground — under the
+   3:1 AA floor for large bold text. The deeper cobalt is 5.8:1. The mark is a
+   26px graphic and can carry a lighter blue; a sentence cannot. */
+.hero-turn {
+  max-width:24ch;
+  margin-top:.9rem;
+  color:var(--accent);
+  font-size:clamp(1.6rem,3vw,2.4rem);
+  line-height:1.04;
+  letter-spacing:-.03em;
+  font-weight:var(--w-title);
+  text-wrap:balance;
+}
 .hero-deck { max-width:39rem; margin-top:1.75rem; font-size:var(--t-lead); line-height:1.55; color:var(--muted); }
 .hero-actions { display:flex; flex-wrap:wrap; align-items:center; gap:1rem 1.6rem; margin-top:1.75rem; }
 .hosted-cta {
@@ -522,32 +543,32 @@ summary::-webkit-details-marker { display:none; }
 /* Product narrative, revision 2026-09-04.
    Marketing hierarchy: thesis -> lead -> body. Mono labels are reserved for
    the product surfaces below, never used as miniature section headings. */
-.fragmented-story { overflow:hidden; }
-.fragmented-intro {
-  display:grid;
-  grid-template-columns:minmax(0,1.35fr) minmax(18rem,.65fr);
-  align-items:end;
-  gap:clamp(2rem,7vw,7rem);
-}
-.fragmented-intro h2,
 .operating-copy>h2,
 .matrix-intro h2,
 .contexts-intro h2,
 .audience-intro h2 {
-  max-width:14ch;
+  /* The measure is the COLUMN, not this cap.
+     The reference is the operating band's "Keep the reasoning attached to the
+     work.": its cap never bites, because the copy column beside the handset is
+     626px and any cap here is wider. The title therefore fills its column and
+     every line is full — which is the whole of why it looks right.
+     The other three had caps BELOW their columns (13ch/14ch/15ch against
+     759/736/774px tracks) so they broke a line early: the matrix and contexts
+     titles ran to three lines where two fit, and the audience title to two
+     where it fits on one. Equalising the caps did not fix that; it only made
+     them all break early by the same amount.
+     18ch clears the widest desktop column, so at desktop the container governs
+     everywhere, exactly as it does for the reference. It still acts as a
+     ceiling below 1023px, where these bands go full width and would otherwise
+     set headline type across the whole page. Never set this below ~52rem. */
+  max-width:18ch;
   font-size:var(--t-h2);
   line-height:.96;
   letter-spacing:-.055em;
   font-weight:var(--w-title);
   text-wrap:balance;
 }
-.fragmented-intro h2 span { display:inline-block; color:var(--muted); }
-/* inline, NOT inline-block. An inline-block span is an atomic box for line
-   breaking, so "Plenty of people have this week." could only ever start on a
-   fresh line — a hard break the copy never asked for, sitting between two
-   sentences that read as one thought. */
-.audience-intro h2 span { color:var(--muted); }
-.fragmented-intro>p,
+.operating-copy>h2 span { display:inline-block; color:var(--muted); }
 .contexts-intro>p,
 .audience-intro>p {
   max-width:34rem;
@@ -568,7 +589,6 @@ summary::-webkit-details-marker { display:none; }
   flex-direction:column;
   padding-block:1.5rem;
 }
-.operating-copy>h2 { max-width:10ch; }
 .operating-lead {
   max-width:34rem;
   margin-top:1.75rem;
@@ -576,52 +596,66 @@ summary::-webkit-details-marker { display:none; }
   font-size:var(--t-lead);
   line-height:1.55;
 }
+/* A tab bar, three abreast on one rule — not three full-width rows with a
+   hairline each, which is a list and took 14rem of the column to say three
+   words. The underline under the selected tab is the only indicator it needs,
+   so the per-row diamond came out of the markup with these rules. */
 .operating-tabs {
-  display:grid;
-  margin-top:clamp(2.5rem,5vw,4.5rem);
+  display:flex;
+  flex-wrap:wrap;
+  gap:0 clamp(1.25rem,2.6vw,2.25rem);
+  margin-top:clamp(2.5rem,5vw,4rem);
+  border-bottom:1px solid var(--line);
 }
 .operating-tabs button {
   position:relative;
-  min-height:4.5rem;
-  display:grid;
-  grid-template-columns:2.5rem 1fr auto;
+  min-height:2.9rem;
+  display:inline-flex;
   align-items:center;
-  gap:.75rem;
-  padding:.75rem 0;
+  padding:.55rem 0 .85rem;
   color:var(--muted);
-  border-bottom:1px solid var(--line);
-  text-align:left;
+  white-space:nowrap;
   transition:color .3s ease;
 }
-.operating-tabs button:first-child { border-top:1px solid var(--line); }
-.operating-tabs button>span {
-  color:var(--faint);
-  font-family:var(--font-mono);
-  font-size:.62rem;
-  letter-spacing:.08em;
-}
 .operating-tabs button>strong { font-size:var(--t-body); font-weight:var(--w-emph); }
-.operating-tabs button>i {
-  width:.55rem;
-  height:.55rem;
-  border:1px solid var(--line-2);
-  rotate:45deg;
-  transition:background .3s ease,border-color .3s ease,transform .45s cubic-bezier(.22,1,.36,1);
+.operating-tabs button::after {
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-1px;
+  height:2px;
+  background:var(--operating-marker,var(--sky));
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .45s cubic-bezier(.22,1,.36,1);
 }
+.operating-tabs button[aria-selected=true]::after { transform:scaleX(1); }
 .operating-tabs button:hover,
 .operating-tabs button[aria-selected=true] { color:var(--text); }
-.operating-tabs button[aria-selected=true]>i {
-  border-color:var(--operating-marker,var(--sky));
-  background:var(--operating-marker,var(--sky));
-  transform:scale(1.28);
-}
 .operating-story-method { --operating-marker:var(--coral); }
 .operating-story-approval { --operating-marker:var(--acid); }
 .operating-phase-copy {
   max-width:34rem;
   margin-top:auto;
   padding-top:2.5rem;
-  animation:operating-copy-in .6s cubic-bezier(.22,1,.36,1) both;
+  display:grid;
+}
+/* One cell, three stacked children: the block is always as tall as the longest
+   phase, so switching never reflows the column. The fade carries no transform —
+   a 1rem slide on text that also changed height was the "jump".
+
+   The switch is instant — no fade. The stacking is what earns its place here:
+   it holds the height so nothing below moves. Dissolving the text on top of
+   that was decoration, and it put a wait between the tab and the answer. */
+.operating-phase-copy>* {
+  grid-area:1/1;
+  opacity:0;
+  visibility:hidden;
+}
+.operating-phase-copy>.is-active {
+  opacity:1;
+  visibility:visible;
 }
 .operating-phase-copy h3 {
   max-width:16ch;
@@ -637,15 +671,10 @@ summary::-webkit-details-marker { display:none; }
   font-size:var(--t-body);
   line-height:1.6;
 }
-@keyframes operating-copy-in {
-  from { opacity:0; transform:translateY(1rem); }
-  to { opacity:1; transform:none; }
-}
-
 .operating-stage {
   position:relative;
   min-width:0;
-  min-height:44rem;
+  min-height:40rem;
   overflow:hidden;
   color:#f4f4f1;
   border:1px solid #343640;
@@ -1017,7 +1046,6 @@ summary::-webkit-details-marker { display:none; }
   grid-template-columns:minmax(0,1.15fr) minmax(19rem,.62fr);
   align-items:end;
 }
-.matrix-intro h2 { max-width:13ch; }
 .matrix-intro>p {
   color:var(--muted);
   font-size:var(--t-lead);
@@ -1346,33 +1374,12 @@ summary::-webkit-details-marker { display:none; }
   min-height:0;
   padding-block:2rem;
 }
-.operating-copy>h2 { max-width:11.5ch; }
 .operating-lead {
   max-width:36rem;
   margin-top:2rem;
   font-size:var(--t-lead);
 }
-.operating-tabs {
-  max-width:35rem;
-  margin-top:clamp(3rem,6vw,5rem);
-  border-bottom:1px solid var(--line);
-}
-.operating-tabs button {
-  min-height:4.75rem;
-  grid-template-columns:2rem 1fr auto;
-  padding:.9rem 0;
-}
-.operating-tabs button::after {
-  content:"";
-  position:absolute;
-  left:0;
-  bottom:-1px;
-  width:0;
-  height:2px;
-  background:var(--operating-marker,var(--sky));
-  transition:width .55s cubic-bezier(.22,1,.36,1);
-}
-.operating-tabs button[aria-selected=true]::after { width:4rem; }
+.operating-tabs { max-width:35rem; margin-top:clamp(3rem,6vw,4.5rem); }
 .operating-phase-copy {
   max-width:35rem;
   min-height:8rem;
@@ -1386,15 +1393,41 @@ summary::-webkit-details-marker { display:none; }
 
 .operating-stage {
   position:relative;
-  min-height:44rem;
+  min-height:40rem;
   display:grid;
-  place-items:center;
+  /* Two rows now — handset, then the store badge. align-content keeps the pair
+     grouped in the middle instead of letting the rows stretch to the 44rem
+     floor and pushing the badge to the bottom edge. */
+  justify-items:center;
+  align-items:center;
+  align-content:center;
+  /* Apple require clear space of at least a quarter of the badge height —
+     11px at our 44px badge. 20px keeps that with room, and sits the badge
+     under the handset rather than adrift below it. */
+  row-gap:clamp(.9rem,1.4vw,1.25rem);
   overflow:visible;
   border:0;
   background:transparent;
   box-shadow:none;
   isolation:isolate;
 }
+
+/* Apple's artwork, served as-is. The wrapper only positions it — no border,
+   no background, no colour of ours anywhere near it. */
+.appstore-badge {
+  position:relative;
+  z-index:1;
+  display:inline-flex;
+}
+/* No hover lift, and nothing else that moves it. Apple's guidelines are
+   explicit: "Don't modify, angle, or animate the App Store badge." A 2px rise
+   on hover is an animation of the badge, however small. Opacity on the wrapper
+   is the most a link may do here, and even that is borrowed restraint — the
+   badge itself is untouched.
+   Height is 2.75rem = 44px, over the 40px onscreen minimum. */
+.appstore-badge-art { display:block; width:auto; height:2.75rem; }
+.appstore-badge:not(.appstore-badge-stub) { transition:opacity .25s ease; }
+.appstore-badge:not(.appstore-badge-stub):hover { opacity:.85; }
 .operating-stage::before {
   inset:50% auto auto 50%;
   width:min(35rem,108%);
@@ -1408,101 +1441,124 @@ summary::-webkit-details-marker { display:none; }
   mask-image:none;
   opacity:.82;
 }
-.phone-orbit {
-  position:absolute;
-  z-index:-1;
-  top:50%;
-  left:50%;
-  width:min(31rem,98%);
-  aspect-ratio:1;
-  border:1px solid color-mix(in srgb,var(--line-2) 70%,transparent);
-  border-radius:50%;
-  transform:translate(-50%,-50%);
-}
-.phone-orbit::after {
-  content:"";
-  position:absolute;
-  inset:2.8rem;
-  border:1px solid color-mix(in srgb,var(--line) 70%,transparent);
-  border-radius:50%;
-}
-.phone-orbit>i {
-  position:absolute;
-  width:.62rem;
-  height:.62rem;
-  background:var(--sky);
-  rotate:45deg;
-}
-.phone-orbit>i:first-child { top:8%; left:22%; }
-.phone-orbit>i:nth-child(2) { right:4%; top:48%; background:var(--coral); }
-.phone-orbit>i:last-child { left:12%; bottom:12%; background:var(--acid); }
-
+/* The device is Apple's artwork now: no border, no gradient body, no shadow of
+   ours. Height comes from the file's own 1350x2760, so only the width is set
+   here and at the breakpoints below. The drop shadow is painted by the PNG. */
 .phone-device {
   position:relative;
   z-index:1;
-  width:20rem;
-  height:41.25rem;
-  padding:.38rem;
-  border:1px solid #36373c;
-  border-radius:3.25rem;
-  background:linear-gradient(110deg,#36373c,#111217 12% 88%,#36373c);
-  box-shadow:
-    0 3rem 6rem -2.2rem rgb(17 17 15 / .48),
-    0 0 0 .12rem #24262d,
-    inset 0 0 0 1px #24262d;
-  animation:phone-float 7s ease-in-out infinite;
+  width:calc(var(--device-w) * 1rem);
+  aspect-ratio:1350/2760;
 }
-@keyframes phone-float {
-  0%,100% { transform:translateY(0); }
-  50% { transform:translateY(-.6rem); }
+/* The watch sits beside the handset at true relative scale — 0.58527 of its
+   width, derived from both devices' real screen sizes in millimetres, because
+   Apple require correct relative product scale when two are shown together.
+   One number still drives everything: --device-w. */
+.device-lockup {
+  display:flex;
+  align-items:flex-end;
+  gap:clamp(.4rem,1vw,.9rem);
+  /* The one number. Both devices and both screen scales come off it, so a
+     breakpoint changes this and nothing else. */
+  --device-w:16.5;
+  --screen-scale:calc(var(--device-w) / 20);
 }
-.phone-side-button {
-  position:absolute;
-  left:-.35rem;
-  width:.22rem;
-  border-radius:.16rem 0 0 .16rem;
-  background:#303138;
+.watch-device {
+  position:relative;
+  flex:none;
+  width:calc(var(--device-w) * .58527rem);
+  aspect-ratio:560/880;
 }
-.phone-side-button-top { top:7.7rem; height:2.2rem; }
-.phone-side-button-middle { top:10.7rem; height:3.3rem; }
-.phone-side-button-bottom { top:14.6rem; height:3.3rem; }
-.phone-side-button-power {
-  top:10.1rem;
-  right:-.35rem;
-  left:auto;
-  height:5rem;
-  border-radius:0 .16rem .16rem 0;
-}
-.phone-side-button-camera {
-  top:18.2rem;
-  right:-.38rem;
-  left:auto;
-  height:3rem;
-  border:1px solid #36373c;
-  border-radius:0 .2rem .2rem 0;
-  background:#24262d;
-}
-.phone-island {
+.watch-bezel {
   position:absolute;
   z-index:8;
-  top:.95rem;
-  left:50%;
-  width:5.45rem;
-  height:1.55rem;
-  border-radius:1rem;
-  background:#090a0d;
-  translate:-50% 0;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
 }
-.phone-island::after {
-  content:"";
+/* Aperture measured off the alpha channel: 416x496 at 72,192 in a 560x880 file. */
+.watch-panel {
   position:absolute;
-  top:50%;
-  right:.48rem;
+  left:12.8571%;
+  top:21.8182%;
+  width:74.2857%;
+  height:56.3636%;
+  overflow:hidden;
+  border-radius:1.75rem;
+  background:#000;
+}
+.watch-scene {
+  position:absolute;
+  top:0;
+  left:0;
+  width:8.6954rem;
+  height:10.3676rem;
+  transform-origin:0 0;
+  transform:scale(var(--screen-scale,1));
+}
+.watch-screen {
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  height:100%;
+  padding:.9rem .8rem .75rem;
+  color:#fff;
+}
+.watch-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  color:var(--acid);
+  font-family:var(--font-mono);
+  font-size:.5rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.watch-top b { color:#8b8f9a; font-weight:500; }
+.watch-wave {
+  display:flex;
+  align-items:center;
+  gap:.14rem;
+  height:1.5rem;
+  margin-top:.55rem;
+}
+.watch-wave i {
+  width:.14rem;
+  height:var(--wave-height,10px);
+  border-radius:.07rem;
+  background:var(--acid);
+}
+.watch-line {
+  margin-top:.5rem;
+  font-size:.82rem;
+  font-weight:600;
+  line-height:1.2;
+  letter-spacing:-.01em;
+}
+.watch-saved {
+  display:flex;
+  align-items:center;
+  gap:.3rem;
+  margin-top:auto;
+  color:#9aa0ab;
+  font-size:.62rem;
+  font-weight:550;
+}
+.watch-saved i {
   width:.38rem;
   height:.38rem;
   border-radius:50%;
-  background:#24262d;
-  translate:0 -50%;
+  background:var(--success-fill,#20c997);
+}
+
+.phone-bezel {
+  position:absolute;
+  z-index:8;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
 }
 .phone-screen {
   position:relative;
@@ -1551,12 +1607,15 @@ summary::-webkit-details-marker { display:none; }
 }
 .phone-app-bar>div:nth-child(2) { display:grid; gap:.05rem; }
 .phone-app-bar strong { font-size:.72rem; line-height:1.1; }
-.phone-app-bar span { color:var(--muted); font-size:.52rem; }
-.phone-app-bar button {
+/* The subtitle only. When the compose glyph stopped being a <button> it
+   started matching a bare `span` here and came out grey at 8px. */
+.phone-app-bar>div>span { color:var(--muted); font-size:.52rem; }
+.phone-compose {
+  display:grid;
+  place-items:center;
   width:2.75rem;
   height:2.75rem;
   color:var(--on-action,#fcfcfb);
-  border:0;
   border-radius:50%;
   background:var(--accent-fill);
   font-size:1.25rem;
@@ -1708,10 +1767,10 @@ summary::-webkit-details-marker { display:none; }
 .method-contract li>b { color:#b8bbc4; font-size:.48rem; font-weight:550; }
 .method-contract li>strong { color:var(--acid); font-size:.8rem; }
 
-.agent-run { margin-top:1.3rem; }
+.agent-run { margin-top:1rem; }
 .agent-run li {
   position:relative;
-  min-height:2.7rem;
+  min-height:2.35rem;
   display:grid;
   grid-template-columns:.8rem 1fr auto;
   align-items:center;
@@ -1719,8 +1778,13 @@ summary::-webkit-details-marker { display:none; }
   color:var(--muted);
   font-size:.62rem;
 }
-.agent-run li:not(:last-child)::after { content:""; position:absolute; left:.26rem; top:1.65rem; width:1px; height:2rem; background:var(--line-2); }
-.agent-run li>i { position:relative; z-index:1; width:.52rem; height:.52rem; border:1px solid var(--line-2); rotate:45deg; background:var(--bg); }
+.agent-run li:not(:last-child)::after { content:""; position:absolute; left:.4rem; top:1.65rem; width:1px; height:2rem; background:var(--line-2); }
+/* Centred in its .8rem column, not flush left. A .52rem square rotated 45deg is
+   .74rem across the diagonal, so flush left it painted ~2px outside the row —
+   which the no-clipping gate reads as text escaping its box. It only surfaced
+   when every screen became permanently mounted; before that the gate never saw
+   the approval screen at all. The connector line moves with the marker. */
+.agent-run li>i { position:relative; z-index:1; justify-self:center; width:.52rem; height:.52rem; border:1px solid var(--line-2); rotate:45deg; background:var(--bg); }
 .agent-run li.is-complete>i { border-color:var(--success-fill); background:var(--success-fill); }
 .agent-run li.is-current { color:var(--text); font-weight:650; }
 .agent-run li.is-current>i { border-color:var(--acid); background:var(--acid); animation:phone-gate 2.8s ease-in-out infinite; }
@@ -1730,7 +1794,7 @@ summary::-webkit-details-marker { display:none; }
   50% { box-shadow:0 0 0 .5rem rgb(223 255 79 / .18); }
 }
 .approval-card {
-  margin-top:1rem;
+  margin-top:.85rem;
   padding:1rem;
   border:1px solid var(--border-strong,#a9a59a);
   background:var(--surface);
@@ -1743,7 +1807,7 @@ summary::-webkit-details-marker { display:none; }
 .approval-card>p { margin-top:.55rem; color:var(--muted); font-size:.62rem; line-height:1.5; }
 .approval-card>footer { display:grid; grid-template-columns:1fr 1fr; gap:.45rem; margin-top:1rem; }
 .approval-card>footer button {
-  min-height:2.75rem;
+  min-height:3.45rem;
   padding:.55rem;
   border:1px solid var(--border-strong,#a9a59a);
   background:transparent;
@@ -1753,44 +1817,64 @@ summary::-webkit-details-marker { display:none; }
 .approval-card>footer button.is-primary { color:var(--on-action,#fcfcfb); border-color:var(--accent-fill); background:var(--accent-fill); }
 
 .operating-panel {
-  width:100%;
-  height:100%;
+  position:absolute;
+  left:5.3333%;
+  top:2.5%;
+  width:89.3333%;
+  height:95%;
   min-height:0;
   padding:0;
-  animation:phone-screen-in .68s cubic-bezier(.22,1,.36,1) both;
+  overflow:hidden;
+  /* The lit screen, painted on the panel itself. Two screens at partial opacity
+     compose to less than one, so without this the dark phone body showed
+     through the cross-fade as a dip in brightness — a smaller version of the
+     flash the cross-fade was added to remove. */
+  border-radius:2.86rem;
+  background:var(--bg);
 }
-@keyframes phone-screen-in {
-  from { opacity:0; transform:translateY(1rem) scale(.985); }
-  to { opacity:1; transform:none; }
+/* inset:0 against the panel's padding box, which is the whole screen — the
+   panel carries no padding of its own at any width. */
+.operating-scene {
+  position:absolute;
+  top:0;
+  left:0;
+  width:17.8667rem;
+  height:38.8444rem;
+  transform-origin:0 0;
+  transform:scale(var(--screen-scale,1));
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .5s ease,visibility 0s linear .5s;
 }
+.operating-scene.is-active {
+  opacity:1;
+  visibility:visible;
+  transition:opacity .5s ease;
+}
+/* A hidden screen holds four looping animations of its own. Paused, they cost
+   nothing and resume from where they stopped when the screen comes forward —
+   which also means each scene still plays its entrance the first time it is
+   shown rather than having run out of sight. */
+.operating-scene:not(.is-active),
+.operating-scene:not(.is-active) * { animation-play-state:paused; }
 @media (max-width:1023px) {
   .operating-story { grid-template-columns:minmax(0,1fr) minmax(19rem,.72fr); gap:3rem; }
   .operating-copy { padding-block:0; }
   .operating-copy>h2 { max-width:12ch; }
   .operating-tabs { margin-top:3rem; }
-  .operating-tabs button {
-    min-width:0;
-    min-height:4.5rem;
-    grid-template-columns:1.6rem 1fr auto;
-    padding:.8rem 0;
-    border-right:0;
-  }
-  .operating-tabs button>strong { grid-column:auto; }
   .operating-phase-copy { min-height:9rem; margin-top:2rem; }
-  .operating-stage { min-height:44rem; }
-  .phone-device { width:18.5rem; height:38.15rem; }
-  .phone-orbit { width:min(27rem,105%); }
+  .operating-stage { min-height:39rem; }
+  .device-lockup { --device-w:15.5; }
   .phone-view-head h3 { font-size:1.3rem; }
 }
 
 @media (max-width:820px) {
   .operating-story { grid-template-columns:1fr; gap:3.5rem; }
-  .operating-copy>h2 { max-width:13ch; }
   .operating-lead { max-width:42rem; }
   .operating-tabs { max-width:none; }
   .operating-phase-copy { max-width:38rem; min-height:7.5rem; }
-  .operating-stage { min-height:44rem; }
-  .phone-device { width:19rem; height:39.2rem; }
+  .operating-stage { min-height:39rem; }
+  .device-lockup { --device-w:16; }
 }
 
 @media (max-width:520px) {
@@ -1799,17 +1883,19 @@ summary::-webkit-details-marker { display:none; }
   .operating-copy>h2 { font-size:clamp(2.4rem,11.5vw,3.35rem); }
   .operating-tabs { margin-inline:0; overflow:visible; }
   .operating-tabs button { min-width:0; }
-  .operating-tabs button>span { display:none; }
   .operating-phase-copy { min-height:10.5rem; }
   .operating-phase-copy h3 { font-size:1.75rem; }
-  .operating-stage { min-height:41rem; border-inline:0; }
-  .phone-device { width:min(18.4rem,calc(100vw - 3.1rem)); height:min(37.95rem,calc((100vw - 3.1rem) * 2.0625)); }
-  .phone-orbit { width:calc(100vw - 1.5rem); }
+  .operating-stage { min-height:37rem; border-inline:0; }
+  /* The pair is 1.585 handsets wide plus the gap, which does not fit a phone
+     screen. The watch drops out below here and the handset keeps its size,
+     rather than shrinking both to squeeze in a 100px watch nobody can read. */
+  .device-lockup { --device-w:15.5; }
+  .watch-device { display:none; }
+  .phone-device { width:min(15.5rem,calc(100vw - 3.1rem)); }
   .phone-view { padding-inline:.9rem; }
 }
 
 @media (prefers-reduced-motion:reduce) {
-  .phone-device,
   .capture-wave i,
   .method-trace li,
   .agent-run li.is-current>i,
@@ -1829,7 +1915,8 @@ summary::-webkit-details-marker { display:none; }
 
 .contexts-section { padding-block:clamp(6rem,10vw,10rem); }
 /* Stacked, not the two-column heading/deck this band used to share with
-   fragmented-intro, matrix-intro, audience-intro and price-intro. Five bands
+   matrix-intro, audience-intro and price-intro. Five bands (four, since the
+   standalone "Keep the reasoning" band folded into the operating story)
    opening the same way is a page with one idea about how a band begins, and by
    the fourth the reader stops reading the right-hand column at all. The deck
    sits under its own heading here, where it is read as the sentence that
@@ -1838,7 +1925,6 @@ summary::-webkit-details-marker { display:none; }
   max-width:46rem;
   margin-bottom:clamp(3.5rem,7vw,6rem);
 }
-.contexts-intro h2 { max-width:18ch; }
 .contexts-intro>p { margin-top:clamp(1.4rem,2.4vw,1.9rem); }
 .contexts-section .context-stage-shell { min-height:42rem; }
 .contexts-section .context-stage-tabs button { min-height:44px; }
@@ -1882,7 +1968,6 @@ summary::-webkit-details-marker { display:none; }
   gap: clamp(2rem,7vw,7rem);
   margin-bottom: clamp(3rem,6vw,5rem);
 }
-.audience-intro h2 { max-width: 15ch; }
 /* A paired comparison: two headed columns split by one full-height rule, with
    every row hairlined off the next.
 
@@ -1966,12 +2051,12 @@ summary::-webkit-details-marker { display:none; }
 }
 
 @supports (animation-timeline:view()) {
-  .fragmented-intro h2 {
+  .operating-copy>h2 {
     animation:reasoning-title-enter both cubic-bezier(.22,1,.36,1);
     animation-timeline:view();
     animation-range:entry 0% cover 32%;
   }
-  .fragmented-intro h2 span {
+  .operating-copy>h2 span {
     animation:reasoning-phrase-attach both cubic-bezier(.22,1,.36,1);
     animation-timeline:view();
     animation-range:entry 10% cover 40%;
@@ -2000,45 +2085,25 @@ summary::-webkit-details-marker { display:none; }
 }
 
 @media (max-width:1023px) {
-  /* .fragmented-intro is still a two-column grid and must collapse here.
-     .contexts-intro used to share this declaration; it is stacked at every
-     width now, so it only keeps the measure below. */
-  .fragmented-intro { grid-template-columns:1fr; }
-  .fragmented-intro>p,
   .contexts-intro>p { max-width:42rem; }
   .operating-story { grid-template-columns:1fr; }
   .operating-copy { min-height:auto; padding:0; }
-  .operating-copy>h2 { max-width:13ch; }
   .operating-lead { max-width:42rem; }
-  .operating-tabs { grid-template-columns:repeat(3,1fr); margin-top:3rem; }
-  .operating-tabs button {
-    grid-template-columns:1fr auto;
-    min-height:5.5rem;
-    padding:1rem;
-    border-top:1px solid var(--line);
-    border-right:1px solid var(--line);
-  }
-  .operating-tabs button:last-child { border-right:0; }
-  .operating-tabs button>strong { grid-column:1/-1; }
+  .operating-tabs { margin-top:3rem; }
   .operating-phase-copy { min-height:11rem; margin-top:2rem; padding-top:0; }
-  .operating-stage { min-height:42rem; }
+  .operating-stage { min-height:38rem; }
   .matrix-intro { grid-template-columns:1fr; }
   .matrix-intro>p { max-width:42rem; }
 }
 
 @media (max-width:680px) {
-  .fragmented-story { padding-block:4.75rem; }
-  .fragmented-intro h2,
   .operating-copy>h2,
   .matrix-intro h2,
   .contexts-intro h2 { font-size:clamp(2.45rem,11.5vw,3.6rem); }
   .operating-section { padding-inline:0; }
   .operating-copy { padding-inline:1.5rem; }
-  .operating-tabs { margin-inline:-1.5rem; overflow-x:auto; scrollbar-width:none; }
-  .operating-tabs::-webkit-scrollbar { display:none; }
-  .operating-tabs button { min-width:9rem; }
   .operating-phase-copy { min-height:13.5rem; }
-  .operating-stage { min-height:39rem; border-inline:0; }
+  .operating-stage { min-height:36rem; border-inline:0; }
   .operating-stage-bar { grid-template-columns:1fr auto; }
   .operating-stage-bar>span { display:none; }
   .operating-panel { min-height:34.5rem; padding:1rem; }
@@ -2064,10 +2129,10 @@ summary::-webkit-details-marker { display:none; }
 }
 
 @media (prefers-reduced-motion:reduce) {
-  .fragmented-intro h2,
-  .fragmented-intro h2 span,
-  .operating-phase-copy,
-  .operating-panel,
+  .operating-scene,
+  .operating-scene.is-active { transition:none !important; }
+  .operating-copy>h2,
+  .operating-copy>h2 span,
   .operating-progress i,
   .journey-composer>i,
   .journey-capture svg path,

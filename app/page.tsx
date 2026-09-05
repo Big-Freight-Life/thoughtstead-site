@@ -182,7 +182,7 @@ export default function Home() {
               </p>
               <h1 className="hero-title display max-w-5xl">
                 Everything helps you build it.{' '}
-                <span className="hero-accent">Nothing tells you if you should.</span>
+                <span className="hero-accent">Nothing says if you should.</span>
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted md:text-lg">

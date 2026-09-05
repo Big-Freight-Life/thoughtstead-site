@@ -32,12 +32,23 @@ import { ValueMatrixCards } from '@/components/value-matrix-cards';
 // Phrases are kept to one line each. The two columns are a grid rather than two
 // lists so that row N on the left always sits level with row N on the right —
 // two independent <ul>s drift apart the moment one phrase wraps.
+//
+// Say it the way a person says it. Every row was rewritten on 2026-09-04 after
+// "Nobody costed a false positive" — nobody says "costed", and it was not the
+// only one: "outbound", "parks", "the story and the system", and a "renewal"
+// that "does not wait for the sprint" were all house shorthand read back as if
+// it were English. The left cell now says what actually happens in the week and
+// the right cell answers in a full clause, so each row reads straight through
+// its head: your week / in Thoughtstead.
+//
+// "In your head" was also dropped here — the hero and the operating band both
+// use it, and three of them on one page is a tic.
 const AUDIENCE = [
-  ['Nobody costed a false positive', 'The Value Matrix, against a human baseline'],
-  ['The reasoning never left your head', 'Decisions kept with the meeting behind them'],
-  ['The story and the system drift apart', 'One record, linked moment to component'],
-  ['Something outbound is always waiting on you', 'Agents draft it, and it parks for approval'],
-  ['The renewal does not wait for the sprint', 'Home, in a context of its own'],
+  ['Nobody knows what a false alarm costs', 'The Value Matrix prices it against a human baseline'],
+  ['Six weeks later, nobody remembers why', 'Every decision keeps the meeting it came from'],
+  ['What users see and what’s built stop matching', 'One record holds both, moment tied to component'],
+  ['You’re the bottleneck on everything that goes out', 'An agent writes it and waits for your approval'],
+  ['The warranty runs out the week you ship', 'Home gets a context of its own'],
 ];
 
 // The card had a price and a dead button and nothing else, so two thirds of it
@@ -100,13 +111,38 @@ export default function LandingPage() {
           <div className="human-hero-wash" aria-hidden="true" />
           <div className="hero-grid relative mx-auto w-full max-w-7xl">
             <div className="hero-copy">
-              <h1 className="hero-title display">
-                Get the whole product out of your head.
-              </h1>
+              {/* The hero the approved spec specifies, which the page had drifted
+                  off. "Get the whole product out of your head" sold storage —
+                  the second-brain promise positioning rule 1 rejects in those
+                  words — and "out of your head" was the page's tic, said again
+                  in the operating band's lead. This states the wedge instead:
+                  Figma gives you a canvas, Linear gives you tickets, Notion
+                  gives you docs, and none of them will tell you the feature
+                  should not ship.
+
+                  TWO ELEMENTS, not two spans in one h1. Both sentences at
+                  display size ran to four lines — measured, not guessed: only
+                  ~16 characters fit a line at 95px in this 720px column, so
+                  each sentence took two of its own. Shortening the second one
+                  to fit was tried and rejected; it cost the sentence. Stepping
+                  it down in size instead keeps every word.
+
+                  Cobalt, not muted grey. Greying the second line treated the
+                  turn as the quiet half, when it is the whole argument — and
+                  cobalt is the product's action colour, the compose button,
+                  Approve, the selected tab. The deck's "the one that tells
+                  you" is its callback. */}
+              <h1 className="hero-title display">Everything helps you build it.</h1>
+              <p className="hero-turn">Nothing says if you should.</p>
+              {/* The deck answers the headline's second line and nothing else.
+                  The old one opened on "connects your life at machine speed" —
+                  a phrase that survives no reading — and buried the actual
+                  answer in its third sentence. "Tells you" is deliberate: it is
+                  the headline's own verb handed back. */}
               <p className="hero-deck">
-                Thoughtstead connects your life at machine speed. It brings the brief, ticket,
-                evidence, and system design together. Then it puts a number on the assumption
-                behind the call.
+                Thoughtstead is the one that tells you. It holds the brief, the evidence, the
+                concept and the system behind it. Then it puts a number on what it costs to
+                be wrong.
               </p>
               <div className="hero-actions">
                 <HostedCta large />
@@ -128,17 +164,41 @@ export default function LandingPage() {
 
         <AnimatedShowcaseCard />
 
-        <section className="fragmented-story px-6 py-20 md:py-28">
-          <div className="mx-auto max-w-7xl">
-            <div className="fragmented-intro">
-              <h2>Keep the reasoning <span>attached to the work.</span></h2>
-              <p>
-                Thoughtstead connects the brief, evidence, concept, system, and decision as
-                they change—so the product stays whole without living in your head.
-              </p>
-            </div>
+        <Section id="audience" className="audience-section" wide>
+          <div className="audience-intro">
+            {/* One beat each. The headline used to carry "but the week looks
+                the same" and the deck used to open "Thoughtstead isn't built
+                for a role" — so the band said "this is a situation, not a role"
+                three times and "week" twice before the reader reached a single
+                row. The table's own "Your week" head is where the week belongs;
+                the headline hooks, the deck defines, the table proves. */}
+            <h2>Nobody has this job title.</h2>
+            <p>
+              It’s built for the situation you’re in when the thing you’re shipping
+              turns on a call nobody wrote down.
+            </p>
           </div>
-        </section>
+          <Reveal className="audience-table">
+            {/* Three heads were tried and thrown out, all for the same reason:
+                "What holds it" and "Held by" made you read a whole row before
+                the actor appeared, and "Thoughtstead holds it" named the actor
+                but is not how anyone labels a column — a declarative sentence
+                with a dangling pronoun over a list.
+
+                "In Thoughtstead" is the plain version. It names the actor, it
+                is two words against "Your week", and it completes every row as
+                ordinary English: in Thoughtstead, agents draft it and it parks
+                for approval. */}
+            <h3 className="audience-head">Your week</h3>
+            <h3 className="audience-head">In Thoughtstead</h3>
+            {AUDIENCE.map(([week, holds]) => (
+              <Fragment key={week}>
+                <p className="audience-cell" data-label="Your week">{week}</p>
+                <p className="audience-cell" data-label="In Thoughtstead">{holds}</p>
+              </Fragment>
+            ))}
+          </Reveal>
+        </Section>
 
         <Section id="product" className="operating-section" wide>
           <OperatingStory />
@@ -166,26 +226,6 @@ export default function LandingPage() {
             </p>
           </div>
           <ContextStage />
-        </Section>
-
-        <Section id="audience" className="audience-section" wide>
-          <div className="audience-intro">
-            <h2>Nobody has this job title, <span>but the week looks the same.</span></h2>
-            <p>
-              Thoughtstead isn’t built for a role. It’s built for the situation you’re in
-              when the thing you’re shipping turns on a call nobody wrote down.
-            </p>
-          </div>
-          <Reveal className="audience-table">
-            <h3 className="audience-head">Your week</h3>
-            <h3 className="audience-head">What holds it</h3>
-            {AUDIENCE.map(([week, holds]) => (
-              <Fragment key={week}>
-                <p className="audience-cell" data-label="Your week">{week}</p>
-                <p className="audience-cell" data-label="What holds it">{holds}</p>
-              </Fragment>
-            ))}
-          </Reveal>
         </Section>
 
         <Section id="price" className="price-section" wide>

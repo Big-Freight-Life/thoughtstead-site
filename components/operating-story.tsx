@@ -2,6 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import Image from 'next/image';
+
+import { AppStoreBadge } from '@/components/app-store-badge';
+
 const PHASES = [
   {
     id: 'capture',
@@ -37,7 +41,10 @@ function PhoneChrome({ children }: { children: React.ReactNode }) {
       <div className="phone-app-bar">
         <div className="phone-wordmark">T</div>
         <div><strong>Studio</strong><span>Thoughtstead</span></div>
-        <button type="button" aria-label="Open capture composer">+</button>
+        {/* Drawn, not a control. It has never had a handler, and as a <button>
+            it counted as a tap target — which the scaled-down handset then
+            failed, at 34px against a 40px floor. */}
+        <span className="phone-compose" aria-hidden="true">+</span>
       </div>
       {children}
       <nav className="phone-nav" aria-label="Product preview navigation">
@@ -154,6 +161,23 @@ const SCENES: Record<PhaseId, React.ReactNode> = {
   approval: <ApprovalScene />,
 };
 
+// The watch is the companion at its own job: one thought, caught and confirmed.
+// Anything more is a claim a 39mm screen cannot support.
+function WatchCapture() {
+  return (
+    <div className="watch-screen">
+      <div className="watch-top" aria-hidden="true"><span>Capture</span><b>9:41</b></div>
+      <div className="watch-wave" aria-hidden="true">
+        {[10, 17, 9, 22, 13, 19, 8, 15].map((height, index) => (
+          <i key={index} style={{ '--wave-height': `${height}px` } as React.CSSProperties} />
+        ))}
+      </div>
+      <p className="watch-line">The customer call changed the rollout.</p>
+      <p className="watch-saved"><i aria-hidden="true" />Saved</p>
+    </div>
+  );
+}
+
 export function OperatingStory() {
   const [active, setActive] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -203,10 +227,15 @@ export function OperatingStory() {
       data-autoplay={!reduced && visible}
     >
       <div className="operating-copy">
-        <h2>One thought becomes a system that can act.</h2>
+        {/* Folded in from the standalone "Keep the reasoning" band, which was one
+            heading and one paragraph between the showcase card and this one and
+            had no mechanic of its own. The thesis belongs on the band that
+            demonstrates it; the scroll-driven phrase-attach on the span moved
+            across with it. */}
+        <h2>Keep the reasoning <span>attached to the work.</span></h2>
         <p className="operating-lead">
-          Capture what changed. Follow it through the product. Let agents move the work
-          forward without giving up the final call.
+          Thoughtstead connects the brief, evidence, concept, system, and decision as
+          they change. The product stays whole without living in your head.
         </p>
 
         <div className="operating-tabs" role="tablist" aria-label="How Thoughtstead works">
@@ -220,38 +249,99 @@ export function OperatingStory() {
               aria-controls="operating-panel"
               onClick={() => choose(index)}
             >
-              <span>{String(index + 1).padStart(2, '0')}</span>
               <strong>{item.label}</strong>
-              <i aria-hidden="true" />
             </button>
           ))}
         </div>
 
-        <div className="operating-phase-copy" key={phase.id}>
-          <h3>{phase.title}</h3>
-          <p>{phase.body}</p>
+        {/* All three sit in one grid cell, so the block is always as tall as the
+            longest of them and the page below never reflows when the phase
+            changes. Keying one <div> to the phase made it remount and slide up
+            from opacity 0, which read as the copy jumping into place — and the
+            27px height difference between phases shunted everything below it. */}
+        <div className="operating-phase-copy">
+          {PHASES.map((item) => (
+            <div
+              key={item.id}
+              className={item.id === phase.id ? 'is-active' : undefined}
+              aria-hidden={item.id !== phase.id || undefined}
+            >
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </div>
+          ))}
         </div>
       </div>
 
       <div className="operating-stage">
-        <div className="phone-orbit" aria-hidden="true"><i /><i /><i /></div>
+        {/* Apple's own iPhone 17 bezel, from the Apple Design Resources bezel
+            download, unmodified. It replaces a hand-drawn CSS iPhone that had a
+            Dynamic Island, a Camera Control and a Ring/Silent switch on it —
+            Apple's marketing guidelines prohibit illustrations depicting an
+            Apple product, and name those details specifically.
+
+            The artwork is 1350x2760 with a transparent screen aperture at
+            5.3333% / 2.5% / 89.3333% / 95%, measured off the alpha channel; the
+            screens sit behind it at exactly those insets and the frame covers
+            their corners. The licence covers mock-ups of interfaces for
+            software running on Apple operating systems — it is the iPhone app
+            in here, and it may not be reused to frame the web app. */}
+        <div className="device-lockup">
+          {/* True relative scale, which Apple's guidelines require when two
+              products appear together. Both bezels turn out to be one image
+              pixel per device pixel, so the sizes come from physics rather than
+              eye: the iPhone 17's 2622px screen at 460ppi is 144.78mm and the
+              Watch's 496px at 326ppi is 38.65mm, which puts the watch image at
+              0.58527 of the phone's width. */}
+          <div className="watch-device">
+            <Image
+              src="/apple-watch-s11-46-milanese.png"
+              alt=""
+              width={560}
+              height={880}
+              className="watch-bezel"
+              aria-hidden="true"
+            />
+            <div className="watch-panel">
+              <div className="watch-scene"><WatchCapture /></div>
+            </div>
+          </div>
+
         <div className="phone-device">
-          <div className="phone-side-button phone-side-button-top" aria-hidden="true" />
-          <div className="phone-side-button phone-side-button-middle" aria-hidden="true" />
-          <div className="phone-side-button phone-side-button-bottom" aria-hidden="true" />
-          <div className="phone-side-button phone-side-button-power" aria-hidden="true" />
-          <div className="phone-side-button phone-side-button-camera" aria-hidden="true" />
-          <div className="phone-island" aria-hidden="true" />
+          <Image
+            src="/iphone-17-black-portrait.png"
+            alt=""
+            width={1350}
+            height={2760}
+            className="phone-bezel"
+            aria-hidden="true"
+          />
+          {/* Every screen stays mounted and cross-fades. The panel IS the phone's
+              whole screen, so keying it to the phase took the status bar, app
+              bar and nav out with it: the lit screen dropped to the bare dark
+              body for the length of the entrance and read as a flash on every
+              switch. Nothing is blank now — the outgoing screen fades out
+              underneath the incoming one. */}
           <div
             id="operating-panel"
             role="tabpanel"
             aria-labelledby={`operating-tab-${phase.id}`}
             className="operating-panel"
-            key={phase.id}
           >
-            {SCENES[phase.id]}
+            {PHASES.map((item) => (
+              <div
+                key={item.id}
+                className={`operating-scene${item.id === phase.id ? ' is-active' : ''}`}
+                aria-hidden={item.id !== phase.id || undefined}
+                inert={item.id !== phase.id}
+              >
+                {SCENES[item.id]}
+              </div>
+            ))}
           </div>
         </div>
+        </div>
+        <AppStoreBadge />
       </div>
     </div>
   );
