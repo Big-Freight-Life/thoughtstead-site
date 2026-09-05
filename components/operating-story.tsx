@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 
 import Image from 'next/image';
 
-import { AppStoreBadge } from '@/components/app-store-badge';
-
 const PHASES = [
   {
     id: 'capture',
@@ -341,7 +339,19 @@ export function OperatingStory() {
           </div>
         </div>
         </div>
-        <AppStoreBadge />
+        {/* No App Store badge until Apple has signed the app off.
+            There is no "coming soon" badge to use in the meantime. Apple offer
+            exactly two modifiers, "Download on the" and "Pre-order on the",
+            and the pre-order one is not a placeholder either: their rule is
+            that it means the app IS taking pre-orders on the store, with a
+            release date set in App Store Connect. Neither is true yet, and a
+            download badge over an app nobody can download is a claim the page
+            cannot keep.
+            components/app-store-badge.tsx and Apple's artwork stay in the
+            repo. Set NEXT_PUBLIC_APP_STORE_URL and render <AppStoreBadge />
+            here on the day it ships. Same discipline as the HostedCta stub and
+            the "Launching soon" CTA: the component survives, the unearned
+            claim does not. */}
       </div>
     </div>
   );
