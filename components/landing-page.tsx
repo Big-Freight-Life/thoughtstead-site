@@ -173,10 +173,6 @@ export default function LandingPage() {
                 row. The table's own "Your week" head is where the week belongs;
                 the headline hooks, the deck defines, the table proves. */}
             <h2>Nobody has this job title.</h2>
-            <p>
-              It’s built for the situation you’re in when the thing you’re shipping
-              turns on a call nobody wrote down.
-            </p>
           </div>
           <Reveal className="audience-table">
             {/* Three heads were tried and thrown out, all for the same reason:
@@ -209,10 +205,6 @@ export default function LandingPage() {
             <div>
               <h2>Put a number on the part everyone is guessing.</h2>
             </div>
-            <p>
-              The Value Matrix is a real confusion matrix, not a confidence dial. It prices
-              the assumption beneath the decision and refuses impossible input.
-            </p>
           </div>
           <Reveal className="matrix-card-field"><ValueMatrixCards /></Reveal>
         </Section>
@@ -237,8 +229,7 @@ export default function LandingPage() {
             </Reveal>
             <Reveal delay={60}>
               <p>
-                One hosted instance with the whole product and AI included. Pay monthly or
-                yearly. Export everything whenever you want.
+                No set team pricing survives contact with your system. Contact us.
               </p>
             </Reveal>
           </div>

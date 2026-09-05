@@ -625,7 +625,7 @@ summary::-webkit-details-marker { display:none; }
   right:0;
   bottom:-1px;
   height:2px;
-  background:var(--operating-marker,var(--sky));
+  background:var(--accent);
   transform:scaleX(0);
   transform-origin:left;
   transition:transform .45s cubic-bezier(.22,1,.36,1);
@@ -658,8 +658,8 @@ summary::-webkit-details-marker { display:none; }
   visibility:visible;
 }
 .operating-phase-copy h3 {
-  max-width:16ch;
-  font-size:var(--t-h3);
+  max-width:33rem;
+  font-size:var(--t-body);
   line-height:1.02;
   letter-spacing:-.045em;
   font-weight:var(--w-title);
@@ -1364,9 +1364,7 @@ summary::-webkit-details-marker { display:none; }
   margin-top:2.5rem;
   padding-top:0;
 }
-.operating-phase-copy h3 {
-  max-width:18ch;
-}
+.operating-phase-copy h3 { max-width:33rem; }
 .operating-phase-copy p { max-width:33rem; }
 
 .operating-stage {
@@ -1862,7 +1860,7 @@ summary::-webkit-details-marker { display:none; }
   .operating-tabs { margin-inline:0; overflow:visible; }
   .operating-tabs button { min-width:0; }
   .operating-phase-copy { min-height:10.5rem; }
-  .operating-phase-copy h3 { font-size:1.75rem; }
+  .operating-phase-copy h3 { font-size:var(--t-body); }
   .operating-stage { min-height:37rem; border-inline:0; }
   /* The pair is 1.585 handsets wide plus the gap, which does not fit a phone
      screen. The watch drops out below here and the handset keeps its size,
