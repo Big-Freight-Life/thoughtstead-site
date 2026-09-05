@@ -6,18 +6,30 @@
 }
 
 .card {
+  --card-scale: 1;
   --title-opacity: 0;
   --title-scale: .94;
   --arch-opacity: 0;
+  --signoff-opacity: 0;
+  --signoff-scale: .965;
   --code-opacity: 0;
-  --code-scale: .9;
-  --code-y: 42px;
+  --code-scale: .965;
+  --code-x: -46px;
+  --code-y: 34px;
+  --code-z: -180px;
+  --code-rotate: 5deg;
   --agent-opacity: 0;
-  --agent-scale: .9;
-  --agent-y: 42px;
+  --agent-scale: .965;
+  --agent-x: 54px;
+  --agent-y: 22px;
+  --agent-z: -140px;
+  --agent-rotate: -6deg;
   --prompt-opacity: 0;
-  --prompt-scale: .9;
-  --prompt-y: 42px;
+  --prompt-scale: .965;
+  --prompt-x: 0px;
+  --prompt-y: 52px;
+  --prompt-z: -60px;
+  --prompt-rotate: 0deg;
   position: relative;
   width: min(calc(100vw - 24px), 1680px);
   aspect-ratio: 16 / 9;
@@ -28,7 +40,16 @@
   border-radius: 38px;
   background: #020204;
   box-shadow: 0 42px 110px -62px rgb(17 17 15 / .62);
+  /* The entry scrub. Antigravity animates the whole section; ours lives on the
+     card so the section's padding is not scaled with it. The value is written
+     every frame by the scroll scrub, never transitioned — a transition would
+     fight a reversed scroll. */
+  transform: scale(var(--card-scale));
+  transform-origin: 50% 50%;
+  will-change: transform;
 }
+
+.card[data-cursor='active'] { cursor: none; }
 
 .canvas,
 .atmosphere,
@@ -50,9 +71,9 @@
   z-index: 1;
   opacity: var(--arch-opacity);
   background:
-    radial-gradient(ellipse 28% 46% at 36% 65%, rgb(36 87 255 / .24), transparent 72%),
-    radial-gradient(ellipse 28% 46% at 64% 65%, rgb(149 201 255 / .18), transparent 72%),
-    radial-gradient(ellipse 23% 22% at 50% 29%, rgb(223 255 79 / .1), transparent 75%);
+    radial-gradient(ellipse 30% 34% at 50% 46%, rgb(36 87 255 / .26), transparent 72%),
+    radial-gradient(ellipse 26% 20% at 50% 63%, rgb(149 201 255 / .16), transparent 74%),
+    radial-gradient(ellipse 24% 20% at 50% 30%, rgb(223 255 79 / .1), transparent 75%);
   filter: blur(24px);
   pointer-events: none;
 }
@@ -82,24 +103,6 @@
   text-shadow: 0 0 42px rgb(149 201 255 / .18);
 }
 
-.titleMarker {
-  width: .68rem;
-  height: .68rem;
-  margin-bottom: 1.25rem;
-  rotate: 45deg;
-  background: var(--acid);
-  box-shadow: 0 0 24px rgb(223 255 79 / .46);
-}
-
-.titleCaption {
-  margin-top: 1rem;
-  color: rgb(252 252 251 / .58);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: clamp(.56rem, .8vw, .72rem);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-
 .workspace {
   z-index: 4;
   left: 50%;
@@ -126,7 +129,12 @@
   width: 59%;
   height: 61%;
   opacity: var(--code-opacity);
-  transform: translate3d(0, var(--code-y), 0) scale(var(--code-scale)) rotateY(1.8deg);
+  /* The resting depth and angle stay here; the approach that decays into them
+     comes from PANEL_APPROACH. */
+  transform:
+    translate3d(var(--code-x), var(--code-y), var(--code-z))
+    scale(var(--code-scale))
+    rotateY(calc(1.8deg + var(--code-rotate)));
   transform-origin: 30% 70%;
 }
 
@@ -137,7 +145,10 @@
   min-height: 49%;
   padding: clamp(.9rem, 1.7vw, 1.75rem);
   opacity: var(--agent-opacity);
-  transform: translate3d(0, var(--agent-y), 34px) scale(var(--agent-scale)) rotateY(-2.2deg);
+  transform:
+    translate3d(var(--agent-x), var(--agent-y), calc(34px + var(--agent-z)))
+    scale(var(--agent-scale))
+    rotateY(calc(-2.2deg + var(--agent-rotate)));
   transform-origin: 70% 50%;
 }
 
@@ -152,7 +163,10 @@
   gap: clamp(.65rem, 1.2vw, 1.2rem);
   padding: clamp(.75rem, 1.3vw, 1.25rem);
   opacity: var(--prompt-opacity);
-  transform: translate3d(0, var(--prompt-y), 72px) scale(var(--prompt-scale));
+  transform:
+    translate3d(var(--prompt-x), var(--prompt-y), calc(72px + var(--prompt-z)))
+    scale(var(--prompt-scale))
+    rotateY(var(--prompt-rotate));
   box-shadow: 0 34px 100px rgb(0 0 0 / .7), 0 0 0 1px rgb(36 87 255 / .15);
 }
 
@@ -274,6 +288,107 @@
 .promptPanel p { margin-top: .2rem; color: #666b76; font-size: clamp(.46rem, .7vw, .72rem); white-space: nowrap; }
 .promptArrow { color: var(--accent); font-size: clamp(.8rem, 1.2vw, 1.15rem); }
 
+.cursor {
+  position: absolute;
+  z-index: 9;
+  top: 0;
+  left: 0;
+  transform: translate3d(var(--cursor-x, 0px), var(--cursor-y, 0px), 0);
+  pointer-events: none;
+}
+
+.cursorPill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .7rem 1.1rem .7rem .85rem;
+  color: #11110f;
+  border: 1px solid rgb(17 17 15 / .1);
+  border-radius: 999px;
+  background: #fcfcfb;
+  box-shadow: 0 10px 30px rgb(0 0 0 / .3);
+  font-size: .82rem;
+  font-weight: 650;
+  letter-spacing: -.01em;
+  white-space: nowrap;
+  /* Grows from under the pointer rather than from beside it: the origin is the
+     pill's top-left, which sits exactly on the cursor, and the scale is applied
+     outside the centring translate.
+     Everything stays in `transform` on purpose — an individual `scale` property
+     alongside it is folded into the same matrix by the minifier, and the
+     hover rule's `scale: 1` then loses to a `scale(0)` baked into this one. */
+  transform-origin: 0 0;
+  transform: scale(0) translate(-50%, -50%);
+  opacity: 0;
+  transition: transform .2s cubic-bezier(.55, .085, .68, .53), opacity .2s cubic-bezier(.55, .085, .68, .53);
+}
+
+.card[data-cursor='active'] .cursorPill {
+  transform: scale(1) translate(-50%, -50%);
+  opacity: 1;
+  /* back.out(1.7) — the pill overshoots on the way in. */
+  transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), opacity .3s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.cursorGlyph,
+.playGlyph {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid currentColor;
+}
+
+/* The maker's mark, at the end of the film. It sits above the workspace and
+   under the vignette, so the card's own edge treatment still reads over it. */
+.signoff {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(.55rem, 1vw, .9rem);
+  opacity: var(--signoff-opacity);
+  transform: scale(var(--signoff-scale));
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+
+.signoffMark {
+  /* Larger stacked than it was beside the wordmark, but not by as much as it
+     first was: at 3.5rem the mark outweighed its own line and read as a second
+     title card rather than a credit.
+     The tone is carried in `color`, not `opacity`, because the parent already
+     owns opacity as the animation's fade — a second one there would multiply
+     against it and the lockup would never reach the tone it was set to. */
+  width: clamp(1.75rem, 2.9vw, 2.8rem);
+  height: auto;
+  color: rgb(252 252 251 / .92);
+}
+
+/* The slogan, not the company name: the mark above already says who made it.
+   Set with the full stop, matching the canonical slogan string in bfl-design's
+   `structuredData.ts` (Ray's call, 2026-09-04). The display lockups there —
+   `BookCover.tsx`, `ClosingPage.tsx` — drop it; this one keeps it, because a
+   closing frame is a sentence the film ends on rather than a label. */
+.signoffLine {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  /* The brand sets this 600 at -.035em, but that is its DISPLAY setting. At
+     credit size the same tracking closes the counters up and the line reads
+     cramped, so the weight comes down one step and the tracking opens toward
+     neutral. */
+  font-size: clamp(.72rem, .95vw, .95rem);
+  font-weight: 500;
+  letter-spacing: -.005em;
+  color: rgb(252 252 251 / .62);
+  white-space: nowrap;
+}
+
 .vignette {
   z-index: 6;
   background:
@@ -282,37 +397,44 @@
   pointer-events: none;
 }
 
-.playButton {
+/* The control is chrome, not artwork: it holds its size on screen while the
+   card scrubs up from half scale, so it never becomes a 22px tap target on a
+   phone. The counter-scale sits on this wrapper rather than on the button so
+   it is not transitioned — the button's own transform is, for the hover
+   handover, and a transition on a value rewritten every scroll frame lags. */
+.playSlot {
   position: absolute;
   z-index: 8;
-  left: clamp(1rem, 6.5vw, 6.5rem);
-  bottom: clamp(1rem, 7.2vw, 6.5rem);
-  min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-  gap: .65rem;
-  padding: .7rem 1rem;
-  color: #11110f;
-  border: 1px solid rgb(255 255 255 / .58);
-  border-radius: 999px;
-  background: #fcfcfb;
-  box-shadow: 0 8px 28px rgb(0 0 0 / .28);
-  font-size: .78rem;
-  font-weight: 650;
-  letter-spacing: -.01em;
-  transition: transform .35s cubic-bezier(.22, 1, .36, 1), background-color .2s ease;
+  right: calc(clamp(1rem, 2vw, 1.5rem) + 6px);
+  bottom: calc(clamp(1rem, 2vw, 1.5rem) + 6px);
+  line-height: 0;
+  transform: scale(calc(1 / var(--card-scale)));
+  transform-origin: 100% 100%;
 }
 
-.playButton:hover { transform: translateY(-2px); background: #f0eee5; }
-.playButton:active { transform: translateY(0) scale(.98); }
-.playButton:focus-visible { outline: 3px solid var(--sky); outline-offset: 4px; }
-.playButton > span {
-  width: 0;
-  height: 0;
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-  border-left: 7px solid #11110f;
+.playButton {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #fcfcfb;
+  border: none;
+  border-radius: 999px;
+  background: rgb(17 17 15 / .42);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: transform .3s, opacity .3s;
 }
+
+/* The pill takes over inside the card, so the corner control gets out of its
+   way. Keyboard focus is untouched — this is a hover state only. */
+.card:hover .playButton { opacity: 0; transform: scale(.8); }
+.card:hover .playButton:focus-visible { opacity: 1; transform: none; }
+.playButton:focus-visible { outline: 3px solid var(--sky); outline-offset: 4px; }
+
+.playGlyph { margin-left: 2px; }
 
 .card[data-renderer='fallback'] .atmosphere {
   opacity: .9;
@@ -328,11 +450,12 @@
   .section { padding-top: 6px; }
   .card { width: calc(100vw - 12px); border-radius: 20px; }
   .workspace { width: 760px; }
-  .playButton { left: 14px; bottom: 14px; min-height: 42px; padding: .55rem .8rem; font-size: .68rem; }
+  .playSlot { right: 14px; bottom: 14px; }
+  .playButton { width: 42px; height: 42px; }
   .titleMoment strong { font-size: clamp(2.2rem, 13vw, 3.5rem); }
-  .titleCaption { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .playButton { transition: none; }
+  .cursor { display: none; }
 }

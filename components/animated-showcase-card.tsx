@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { BigFreightLifeMark } from './big-freight-life-mark';
 import styles from './animated-showcase-card.module.css';
 
 /**
@@ -8,18 +9,55 @@ import styles from './animated-showcase-card.module.css';
  * so the pacing can be tuned without touching rendering or presentation code.
  */
 export const SHOWCASE_TIMELINE = [
-  { phase: 'void', start: 0, end: 2.2, description: 'Sparse particles drift in deep space.' },
-  { phase: 'formation', start: 1.6, end: 5.9, description: 'Particles gather into the twin arch.' },
-  { phase: 'title', start: 5.1, end: 8.1, description: 'The Thoughtstead title resolves and recedes.' },
-  { phase: 'workspace', start: 7.2, end: 12.1, description: 'Product panels settle into a layered workspace.' },
-  { phase: 'dissolve', start: 11.8, end: 14.4, description: 'The workspace and arch disperse back into particles.' },
-  { phase: 'reset', start: 14.4, end: 15, description: 'The dark opening state returns for a seamless loop.' },
+  { phase: 'void', start: 0, end: 1.05, description: 'Sparse particles drift in deep space.' },
+  { phase: 'formation', start: 0.85, end: 4.75, description: 'Particles gather into the Thoughtstead mark.' },
+  { phase: 'title', start: 3.95, end: 6.95, description: 'The Thoughtstead title resolves and recedes.' },
+  { phase: 'hold', start: 6.95, end: 7.4, description: 'The mark holds alone for a beat before the screens arrive.' },
+  { phase: 'workspace', start: 7.4, end: 12.3, description: 'Product panels settle into a layered workspace.' },
+  { phase: 'dissolve', start: 12, end: 14.6, description: 'The workspace and the mark disperse back into particles.' },
+  { phase: 'signoff', start: 14.6, end: 17, description: 'The Big Freight Life mark signs the film off.' },
+  { phase: 'gather', start: 17, end: 21, description: 'The field draws back together into the opening drift.' },
+  { phase: 'reset', start: 21, end: 21.2, description: 'The dark opening state, already reached before the wrap.' },
 ] as const;
 
-const LOOP_SECONDS = 15;
+const LOOP_SECONDS = 21.2;
+/**
+ * The card's own behaviour, matched to the reference it was modelled on.
+ *
+ * The card enters at half size and scrubs up to full as it is scrolled in —
+ * from the moment its top touches the bottom of the viewport until that top
+ * reaches the middle — eased `power2.out`, with roughly a second of catch-up
+ * lag. Both the scrub and the pointer pill are damped toward a target every
+ * frame instead of being handed to a CSS transition, because a transition
+ * fights a reversed scroll and a flicked pointer.
+ */
+const ENTRY_MIN_SCALE = 0.5;
+const ENTRY_SCRUB_RATE = 3.4;
+const CURSOR_FOLLOW_RATE = 9;
+
+/**
+ * The three filled paths of the Thoughtstead mark — crown, lower-left lobe,
+ * lower-right lobe — copied from `thoughtstead-logo.tsx` in its own 64-unit
+ * viewBox. The particles form the brand's brain, not an abstract shape, so
+ * these must stay in step with the mark: if the logo is redrawn, redraw this.
+ * The veins are strokes and are deliberately left out — at this particle
+ * density they close the seams that give the mark its shape.
+ */
+const MARK_VIEWBOX = 64;
+const MARK_PATHS = [
+  'M6 40c-3-3-4-8-2-12-1-5 2-9 6-12 1-5 5-8 10-8 3-4 8-4 12 .5 4-4.5 10-3.5 13 .5 5 0 9 4 10 9 5 2 7 7 5 12 3 4 1 8-2 11-8.5 1.5-16.5-1-24 1-9.5 2-18-2.5-29-1Z',
+  'M6.5 42.3c7.5-1.5 16.5 2.1 24.1-.1 1.5 4.8-1.1 8.8.2 13-1.4 4.1-5.4 6.7-10.1 6.6-4.5-.1-8-2.5-10.1-6-4.2-.8-7-4-6.4-8.2.2-2 1.1-3.6 2.3-4.8Z',
+  'M33.8 42.2c7.5 2.2 16.5-1.4 23.8.2 2.4 2.5 3.5 6 2 9.2.8 4-2 7-6 7.7-2.8 3.5-7.5 4.4-11.6 2.1-4.4-1.1-7.4-3.8-7.5-7.3-1.4-4.2 1.4-8.1-.7-11.7Z',
+];
+/** How much of the card's height the mark occupies once it has formed. Model
+ *  space is isotropic — the shader divides x by the aspect ratio, so one unit
+ *  is the same number of pixels on both axes and the mark needs no widening. */
+const MARK_HEIGHT = 1.28;
 const STATIC_FRAME_SECONDS = 9.45;
-const PARTICLE_COUNT_DESKTOP = 5200;
-const PARTICLE_COUNT_MOBILE = 2800;
+/* A filled silhouette needs a good deal more than the thin arch this replaced:
+   at 5200 the mark read as a haze rather than a shape. */
+const PARTICLE_COUNT_DESKTOP = 11000;
+const PARTICLE_COUNT_MOBILE = 5200;
 
 type ParticleRenderer = {
   resize: () => void;
@@ -28,7 +66,7 @@ type ParticleRenderer = {
 };
 
 type ParticleFrame = {
-  time: number;
+  phase: number;
   formation: number;
   dissolve: number;
   push: number;
@@ -77,6 +115,67 @@ function particleColor(height: number, variation: number) {
   return interpolateColor(paleYellow, softPink, clamp01((height - 0.84) / 0.16 + variation * 0.08));
 }
 
+/**
+ * Rejection-samples points inside the mark by rasterising it once and reading
+ * back the alpha. Filling the real paths is what keeps the silhouette honest —
+ * an approximation of a brain drawn in code would drift from the logo the
+ * moment either changed.
+ */
+function sampleMarkPoints(count: number, random: () => number) {
+  const size = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const context = canvas.getContext('2d', { willReadFrequently: true });
+  if (!context) return null;
+
+  const scale = size / MARK_VIEWBOX;
+  context.setTransform(scale, 0, 0, scale, 0, 0);
+  context.fillStyle = '#ffffff';
+  for (const definition of MARK_PATHS) context.fill(new Path2D(definition));
+
+  const { data } = context.getImageData(0, 0, size, size);
+
+  // Measured, not assumed. The paths do not fill their own viewBox, and reading
+  // the colour ramp over the whole box instead of the mark's own bounds was
+  // what kept the mark stuck at the dark blue end of the palette.
+  let minX = size;
+  let maxX = 0;
+  let minY = size;
+  let maxY = 0;
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      if (data[(y * size + x) * 4 + 3] < 128) continue;
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+  }
+  if (maxX <= minX || maxY <= minY) return null;
+
+  const centreX = (minX + maxX) / 2;
+  const centreY = (minY + maxY) / 2;
+  // The longer side sets the scale for both, so the mark keeps its proportions.
+  const span = Math.max(maxX - minX, maxY - minY);
+
+  const points: number[][] = [];
+  // The mark covers roughly half its box, so this lands about two tries per
+  // point. The ceiling is only there so a mis-drawn path cannot spin forever.
+  const ceiling = count * 60;
+  for (let attempt = 0; attempt < ceiling && points.length < count; attempt += 1) {
+    const x = Math.min(size - 1, Math.floor(random() * size));
+    const y = Math.min(size - 1, Math.floor(random() * size));
+    if (data[(y * size + x) * 4 + 3] < 128) continue;
+    points.push([
+      (x + random() - centreX) / span,
+      (y + random() - centreY) / span,
+      (maxY - y) / (maxY - minY),
+    ]);
+  }
+  return points.length === count ? points : null;
+}
+
 function compileShader(gl: WebGLRenderingContext, type: number, source: string) {
   const shader = gl.createShader(type);
   if (!shader) throw new Error('Unable to create showcase shader.');
@@ -106,7 +205,7 @@ function createParticleRenderer(canvas: HTMLCanvasElement): ParticleRenderer | n
     attribute vec3 a_target;
     attribute vec3 a_meta;
     attribute vec3 a_color;
-    uniform float u_time;
+    uniform float u_phase;
     uniform float u_formation;
     uniform float u_dissolve;
     uniform float u_push;
@@ -117,14 +216,20 @@ function createParticleRenderer(canvas: HTMLCanvasElement): ParticleRenderer | n
     varying float v_alpha;
 
     void main() {
-      float shimmer = sin(u_time * (0.7 + a_meta.y * 0.8) + a_meta.y * 38.0) * 0.5 + 0.5;
+      // Driven by the loop's own phase, never by elapsed seconds, and every
+      // frequency is a WHOLE number of turns per loop. Run on raw time these
+      // wanders land mid-cycle at the wrap: the origins jump by up to a dozen
+      // pixels and every particle's shimmer changes brightness in one frame,
+      // which is a cut no amount of fading at the end can hide.
+      float shimmerTurns = 2.0 + floor(a_meta.y * 4.0);
+      float shimmer = sin(u_phase * shimmerTurns + a_meta.y * 38.0) * 0.5 + 0.5;
       vec3 origin = a_origin;
-      origin.x += sin(u_time * 0.24 + a_meta.y * 21.0) * (0.018 + a_meta.z * 0.018);
-      origin.y += cos(u_time * 0.19 + a_meta.y * 17.0) * (0.014 + a_meta.z * 0.022);
+      origin.x += sin(u_phase + a_meta.y * 21.0) * (0.018 + a_meta.z * 0.018);
+      origin.y += cos(u_phase + a_meta.y * 17.0) * (0.014 + a_meta.z * 0.022);
 
       vec3 target = a_target;
-      target.x += sin(u_time * 0.42 + a_meta.y * 30.0) * 0.009;
-      target.y += cos(u_time * 0.36 + a_meta.y * 24.0) * 0.008;
+      target.x += sin(u_phase * 2.0 + a_meta.y * 30.0) * 0.009;
+      target.y += cos(u_phase * 2.0 + a_meta.y * 24.0) * 0.008;
       float localFormation = smoothstep(a_meta.y * 0.12, 0.72 + a_meta.y * 0.08, u_formation);
       vec3 position = mix(origin, target, localFormation);
 
@@ -174,24 +279,26 @@ function createParticleRenderer(canvas: HTMLCanvasElement): ParticleRenderer | n
   const metadata = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
   const random = seededRandom();
+  const markPoints = sampleMarkPoints(count, random);
+  if (!markPoints) throw new Error('Unable to sample the Thoughtstead mark.');
 
   for (let index = 0; index < count; index += 1) {
     const offset = index * 3;
-    const path = Math.pow(random(), 0.9);
-    const side = random() > 0.5 ? 1 : -1;
-    const thickness = 0.018 + (1 - path) * 0.052;
-    const jitter = (random() + random() + random() - 1.5) * thickness;
-    const color = particleColor(path, random() - 0.5);
+    const [u, v, height] = markPoints[index];
+    // Height within the mark, bottom to top, which is what the palette reads:
+    // cobalt through the lobes, mint and pale yellow across the crown.
+    const color = particleColor(height, random() - 0.5);
 
     origins[offset] = (random() * 2 - 1) * 1.82;
     origins[offset + 1] = (random() * 2 - 1) * 0.88;
     origins[offset + 2] = (random() * 2 - 1) * 0.5;
 
-    targets[offset] = side * (0.115 + 0.82 * Math.pow(1 - path, 0.72)) + jitter;
-    targets[offset + 1] = -0.61 + path * 1.28 + (random() - 0.5) * thickness * 1.7;
-    targets[offset + 2] = (random() - 0.5) * 0.48 + Math.sin(path * Math.PI) * 0.08;
+    targets[offset] = u * MARK_HEIGHT;
+    targets[offset + 1] = -v * MARK_HEIGHT;
+    // A shallow bulge so the mark reads as a solid rather than a decal.
+    targets[offset + 2] = (random() - 0.5) * 0.3 + Math.sin(height * Math.PI) * 0.12;
 
-    metadata[offset] = 1.05 + random() * 2.15;
+    metadata[offset] = 1.3 + random() * 2.3;
     metadata[offset + 1] = random();
     metadata[offset + 2] = 0.28 + random() * 0.72;
 
@@ -218,7 +325,7 @@ function createParticleRenderer(canvas: HTMLCanvasElement): ParticleRenderer | n
   addAttribute('a_color', colors);
 
   const uniforms = {
-    time: gl.getUniformLocation(program, 'u_time'),
+    phase: gl.getUniformLocation(program, 'u_phase'),
     formation: gl.getUniformLocation(program, 'u_formation'),
     dissolve: gl.getUniformLocation(program, 'u_dissolve'),
     push: gl.getUniformLocation(program, 'u_push'),
@@ -251,7 +358,7 @@ function createParticleRenderer(canvas: HTMLCanvasElement): ParticleRenderer | n
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-    gl.uniform1f(uniforms.time, frame.time);
+    gl.uniform1f(uniforms.phase, frame.phase);
     gl.uniform1f(uniforms.formation, frame.formation);
     gl.uniform1f(uniforms.dissolve, frame.dissolve);
     gl.uniform1f(uniforms.push, frame.push);
@@ -273,52 +380,135 @@ function createParticleRenderer(canvas: HTMLCanvasElement): ParticleRenderer | n
   };
 }
 
-function setPanelFrame(card: HTMLDivElement, name: string, progress: number, exit: number) {
-  const opacity = progress * (1 - exit);
+type PanelName = 'code' | 'agent' | 'prompt';
+
+/**
+ * Where each panel travels from, in the stage's own space.
+ *
+ * The workspace already declares `perspective: 1600px` and parks the panels at
+ * real depths — the editor at 0, the verdict at 34px, the prompt at 72px — each
+ * with its own Y-rotation. None of that used to be animated: all three faded up
+ * from `scale(.9)` and rose 42px, identical motion offset only in time, so the
+ * product arrived flat and only then occupied a stage that had already been
+ * paid for. Three copies of one animation read as one animation repeated rather
+ * than as a workspace assembling.
+ *
+ * These are OFFSETS that decay to zero, so the resting position stays a layout
+ * decision in the stylesheet and only the approach lives here.
+ */
+const PANEL_APPROACH: Record<PanelName, { x: number; y: number; z: number; rotate: number }> = {
+  // The editor is the largest surface and sits deepest, so it comes forward
+  // from furthest back and swings square to the viewer as it lands.
+  code: { x: -46, y: 34, z: -180, rotate: 5 },
+  // The verdict arrives from the right — the side it already faces.
+  agent: { x: 54, y: 22, z: -140, rotate: -6 },
+  // The prompt is the nearest surface and the last to land, so it slides up
+  // under the other two rather than flying in, and the stack reads bottom-last.
+  prompt: { x: 0, y: 52, z: -60, rotate: 0 },
+};
+
+function setPanelFrame(card: HTMLDivElement, name: PanelName, progress: number, exit: number) {
+  const approach = PANEL_APPROACH[name];
+  // Front-loaded on purpose: opaque by 40% of the travel. A panel that fades
+  // across its whole approach is semi-transparent while it moves, so the
+  // particle field shows through the editor and it reads as a ghost instead of
+  // a surface. The depth change now carries the arrival; the fade only starts it.
+  const opacity = clamp01(progress * 2.4) * (1 - exit);
   card.style.setProperty(`--${name}-opacity`, opacity.toFixed(4));
-  card.style.setProperty(`--${name}-scale`, mix(0.9, 1, progress).toFixed(4));
-  card.style.setProperty(`--${name}-y`, `${mix(42, -18 * exit, progress).toFixed(2)}px`);
+  // Shallower than the old .9: most of the size change is the panel genuinely
+  // coming forward through the perspective, and scaling on top of that as well
+  // double-counts it.
+  card.style.setProperty(`--${name}-scale`, mix(0.965, 1, progress).toFixed(4));
+  card.style.setProperty(`--${name}-x`, `${mix(approach.x, 0, progress).toFixed(2)}px`);
+  card.style.setProperty(`--${name}-y`, `${mix(approach.y, -18 * exit, progress).toFixed(2)}px`);
+  card.style.setProperty(`--${name}-z`, `${mix(approach.z, 0, progress).toFixed(2)}px`);
+  card.style.setProperty(`--${name}-rotate`, `${mix(approach.rotate, 0, progress).toFixed(3)}deg`);
 }
 
 function applyPresentationFrame(card: HTMLDivElement, seconds: number) {
-  const titleIn = smoothRange(5.1, 6.15, seconds);
-  const titleOut = smoothRange(7.1, 8.1, seconds);
+  // THE BEAT SHEET. The film used to spend its first 1.35s on nothing at all —
+  // particles drifting at the opening brightness with no event — and then took
+  // 4.4s to form the mark, so it was 6.1s in before it said its own name. That
+  // front is where "slow" was being felt, so it is the only thing that moved:
+  // the open is cut to a beat, the formation tightened to 4.0s, and everything
+  // from the title onward shifted 1.15s earlier by the same amount. Every HOLD
+  // is untouched — the title's 0.95s, the workspace's 2.65s (the only reading
+  // time in the film), the sign-off's 0.9s, and the gather's 3.5s. Shortening a
+  // hold is what makes a film feel rushed; shortening the wait before one does
+  // not.
+  const titleIn = smoothRange(3.95, 5.0, seconds);
+  const titleOut = smoothRange(5.95, 6.95, seconds);
   const titleOpacity = titleIn * (1 - titleOut);
-  const uiExit = smoothRange(11.8, 13.45, seconds);
-  const code = smoothRange(7.2, 8.25, seconds);
-  const agent = smoothRange(7.55, 8.7, seconds);
-  const prompt = smoothRange(8.05, 9.15, seconds);
-  const arch = smoothRange(1.6, 5.9, seconds) * (1 - smoothRange(12.2, 14.35, seconds));
+  const uiExit = smoothRange(12.0, 13.65, seconds);
+  // The sign-off overlaps the tail of the dissolve, so the mark resolves out of
+  // the scattering particles rather than waiting for a blank card.
+  const signoff = smoothRange(14.1, 15.1, seconds) * (1 - smoothRange(16.0, 16.9, seconds));
+  // THE BEAT BEFORE THE SCREENS. These used to start at 6.05s, while the title
+  // was still at about a quarter opacity and falling — the panels arrived on top
+  // of the word rather than after it. They now wait until the title has fully
+  // cleared at 6.95s and the mark has held alone for a beat.
+  const code = smoothRange(7.4, 8.45, seconds);
+  const agent = smoothRange(7.75, 8.9, seconds);
+  const prompt = smoothRange(8.25, 9.35, seconds);
+  const arch = smoothRange(0.85, 4.75, seconds) * (1 - smoothRange(12.4, 14.55, seconds));
 
   card.style.setProperty('--title-opacity', titleOpacity.toFixed(4));
   card.style.setProperty('--title-scale', mix(0.94, 1.035, titleIn).toFixed(4));
   card.style.setProperty('--arch-opacity', arch.toFixed(4));
+  card.style.setProperty('--signoff-opacity', signoff.toFixed(4));
+  card.style.setProperty('--signoff-scale', mix(0.965, 1, smoothRange(14.1, 15.1, seconds)).toFixed(4));
   setPanelFrame(card, 'code', code, uiExit);
   setPanelFrame(card, 'agent', agent, uiExit);
   setPanelFrame(card, 'prompt', prompt, uiExit);
   card.dataset.phase = SHOWCASE_TIMELINE.find(({ start, end }) => seconds >= start && seconds < end)?.phase || 'reset';
 
-  const formation = smoothRange(1.35, 5.75, seconds);
-  const dissolve = smoothRange(12.15, 14.45, seconds);
   const productPresence = Math.max(code, agent, prompt) * (1 - uiExit);
+
+  // THE SEAM. Every value the wrap can show — where each particle is, how
+  // bright it is, how far out the field has been pushed — has to arrive back at
+  // its t=0 value BY t=LOOP_SECONDS, or the restart reads as a cut however
+  // gently the sign-off faded. The film therefore does not end; it gathers the
+  // field back into the drift it opened on, and the loop point lands inside a
+  // state that is already the opening state.
+  //
+  // Two windows, deliberately offset. `collapse` lets go of the mark's target
+  // first, while the field is still fully dispersed and the change is invisible
+  // — do it in one window with the gather and the particles set off toward the
+  // mark before turning for the centre, which reads as a wobble. `gather` then
+  // brings them home: dispersal back to origin, the push relaxing, the light
+  // going with them so the field dims as it converges rather than before it.
+  const collapse = smoothRange(16.7, 19.0, seconds);
+  const gather = smoothRange(17.5, 21.0, seconds);
+  const formed = smoothRange(0.6, 4.6, seconds);
+
+  const formation = formed * (1 - collapse);
+  const dissolve = smoothRange(12.35, 14.65, seconds) * (1 - gather);
+  const presence = formed * (1 - gather);
   return {
-    time: seconds,
+    phase: (seconds / LOOP_SECONDS) * Math.PI * 2,
     formation,
     dissolve,
-    push: smoothRange(0, 13.8, seconds),
-    alpha: 0.12 + formation * 0.74 - productPresence * 0.34 - dissolve * 0.18,
+    push: smoothRange(0, 14.0, seconds) * (1 - gather),
+    // The particle field steps back behind the sign-off rather than competing
+    // with it — but only a step. At 0.46 it emptied the frame to near black and
+    // the credit sat on nothing; the film should still be dispersing behind it.
+    alpha: 0.14 + presence * 0.86 - productPresence * 0.34 - dissolve * 0.18 - signoff * 0.3,
   };
 }
 
 export function AnimatedShowcaseCard() {
+  const sectionRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
   const restartRef = useRef<() => void>(() => undefined);
 
   useEffect(() => {
+    const section = sectionRef.current;
     const card = cardRef.current;
     const canvas = canvasRef.current;
-    if (!card || !canvas) return;
+    const cursor = cursorRef.current;
+    if (!section || !card || !canvas || !cursor) return;
 
     let renderer: ParticleRenderer | null = null;
     try {
@@ -329,52 +519,147 @@ export function AnimatedShowcaseCard() {
 
     card.dataset.renderer = renderer ? 'webgl' : 'fallback';
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const hoverQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
     let reducedMotion = motionQuery.matches;
     let visible = false;
+    let engaged = false;
     let frameId = 0;
     let elapsedMs = 0;
     let previousTime = 0;
+
+    let scale = 1;
+    let scaleTarget = 1;
+    let pillX = 0;
+    let pillY = 0;
+    let pointerClientX = 0;
+    let pointerClientY = 0;
+    let cursorActive = false;
 
     const paint = (seconds: number) => {
       const particleFrame = applyPresentationFrame(card, seconds);
       renderer?.render(particleFrame);
     };
 
-    const animate = (now: number) => {
-      if (!visible || reducedMotion) return;
-      if (!previousTime) previousTime = now;
-      elapsedMs = (elapsedMs + Math.min(now - previousTime, 64)) % (LOOP_SECONDS * 1000);
-      previousTime = now;
-      paint(elapsedMs / 1000);
-      frameId = window.requestAnimationFrame(animate);
+    // Measured on the section, not the card. The card carries the scale, so
+    // reading its own rect would feed the scrub its own output.
+    const readScaleTarget = () => {
+      const viewport = window.innerHeight;
+      if (viewport <= 0) return 1;
+      const progress = clamp01((viewport - section.getBoundingClientRect().top) / (viewport / 2));
+      return ENTRY_MIN_SCALE + (1 - ENTRY_MIN_SCALE) * (1 - (1 - progress) ** 2);
     };
 
-    const start = () => {
-      if (!visible || reducedMotion || frameId) return;
+    const writeScale = (value: number) => {
+      scale = value;
+      card.style.setProperty('--card-scale', value.toFixed(4));
+    };
+
+    // The pointer is kept in client coordinates and converted every frame, so
+    // the pill stays under a motionless cursor while the card scrolls and
+    // scales beneath it.
+    const writePill = (dt: number) => {
+      const rect = card.getBoundingClientRect();
+      const ratio = rect.width > 0 ? card.offsetWidth / rect.width : 1;
+      const targetX = (pointerClientX - rect.left) * ratio;
+      const targetY = (pointerClientY - rect.top) * ratio;
+      const follow = dt > 0 ? 1 - Math.exp(-dt * CURSOR_FOLLOW_RATE) : 1;
+      pillX += (targetX - pillX) * follow;
+      pillY += (targetY - pillY) * follow;
+      cursor.style.setProperty('--cursor-x', `${pillX.toFixed(2)}px`);
+      cursor.style.setProperty('--cursor-y', `${pillY.toFixed(2)}px`);
+    };
+
+    const step = (now: number) => {
+      frameId = 0;
+      if (reducedMotion) return;
+      if (!previousTime) previousTime = now;
+      const dt = Math.min((now - previousTime) / 1000, 0.064);
+      previousTime = now;
+
+      scaleTarget = readScaleTarget();
+      const settled = Math.abs(scaleTarget - scale) < 0.0005;
+      writeScale(settled ? scaleTarget : scale + (scaleTarget - scale) * (1 - Math.exp(-dt * ENTRY_SCRUB_RATE)));
+
+      if (cursorActive) writePill(dt);
+
+      if (visible) {
+        elapsedMs = (elapsedMs + dt * 1000) % (LOOP_SECONDS * 1000);
+        paint(elapsedMs / 1000);
+      }
+
+      if (engaged || cursorActive || !settled) frameId = window.requestAnimationFrame(step);
+      else previousTime = 0;
+    };
+
+    const wake = () => {
+      if (frameId || reducedMotion) return;
       previousTime = 0;
-      frameId = window.requestAnimationFrame(animate);
-      card.dataset.running = 'true';
+      frameId = window.requestAnimationFrame(step);
     };
 
     const stop = () => {
       if (frameId) window.cancelAnimationFrame(frameId);
       frameId = 0;
       previousTime = 0;
-      card.dataset.running = 'false';
     };
 
     restartRef.current = () => {
       elapsedMs = 0;
-      paint(0);
-      stop();
-      start();
+      paint(reducedMotion ? STATIC_FRAME_SECONDS : 0);
+      wake();
     };
 
+    const localise = (event: MouseEvent) => {
+      pointerClientX = event.clientX;
+      pointerClientY = event.clientY;
+    };
+
+    const showCursor = (event: MouseEvent) => {
+      if (reducedMotion || !hoverQuery.matches || cursorActive) return;
+      localise(event);
+      const rect = card.getBoundingClientRect();
+      const ratio = rect.width > 0 ? card.offsetWidth / rect.width : 1;
+      // Placed, not flown in: the pill grows where the pointer already is.
+      pillX = (pointerClientX - rect.left) * ratio;
+      pillY = (pointerClientY - rect.top) * ratio;
+      cursor.style.setProperty('--cursor-x', `${pillX.toFixed(2)}px`);
+      cursor.style.setProperty('--cursor-y', `${pillY.toFixed(2)}px`);
+      cursorActive = true;
+      card.dataset.cursor = 'active';
+      wake();
+    };
+
+    const hideCursor = () => {
+      if (!cursorActive) return;
+      cursorActive = false;
+      card.dataset.cursor = 'idle';
+    };
+
+    const trackCursor = (event: MouseEvent) => {
+      if (!cursorActive) {
+        showCursor(event);
+        return;
+      }
+      localise(event);
+      wake();
+    };
+
+    // Two observers. `visible` decides whether the loop is worth painting;
+    // `engaged` reaches a viewport further out, so the entry scrub is already
+    // running before any of the card has been reached.
     const visibilityObserver = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting && entry.intersectionRatio > 0.02;
-      if (visible) start();
-      else stop();
+      visible = entry.isIntersecting && entry.intersectionRatio > 0.02 && !reducedMotion;
+      card.dataset.running = visible ? 'true' : 'false';
+      if (visible) wake();
     }, { threshold: [0, 0.02, 0.15] });
+
+    const proximityObserver = new IntersectionObserver(([entry]) => {
+      const wasEngaged = engaged;
+      engaged = entry.isIntersecting;
+      if (!engaged || reducedMotion) return;
+      if (!wasEngaged) writeScale(readScaleTarget());
+      wake();
+    }, { rootMargin: '100% 0px 100% 0px' });
 
     const resizeObserver = new ResizeObserver(() => {
       renderer?.resize();
@@ -386,42 +671,72 @@ export function AnimatedShowcaseCard() {
       card.dataset.motion = reducedMotion ? 'reduced' : 'full';
       if (reducedMotion) {
         stop();
+        hideCursor();
+        writeScale(1);
+        visible = false;
+        card.dataset.running = 'false';
         elapsedMs = STATIC_FRAME_SECONDS * 1000;
         paint(STATIC_FRAME_SECONDS);
       } else {
         elapsedMs = 0;
+        writeScale(readScaleTarget());
         paint(0);
-        start();
+        wake();
       }
     };
 
     card.dataset.motion = reducedMotion ? 'reduced' : 'full';
     card.dataset.running = 'false';
+    card.dataset.cursor = 'idle';
+    if (!reducedMotion) writeScale(readScaleTarget());
     paint(reducedMotion ? STATIC_FRAME_SECONDS : 0);
     visibilityObserver.observe(card);
+    proximityObserver.observe(section);
     resizeObserver.observe(card);
     motionQuery.addEventListener('change', handleMotionPreference);
+    card.addEventListener('mouseenter', showCursor);
+    card.addEventListener('mousemove', trackCursor);
+    card.addEventListener('mouseleave', hideCursor);
+    window.addEventListener('scroll', wake, { passive: true });
+    window.addEventListener('resize', wake, { passive: true });
 
     return () => {
       stop();
       visibilityObserver.disconnect();
+      proximityObserver.disconnect();
       resizeObserver.disconnect();
       motionQuery.removeEventListener('change', handleMotionPreference);
+      card.removeEventListener('mouseenter', showCursor);
+      card.removeEventListener('mousemove', trackCursor);
+      card.removeEventListener('mouseleave', hideCursor);
+      window.removeEventListener('scroll', wake);
+      window.removeEventListener('resize', wake);
       renderer?.destroy();
       restartRef.current = () => undefined;
     };
   }, []);
 
   return (
-    <section className={styles.section} aria-label="Thoughtstead animated product introduction" data-showcase-section>
-      <div ref={cardRef} className={styles.card} data-showcase-card>
+    <section
+      ref={sectionRef}
+      className={styles.section}
+      aria-label="Thoughtstead animated product introduction"
+      data-showcase-section
+    >
+      {/* The whole card replays, as the pointer pill promises it will. The
+          button below is the keyboard and screen-reader route to the same
+          thing, so this handler needs no role of its own. */}
+      <div
+        ref={cardRef}
+        className={styles.card}
+        data-showcase-card
+        onClick={() => restartRef.current()}
+      >
         <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         <div className={styles.atmosphere} aria-hidden="true" />
 
         <div className={styles.titleMoment} aria-hidden="true">
-          <span className={styles.titleMarker} />
           <strong>Thoughtstead</strong>
-          <span className={styles.titleCaption}>The whole product, connected.</span>
         </div>
 
         <div className={styles.workspace} aria-hidden="true">
@@ -453,16 +768,34 @@ export function AnimatedShowcaseCard() {
           </article>
         </div>
 
+        <div className={styles.signoff} aria-hidden="true">
+          <BigFreightLifeMark className={styles.signoffMark} />
+          <span className={styles.signoffLine}>Deliver with intent.</span>
+        </div>
+
         <div className={styles.vignette} aria-hidden="true" />
-        <button
-          type="button"
-          className={styles.playButton}
-          onClick={() => restartRef.current()}
-          aria-label="Play the Thoughtstead animated product introduction from the beginning"
-        >
-          <span aria-hidden="true" />
-          Play intro
-        </button>
+
+        <div ref={cursorRef} className={styles.cursor} aria-hidden="true">
+          <span className={styles.cursorPill}>
+            <span className={styles.cursorGlyph} />
+            Play intro
+          </span>
+        </div>
+
+        <div className={styles.playSlot}>
+          <button
+            type="button"
+            className={styles.playButton}
+            onClick={(event) => {
+              event.stopPropagation();
+              restartRef.current();
+            }}
+            aria-label="Play the Thoughtstead animated product introduction from the beginning"
+          >
+            <span className={styles.playGlyph} aria-hidden="true" />
+            <span className="sr-only">Play intro</span>
+          </button>
+        </div>
       </div>
     </section>
   );
