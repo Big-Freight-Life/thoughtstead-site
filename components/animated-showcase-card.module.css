@@ -176,7 +176,7 @@
   align-items: center;
   gap: .75rem;
   padding-inline: clamp(.75rem, 1.4vw, 1.3rem);
-  color: #727783;
+  color: #5d6270;
   border-bottom: 1px solid #dfe1e7;
   background: #f0f1f4;
   font-family: var(--font-mono), ui-monospace, monospace;
@@ -205,7 +205,7 @@
   align-items: end;
   gap: clamp(.32rem, .72vw, .8rem);
   padding: clamp(.8rem, 1.5vw, 1.5rem) .7rem 0 0;
-  color: #555968;
+  color: #8a8f9f;
   border-right: 1px solid #2b2d37;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: clamp(.42rem, .62vw, .68rem);
@@ -233,7 +233,7 @@
   align-items: center;
   gap: .7rem;
   padding-inline: clamp(.75rem, 1.4vw, 1.3rem);
-  color: #777b87;
+  color: #5d6270;
   background: #f0f1f4;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: clamp(.42rem, .54vw, .58rem);
@@ -253,7 +253,7 @@
 }
 
 .agentHeader {
-  color: #747985;
+  color: #5d6270;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: clamp(.46rem, .62vw, .65rem);
   letter-spacing: .08em;
@@ -267,7 +267,7 @@
 .agentPanel > p { margin-top: clamp(.8rem, 1.5vw, 1.45rem); color: #5f6470; font-size: clamp(.54rem, .82vw, .82rem); line-height: 1.52; }
 .recommendation { margin-top: clamp(.8rem, 1.6vw, 1.5rem); padding: clamp(.65rem, 1.05vw, 1rem); align-items: flex-start; flex-direction: column; gap: .35rem; border: 1px solid #d7dae1; background: #eef2ff; }
 .recommendation span,
-.agentPanel footer span { color: #676c78; font-family: var(--font-mono), ui-monospace, monospace; font-size: clamp(.4rem, .53vw, .56rem); letter-spacing: .06em; text-transform: uppercase; }
+.agentPanel footer span { color: #5d6270; font-family: var(--font-mono), ui-monospace, monospace; font-size: clamp(.4rem, .53vw, .56rem); letter-spacing: .06em; text-transform: uppercase; }
 .recommendation strong { color: #122f8c; font-size: clamp(.58rem, .82vw, .82rem); font-weight: 600; }
 .agentPanel footer { margin-top: clamp(.75rem, 1.4vw, 1.35rem); padding-top: clamp(.65rem, 1.1vw, 1rem); border-top: 1px solid #d7dae1; }
 .agentPanel footer b { color: #7a5400; font-size: clamp(.46rem, .66vw, .68rem); font-weight: 600; }
@@ -283,7 +283,7 @@
 }
 
 .promptPanel b { display: block; font-size: clamp(.54rem, .76vw, .76rem); font-weight: 600; }
-.promptPanel p { margin-top: .2rem; color: #666b76; font-size: clamp(.46rem, .7vw, .72rem); white-space: nowrap; }
+.promptPanel p { margin-top: .2rem; color: #5d6270; font-size: clamp(.46rem, .7vw, .72rem); white-space: nowrap; }
 .promptArrow { color: var(--accent); font-size: clamp(.8rem, 1.2vw, 1.15rem); }
 
 .cursor {
@@ -445,7 +445,7 @@
   .card { width: calc(100vw - 12px); border-radius: var(--radius-xl); }
   .workspace { width: 760px; }
   .playSlot { right: 14px; bottom: 14px; }
-  .playButton { width: 42px; height: 42px; }
+  .playButton { width: 44px; height: 44px; }
   .titleMoment strong { font-size: clamp(2.2rem, 13vw, 3.5rem); }
 }
 
