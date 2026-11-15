@@ -41,14 +41,15 @@ test('landing sections share one white canvas without divider rules', async ({ p
     }),
   );
 
-  // rgb(240, 238, 229) is #f0eee5 — the bone ground taken from the bfl.design
-  // hero so the two properties read as one house. It was #fcfcfb when this
-  // guard was written; the guard is about the canvas being ONE colour across
-  // every band, not about which colour, so the expectation moves with --bg.
+  // rgb(252, 252, 251) is #fcfcfb — the app's flat page ground (--background in
+  // system-1's globals.css). It was #f0eee5 (the bone ground) between the
+  // bfl.design hero and the 2026-11 design-system pass; the guard is about the
+  // canvas being ONE colour across every band, not about which colour, so the
+  // expectation moves with --bg.
   // If this fails after a palette change, update the value — do not widen it to
   // accept any colour, which is the banded-slab page it exists to prevent.
   expect(sectionStyles.every(({ background }) =>
-    background === 'rgb(240, 238, 229)' || background === 'rgba(0, 0, 0, 0)')).toBe(true);
+    background === 'rgb(252, 252, 251)' || background === 'rgba(0, 0, 0, 0)')).toBe(true);
   expect(sectionStyles.every(({ borderTop, borderBottom }) => borderTop === '0px' && borderBottom === '0px')).toBe(true);
 
   const chrome = await page.locator('nav[aria-label="Main"]').locator('..').evaluate((header) => {
@@ -61,8 +62,8 @@ test('landing sections share one white canvas without divider rules', async ({ p
   });
   // Same bone ground as the sections above — the nav and footer share the page
   // canvas rather than banding against it, which is the whole point of the check.
-  expect(chrome).toEqual({ background: 'rgb(240, 238, 229)', borderBottom: '0px' });
-  expect(footer).toEqual({ background: 'rgb(240, 238, 229)', borderTop: '0px' });
+  expect(chrome).toEqual({ background: 'rgb(252, 252, 251)', borderBottom: '0px' });
+  expect(footer).toEqual({ background: 'rgb(252, 252, 251)', borderTop: '0px' });
   await expect(page.locator('main .eyebrow')).toHaveCount(0);
 });
 

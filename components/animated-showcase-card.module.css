@@ -264,13 +264,13 @@
 
 .agentHeader i { width: .52rem; height: .52rem; rotate: 45deg; background: var(--acid); }
 .agentIdentity { margin-top: clamp(1rem, 2vw, 2rem); align-items: flex-start; flex-direction: column; gap: .25rem; }
-.agentIdentity b { font-size: clamp(.8rem, 1.25vw, 1.2rem); font-weight: 650; letter-spacing: -.025em; }
+.agentIdentity b { font-size: clamp(.8rem, 1.25vw, 1.2rem); font-weight: 600; letter-spacing: -.025em; }
 .agentIdentity span { color: #147159; font-size: clamp(.48rem, .66vw, .68rem); }
 .agentPanel > p { margin-top: clamp(.8rem, 1.5vw, 1.45rem); color: #5f6470; font-size: clamp(.54rem, .82vw, .82rem); line-height: 1.52; }
 .recommendation { margin-top: clamp(.8rem, 1.6vw, 1.5rem); padding: clamp(.65rem, 1.05vw, 1rem); align-items: flex-start; flex-direction: column; gap: .35rem; border: 1px solid #d7dae1; background: #eef2ff; }
 .recommendation span,
 .agentPanel footer span { color: #676c78; font-family: var(--font-mono), ui-monospace, monospace; font-size: clamp(.4rem, .53vw, .56rem); letter-spacing: .06em; text-transform: uppercase; }
-.recommendation strong { color: #122f8c; font-size: clamp(.58rem, .82vw, .82rem); font-weight: 650; }
+.recommendation strong { color: #122f8c; font-size: clamp(.58rem, .82vw, .82rem); font-weight: 600; }
 .agentPanel footer { margin-top: clamp(.75rem, 1.4vw, 1.35rem); padding-top: clamp(.65rem, 1.1vw, 1rem); border-top: 1px solid #d7dae1; }
 .agentPanel footer b { color: #7a5400; font-size: clamp(.46rem, .66vw, .68rem); font-weight: 600; }
 
@@ -284,7 +284,7 @@
   font-size: clamp(.7rem, 1.1vw, 1rem);
 }
 
-.promptPanel b { display: block; font-size: clamp(.54rem, .76vw, .76rem); font-weight: 650; }
+.promptPanel b { display: block; font-size: clamp(.54rem, .76vw, .76rem); font-weight: 600; }
 .promptPanel p { margin-top: .2rem; color: #666b76; font-size: clamp(.46rem, .7vw, .72rem); white-space: nowrap; }
 .promptArrow { color: var(--accent); font-size: clamp(.8rem, 1.2vw, 1.15rem); }
 
@@ -311,7 +311,7 @@
   background: #fcfcfb;
   box-shadow: 0 10px 30px rgb(0 0 0 / .3);
   font-size: .82rem;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -.01em;
   white-space: nowrap;
   /* Grows from under the pointer rather than from beside it: the origin is the
@@ -439,11 +439,7 @@
 .card[data-renderer='fallback'] .atmosphere {
   opacity: .9;
   background:
-    radial-gradient(circle at 50% 28%, rgb(244 190 199 / .24) 0 1px, transparent 2px),
-    radial-gradient(circle at 38% 58%, rgb(36 87 255 / .6) 0 1px, transparent 2px),
-    radial-gradient(circle at 62% 58%, rgb(149 201 255 / .58) 0 1px, transparent 2px),
     radial-gradient(ellipse 34% 60% at 50% 62%, rgb(36 87 255 / .25), transparent 68%);
-  background-size: 31px 27px, 23px 29px, 29px 21px, auto;
 }
 
 @media (max-width: 720px) {
