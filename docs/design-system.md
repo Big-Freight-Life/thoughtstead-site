@@ -38,6 +38,7 @@ When the app retunes a token, change it here in the same pass.
 | `--faint` | `#6b6e6b` | site only, 5.03:1 on the page, 4.74:1 on a card |
 | `--line` / `--line-2` | `#d2cfc5` / `#a9a59a` | `--border` / `--border-strong` |
 | `--control-border` | `#827e73` | `--control-border` (3.95:1, the edge of a control) |
+| `--control-border-dark` | `#7d7b72` | dark-theme `--control-border`, for fields on dark panels |
 | `--accent-fill` | `#2457ff` | `--action-fill` |
 | `--accent` | `#1747e6` | `--action` (hover) |
 | `--accent-active` | `#1239ba` | `--action-active` |
@@ -53,8 +54,8 @@ own `rounded-*` utilities resolve to the same scale through `@theme`.
 | Token | Value | Use on the site |
 | --- | --- | --- |
 | `--radius-sm` | .3rem (~5px) | chips, inline code |
-| `--radius-md` | .4rem (~6px) | buttons, tabs |
-| `--radius-lg` | .5rem (8px) | inputs |
+| `--radius-md` | .4rem (~6px) | the one control role: buttons, inputs, tabs |
+| `--radius-lg` | .5rem (8px) | small surfaces (inputs moved to `md`, per the approved 2026-11-13 spec §4) |
 | `--radius-xl` | .7rem (~11px) | cards, panels, the price card, FAQ rows, tables, code blocks |
 | `--radius-2xl` | .9rem (~14px) | the large dark stage and the showcase screen |
 

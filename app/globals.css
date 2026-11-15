@@ -26,6 +26,9 @@
   --line-2: #a9a59a;
   /* THE EDGE OF A CONTROL: outline buttons and inputs. 3.95:1 on the page. */
   --control-border: #827e73;
+  /* Same token on a dark panel: --control-border in the app's dark theme
+     (system-1 src/app/globals.css). 3.77:1 on the dark field, 4.36 on the panel. */
+  --control-border-dark: #7d7b72;
   /* The one focus ring: 2px solid, 2px offset (the app's `focus-ring`). */
   --ring: #2457ff;
   /* The app's radius scale, derived from one number exactly as it is there. */
@@ -358,7 +361,7 @@ body { margin:0; background-color:var(--bg);
   min-height:2.75rem;
   padding:.5rem .9rem;
   border:1px solid var(--control-border);
-  border-radius:var(--radius-lg);
+  border-radius:var(--radius-md);
   background:var(--bg);
   color:var(--text);
   font-size:1rem;
@@ -371,7 +374,7 @@ body { margin:0; background-color:var(--bg);
 .early-access-done { min-height:2.75rem; display:flex; align-items:center; color:var(--text); font-size:var(--t-body); }
 .early-access-trap { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
 .early-access-dark { margin-inline:auto; }
-.early-access-dark .early-access-input { background:rgb(255 255 255 / .06); color:#f7f8fa; border-color:rgb(247 248 250 / .6); }
+.early-access-dark .early-access-input { background:rgb(255 255 255 / .06); color:#f7f8fa; border-color:var(--control-border-dark); }
 .early-access-dark .early-access-input::placeholder { color:rgb(247 248 250 / .6); }
 .early-access-dark .early-access-input:focus,
 .early-access-dark .hosted-cta:focus-visible { outline-color:#8ea9ff; }
