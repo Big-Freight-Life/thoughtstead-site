@@ -35,7 +35,7 @@ export function DocsNav() {
               <Link
                 href={link.href}
                 aria-current={isActive ? 'page' : undefined}
-                className={`block rounded-md px-3 py-2.5 text-sm transition-colors ${
+                className={`block rounded-md px-3 py-2.5 text-sm max-md:flex max-md:min-h-11 max-md:items-center transition-colors ${
                   isActive
                     ? 'bg-accent-soft font-medium text-accent'
                     : 'text-muted hover:text-text'
