@@ -76,7 +76,13 @@ buttons are 44px on a phone. Labels are sentence case; only small mono
 micro-labels are uppercase. Focus is one 2px solid `--ring` outline with a 2px
 offset, set once for every interactive element.
 
+## Tap targets
+
+On a phone (390px) every link, button, summary and tab outside running prose is at least 44px tall and wide; desktop sizes are unchanged. Docs sidebar links, the play button, the footer links and the buttons inside the phone mockup follow it.
+
 ## Contrast
 
 Text 4.5:1 and non-text marks 3:1 on their surface. The e2e suite pins the page
 canvas (`landing sections share one white canvas`) and phone tap targets.
+
+Small text on the dark mockups (context stage, matrix cards, showcase editor) is held to 4.5:1 against its real background, so lighten the text, never the background; 3:1 applies only to 24px+ (or bold 18.66px+) text and non-text marks.
