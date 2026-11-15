@@ -38,6 +38,8 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.4);
   --radius-2xl: calc(var(--radius) * 1.8);
+  /* Site-only: the full-width showcase card is far larger than any app surface, so it takes a larger corner in proportion. */
+  --radius-3xl: calc(var(--radius) * 3.5);
   --accent: #1747e6;
   /* The mark's blue. Shared with ThoughtsteadMark's `accent`, the context
      stage and every favicon — change it in all of them or the site, the app
@@ -103,6 +105,8 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.4);
   --radius-2xl: calc(var(--radius) * 1.8);
+  /* Site-only: the full-width showcase card is far larger than any app surface, so it takes a larger corner in proportion. */
+  --radius-3xl: calc(var(--radius) * 3.5);
 }
 
 @theme inline {

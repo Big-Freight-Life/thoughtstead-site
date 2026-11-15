@@ -36,7 +36,7 @@
   margin-inline: auto;
   overflow: hidden;
   isolation: isolate;
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-3xl);
   background: #020204;
   /* The entry scrub. Antigravity animates the whole section; ours lives on the
      card so the section's padding is not scaled with it. The value is written
@@ -442,7 +442,7 @@
 
 @media (max-width: 720px) {
   .section { padding-top: 6px; }
-  .card { width: calc(100vw - 12px); border-radius: var(--radius-xl); }
+  .card { width: calc(100vw - 12px); border-radius: var(--radius-2xl); }
   .workspace { width: 760px; }
   .playSlot { right: 14px; bottom: 14px; }
   .playButton { width: 44px; height: 44px; }
