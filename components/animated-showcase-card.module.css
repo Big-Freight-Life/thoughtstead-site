@@ -36,10 +36,8 @@
   margin-inline: auto;
   overflow: hidden;
   isolation: isolate;
-  border: 1px solid #202126;
-  border-radius: 38px;
+  border-radius: var(--radius-2xl);
   background: #020204;
-  box-shadow: 0 42px 110px -62px rgb(17 17 15 / .62);
   /* The entry scrub. Antigravity animates the whole section; ours lives on the
      card so the section's padding is not scaled with it. The value is written
      every frame by the scroll scrub, never transitioned — a transition would
@@ -444,7 +442,7 @@
 
 @media (max-width: 720px) {
   .section { padding-top: 6px; }
-  .card { width: calc(100vw - 12px); border-radius: 20px; }
+  .card { width: calc(100vw - 12px); border-radius: var(--radius-xl); }
   .workspace { width: 760px; }
   .playSlot { right: 14px; bottom: 14px; }
   .playButton { width: 42px; height: 42px; }
