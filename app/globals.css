@@ -163,6 +163,8 @@ body { margin:0; background-color:var(--bg);
 .doc-prose :is(pre,code) { font-size:.875em; }
 .doc-prose pre { background:var(--surface); border-radius:var(--radius-xl); }
 .doc-prose pre { padding:1rem 1.25rem; }
+.doc-prose { --tw-prose-pre-code:var(--text); --tw-prose-pre-bg:var(--surface); }
+.doc-prose pre code { background:transparent; }
 /* Tables and callouts take the same surface as every card: card tone, the xl
    radius, no outer border. Rows keep one quiet hairline between them. */
 .doc-prose { --tw-prose-th-borders:var(--line); }
