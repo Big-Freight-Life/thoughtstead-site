@@ -34,7 +34,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://thoughtstead.com'),
   title: {
-    default: 'Thoughtstead — a life operating system',
+    default: 'Thoughtstead — know whether you should',
     template: '%s · Thoughtstead',
   },
   description:

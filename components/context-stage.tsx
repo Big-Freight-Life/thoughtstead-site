@@ -21,7 +21,7 @@ const CONTEXTS = {
     title: 'Big Freight Life',
     kicker: 'Company / operating context',
     accent: '#ff7654',
-    nav: ['Projects', 'Meetings', 'Documents', 'People', 'Receivable'],
+    nav: ['Projects', 'Meetings', 'Documents', 'People', 'Proposals'],
     chain: [
       ['Meeting', 'Scope moved during the customer review.'],
       ['Decision', 'The release moves with it.'],
@@ -29,18 +29,18 @@ const CONTEXTS = {
     ],
     note: 'The work follows the decision, not the other way around.',
   },
-  household: {
-    label: 'Household',
-    title: 'Home',
-    kicker: 'Life / private context',
+  client: {
+    label: 'Client',
+    title: 'Acme Field Services',
+    kicker: 'Engagement / client context',
     accent: '#20c997',
-    nav: ['Health', 'Maintenance', 'Warranties', 'Documents', 'People'],
+    nav: ['Brief', 'Readiness', 'Opportunity', 'Business case', 'Pilot'],
     chain: [
-      ['Document', 'A warranty arrives and files itself.'],
-      ['Warranty', 'Coverage and expiry stay attached.'],
-      ['Maintenance', 'The next service knows what is covered.'],
+      ['Interview', 'Dispatchers override the routing most mornings.'],
+      ['Evidence', 'The override rate becomes the baseline.'],
+      ['Business case', 'The case is built on what they actually do.'],
     ],
-    note: 'Same system underneath. A completely separate world.',
+    note: 'Every step points back to what the client said.',
   },
 } as const;
 

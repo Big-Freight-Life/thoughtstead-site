@@ -26,7 +26,8 @@ import { ValueMatrixCards } from '@/components/value-matrix-cards';
 // real confusion matrix against a human baseline; decisions are stored with the
 // meeting and the thinking that produced them; a concept holds the storyboard
 // and the typed system as one record; outbound agent work parks for approval in
-// the database rather than in a prompt; and home is its own isolated context.
+// the database rather than in a prompt; and a pilot's results and fixes stay
+// on the record of the thing that shipped.
 // Nothing here is a capability invented to make a row balance.
 //
 // Phrases are kept to one line each. The two columns are a grid rather than two
@@ -48,16 +49,16 @@ const AUDIENCE = [
   ['Six weeks later, nobody remembers why', 'Every decision keeps the meeting it came from'],
   ['What users see and what’s built stop matching', 'One record holds both, moment tied to component'],
   ['You’re the bottleneck on everything that goes out', 'An agent writes it and waits for your approval'],
-  ['The warranty runs out the week you ship', 'Home gets a context of its own'],
+  ['The pilot ends and what it taught you leaves with the team', 'Pilot results and fixes stay attached to what you shipped'],
 ];
 
 // The card had a price and a dead button and nothing else, so two thirds of it
 // was empty and a decorative wedge had been drawn across the gap to fill it.
 // These are what the plan carries, and they are the reason the card is a card.
 const INCLUDES = [
-  ['Every surface', 'The studio, and the rest of it'],
-  ['AI included', 'No API key to manage, no per-token bill'],
-  ['Every context', 'As many as the things you run'],
+  ['The whole design environment', 'Research to pilot learning, in one place'],
+  ['AI included', 'No API key or token bill. Or bring your own Claude Code or Codex'],
+  ['A context per client', 'Isolated, so nothing crosses between them'],
   ['Guests', 'Comment on a concept without a seat'],
   ['Export', 'Everything, one click, any time'],
 ];
@@ -72,8 +73,8 @@ const FAQS = [
     a: 'Thoughtstead has more than twenty component kinds, but only Model, Prediction and Agent carry the twelve-question contract. They are the three that make a call you may have to defend.',
   },
   {
-    q: 'Why call it a life operating system?',
-    a: 'Product work is one context, not the whole of your life. Thoughtstead gives each thing you run its own isolated context, while keeping one system for capture, search and agents underneath.',
+    q: 'Can I use my own AI?',
+    a: 'Yes. In the Mac app, the Claude Code or Codex you already use works inside Thoughtstead, with only Thoughtstead’s tools. It can read your workspace and make changes you can see. Anything that sends or deletes waits for your approval.',
   },
   {
     q: 'Can I leave?',
@@ -211,10 +212,10 @@ export default function LandingPage() {
 
         <Section className="contexts-section" wide>
           <div className="contexts-intro">
-            <h2>One operating system. Separate worlds.</h2>
+            <h2>One workspace per client. Nothing crosses the wall.</h2>
             <p>
-              Product, company, and household run on the same foundation. Each context is
-              isolated, so search and agents never cross the wall between them.
+              Each client, company or product gets its own context. Each one is isolated, so
+              search and agents never cross the wall between them.
             </p>
           </div>
           <ContextStage />
@@ -287,8 +288,8 @@ export default function LandingPage() {
           <div className="final-cta-panel">
             <Reveal className="final-cta-inner">
               <h2 className="display final-cta-title">
-                <span>Life is moving too fast</span>
-                <span>to be the only one holding it together.</span>
+                <span>Know whether you should,</span>
+                <span>before you build it.</span>
               </h2>
               <div className="final-cta-action"><EarlyAccessCta placement="closing" tone="dark" /></div>
             </Reveal>

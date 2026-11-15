@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { ThoughtsteadMark } from '@/components/thoughtstead-logo';
 
-export const alt = 'Thoughtstead — a life operating system';
+export const alt = 'Thoughtstead — know whether you should';
 export const size = {
   width: 1200,
   height: 630,
@@ -42,7 +42,7 @@ export default async function Image() {
             opacity: 0.66,
           }}
         >
-          A life operating system.
+          Know whether you should, before you build it.
         </div>
       </div>
     ),

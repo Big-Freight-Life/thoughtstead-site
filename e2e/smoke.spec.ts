@@ -12,13 +12,15 @@ test('landing renders the pitch and hosted pricing', async ({ page }) => {
   // carries the argument — assert it by name, not just by the h1.
   await expect(page.locator('.hero-turn')).toHaveText(/Nothing says if you should/i);
   await expect(
-    page.getByRole('heading', { name: /Life is moving too fast to be the only one.*holding it together/i }),
+    page.getByRole('heading', { name: /Know whether you should.*before you build it/i }),
   ).toBeVisible();
-  // The category line. Thoughtstead is a life operating system, not an "AI
-  // second brain" (undersold it, borrowed category) and not a "business OS"
-  // (contested, and strands /health, /lifestyle, /maintenance, /warranties).
-  await expect(page.getByText(/life operating system/i).first()).toBeVisible();
+  // The category line. Since 2026-11-11 Thoughtstead is a design environment
+  // for AI, not an "AI second brain" (undersold it, borrowed category) and no
+  // longer a "life operating system" (the household, health and warranty pages
+  // it was named for are retired).
+  await expect(page.getByText(/design environment/i).first()).toBeVisible();
   await expect(page.getByText(/second brain/i)).toHaveCount(0);
+  await expect(page.getByText(/life operating system/i)).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Individual' })).toBeVisible();
   await expect(page.locator('.price-card-head p')).toHaveText(/Available now|Launching soon/);
   await expect(page.getByText('$19.99').first()).toBeVisible();
@@ -135,8 +137,10 @@ const PAGES = ['/', '/privacy', '/terms', '/docs', '/docs/mcp', '/docs/connector
 const RETIRED = [
   // Cancelled 2026-08-11. One hosted instance; nothing is distributed.
   { pattern: /self-host/i, why: 'the self-hosted tier was cancelled 2026-08-11' },
-  // Retired 2026-08-25. Thoughtstead is a life operating system.
+  // Retired 2026-08-25.
   { pattern: /second brain/i, why: 'the "AI second brain" framing was retired 2026-08-25' },
+  // Retired 2026-11-11, with the pages it was named for.
+  { pattern: /life operating system/i, why: 'the "life operating system" framing was retired 2026-11-11 with the household, health and warranty pages' },
   // Hosted subscribers have no deployment, no env vars, and nothing to redeploy.
   { pattern: /YOUR-APP\.vercel\.app/i, why: 'subscribers have no deployment of their own' },
   { pattern: /your own Google OAuth app/i, why: 'the Google OAuth app is ours to run, not the subscriber\'s' },
@@ -514,7 +518,7 @@ test('the page renders fully with JavaScript disabled', async ({ browser }) => {
   // the wrong reason. The closing headline is the final content on the page, so
   // seeing it proves the whole document rendered rather than merely that some
   // .reveal block un-hid.
-  await expect(page.getByText(/holding it together/i).first()).toBeVisible();
+  await expect(page.getByText(/before you build it/i).first()).toBeVisible();
   await context.close();
 });
 
