@@ -78,7 +78,15 @@ export async function saveEarlyAccess(
       values (${email}, ${EARLY_ACCESS_SOURCE}, ${JSON.stringify(meta)}::jsonb)
     `);
     return 'saved';
-  } catch {
+  } catch (err) {
+    // The visitor gets a plain "try again"; the reason goes to the server log so a
+    // wrong credential or an outage is visible instead of silent. Redacted first:
+    // never let a connection string or password reach a log line.
+    const reason = err instanceof Error ? err.message : 'unknown error';
+    console.error(
+      '[early-access] write failed:',
+      reason.replace(/postgres(?:ql)?:\/\/\S+/gi, '(connection string)').replace(/npg_\w+/g, '(secret)').slice(0, 200),
+    );
     return 'unavailable';
   }
 }
