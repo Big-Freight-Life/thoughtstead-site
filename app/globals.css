@@ -300,6 +300,40 @@ body::before { content:""; position:fixed; inset:0; z-index:60; pointer-events:n
 .hosted-cta-live { color:var(--bg); border:1px solid var(--accent-fill); background:var(--accent-fill); }
 .hosted-cta-live:hover { border-color:var(--accent); background:var(--accent); }
 .hosted-cta-stub { color:var(--muted); border:1px solid var(--line-2); background:transparent; }
+.hosted-cta:disabled { opacity:.6; cursor:progress; }
+/* Early access form. Square, mono-labelled and bone-grounded like the CTA it
+   replaces, so the hero reads the same with or without it. */
+.hero-actions-early { align-items:flex-start; }
+.early-access { width:100%; max-width:30rem; scroll-margin-top:7rem; }
+.early-access-row { display:flex; gap:0; }
+.early-access-input {
+  flex:1 1 auto;
+  min-width:0;
+  min-height:2.75rem;
+  padding:.65rem .9rem;
+  border:1px solid var(--line-2);
+  border-right:0;
+  border-radius:0;
+  background:var(--surface);
+  color:var(--text);
+  font-size:var(--t-body);
+}
+.early-access-input::placeholder { color:var(--faint); }
+.early-access-input:focus { outline:2px solid var(--accent); outline-offset:-2px; }
+.early-access-row .hosted-cta { flex:0 0 auto; }
+.early-access-note { margin-top:.6rem; color:var(--faint); font-size:var(--t-small); line-height:1.45; }
+.early-access-error { color:var(--coral); }
+.early-access-done { min-height:2.75rem; display:flex; align-items:center; color:var(--text); font-size:var(--t-body); }
+.early-access-trap { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
+.early-access-dark { margin-inline:auto; }
+.early-access-dark .early-access-input { background:transparent; color:#f7f8fa; border-color:rgb(247 248 250 / .68); }
+.early-access-dark .early-access-input::placeholder { color:rgb(247 248 250 / .6); }
+.early-access-dark .early-access-note,
+.early-access-dark .early-access-done { color:rgb(247 248 250 / .8); justify-content:center; }
+@media (max-width:480px) {
+  .early-access-row { flex-direction:column; gap:.5rem; }
+  .early-access-input { border-right:1px solid var(--line-2); }
+}
 .hero-plan-lockup {
   min-height:2.75rem;
   display:grid;

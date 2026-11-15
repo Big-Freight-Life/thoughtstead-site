@@ -12,10 +12,13 @@
 //
 // DELIBERATE STUB (Ray, 2026-08-25; reaffirmed 2026-09-03): unset is the
 // intended state and the button is meant to stay non-clickable. Do not "fix" it
-// by pointing it at a placeholder, a mailto, or an email-capture form — there is
-// no transactional mail provider behind this site to capture into. Wiring
-// signup is the Polar work in system-1 (`feat/web-billing-polar`) and lands on
-// its own; the 2026-09-03 redesign deliberately did not flip it.
+// by pointing it at a placeholder or a mailto. Wiring signup is the Polar work
+// in system-1 (`feat/web-billing-polar`) and lands on its own.
+//
+// CHANGED 2026-11-15 (Ray): the landing page may now offer an early access
+// email list before launch. That lives in components/early-access-cta.tsx and
+// only appears when lib/early-access.ts has a real store behind it; without
+// one, this stub is still what renders. The nav keeps the stub either way.
 const SIGNUP_URL = process.env.NEXT_PUBLIC_HOSTED_SIGNUP_URL;
 
 // The advertised price now lives in lib/pricing.ts, which has no JSX in it so

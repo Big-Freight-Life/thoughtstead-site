@@ -1,7 +1,6 @@
 import { Fragment, type ReactNode } from 'react';
 import Image from 'next/image';
 import {
-  HostedCta,
   HOSTED_PRICE,
   HOSTED_PERIOD,
   HOSTED_LIVE,
@@ -10,6 +9,7 @@ import {
   ANNUAL_SAVING_PERCENT,
   PLAN_NAME,
 } from '@/components/cta';
+import { EarlyAccessCta, EARLY_ACCESS_SHOWN } from '@/components/early-access-cta';
 import { Reveal } from '@/components/reveal';
 import { SiteNav, SiteFooter } from '@/components/site-chrome';
 import { AnimatedShowcaseCard } from '@/components/animated-showcase-card';
@@ -144,8 +144,8 @@ export default function LandingPage() {
                 concept and the system behind it. Then it puts a number on what it costs to
                 be wrong.
               </p>
-              <div className="hero-actions">
-                <HostedCta large />
+              <div className={`hero-actions ${EARLY_ACCESS_SHOWN ? 'hero-actions-early' : ''}`}>
+                <EarlyAccessCta placement="hero" anchor />
                 <div
                   className="hero-plan-lockup"
                   aria-label={`${HOSTED_PRICE} per ${HOSTED_PERIOD}. One plan. Export any time.`}
@@ -247,7 +247,7 @@ export default function LandingPage() {
               <p className="price-annual">
                 or {ANNUAL_PRICE}/{ANNUAL_PERIOD} &mdash; save {ANNUAL_SAVING_PERCENT}%
               </p>
-              <div className="price-action"><HostedCta large /></div>
+              <div className="price-action"><EarlyAccessCta placement="pricing" mode="link" /></div>
             </div>
 
             <ul className="price-includes">
@@ -290,7 +290,7 @@ export default function LandingPage() {
                 <span>Life is moving too fast</span>
                 <span>to be the only one holding it together.</span>
               </h2>
-              <div className="final-cta-action"><HostedCta large /></div>
+              <div className="final-cta-action"><EarlyAccessCta placement="closing" tone="dark" /></div>
             </Reveal>
           </div>
         </section>
