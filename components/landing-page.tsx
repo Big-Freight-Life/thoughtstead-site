@@ -41,31 +41,38 @@ import { LoopVideo } from '@/components/loop-video';
 //
 // "In your head" was also dropped here — the hero and the operating band both
 // use it, and three of them on one page is a tic.
-const TRANSFORMATION_STEPS = [
+const SITUATIONS = [
   {
-    number: '01',
-    title: 'Frame the challenge',
-    body: 'Clarify who needs to make progress, what gets in their way, and how the organization works today.',
-    artifact: 'Positioning · People · Systems',
+    title: 'You’ve been asked the question.',
+    body: 'A leader wants AI in the work and you have to say where it belongs, where it doesn’t, and why, with evidence rather than enthusiasm. And then you have to make it stick.',
   },
   {
-    number: '02',
-    title: 'Design the experience',
-    body: 'Connect the moments people move through to the processes and systems that make each one possible.',
-    artifact: 'Concepts · Process · Value',
+    title: 'You run engagements for clients.',
+    body: 'You take a client from a vague ask to a working system and a team that uses it. You need the findings, the business case, the training, the pilot and the adoption plan in one place, one workspace per client.',
   },
   {
-    number: '03',
-    title: 'Prepare the change',
-    body: 'Make assumptions, risks, responsibilities, and next steps visible before the new experience reaches people.',
-    artifact: 'Governance · Validation · Delivery',
+    title: 'You do the same work inside a company.',
+    body: 'Same questions, same decisions, for your own teams. The workspace doesn’t care which side of the contract you’re on.',
   },
 ];
 
+// The product’s own eight phases (consulting/phases/registry.ts), in its order.
+// Four of the eight are the people side, which is the point of the section.
+const PHASES = [
+  ['Identify objectives', 'Diagnose where the client is and state the objective the engagement serves.'],
+  ['Map processes', 'Stakeholders, processes, shadow AI use, and five dimensions of maturity.'],
+  ['Prioritize opportunities', 'Score a first wave, and keep a deferred list with the conditions for bringing each back.'],
+  ['Activate training', 'Role-based capability that starts before go-live and completes at it.'],
+  ['Construct pilots', 'One pilot, real cases, the real workflow, written gates through a day-90 value gate.'],
+  ['Trace governance', 'An AI inventory, monitoring, the obligations that apply, an acceptable-use policy, sized to the client.'],
+  ['Accelerate adoption', 'Champions, redesigned workflows, change communication that says who does what, measured uptake.'],
+  ['Iterate and scale', 'Permanent capability, controlled steps in autonomy, the next wave.'],
+];
+
 const GOVERNANCE_PILLARS = [
-  ['Make the boundaries explicit', 'Define what an AI system may access and what it must not do unattended.'],
-  ['Keep the reasoning reviewable', 'Tie decisions and recommendations to the evidence and assumptions behind them.'],
-  ['Keep consequential actions accountable', 'Outbound or destructive agent work waits for a person to approve it.'],
+  ['Make the boundaries explicit', 'You choose how much your own AI may do.'],
+  ['Keep the reasoning reviewable', 'Every decision keeps what was known and why.'],
+  ['Keep consequential actions accountable', 'Approvals and an audit trail record who allowed what.'],
 ];
 
 const FOUNDATIONS = [
@@ -92,16 +99,24 @@ const INCLUDES = [
 
 const FAQS = [
   {
-    q: 'Why not keep this work in Figma, Linear and Notion?',
-    a: 'Because each one holds a part, while the decision depends on the whole. Thoughtstead connects the concept, the system behind it, the evidence and the cost of being wrong.',
+    q: 'What is Thoughtstead?',
+    a: 'The workspace for AI Experience Architecture. It holds an engagement from the first question to a team that is running the system.',
+  },
+  {
+    q: 'Is it only for deciding whether to do an AI project?',
+    a: 'No. That is the first third. It also covers training, the pilot, governance, change management and the next wave.',
+  },
+  {
+    q: 'Who is Thoughtstead for?',
+    a: 'People who have to make AI work for the people who use it: consultants and architects with clients, and teams doing the same work inside a company.',
+  },
+  {
+    q: 'How is it different from Figma, Linear or Notion?',
+    a: 'Those hold screens, tickets and documents. This holds the reasoning, the roles, the training and the approvals around an AI system, and it knows the shape of an engagement.',
   },
   {
     q: 'How are AI actions kept accountable?',
     a: 'Agents prepare the work. Anything that sends or deletes waits for you to approve it, and every step leaves a record.',
-  },
-  {
-    q: 'Who is Thoughtstead for?',
-    a: 'Anyone who has to work out how an AI capability will fit into real work, with clients or colleagues waiting on the answer. It holds the people it affects, the process it changes, the system behind it, and who stays accountable.',
   },
   {
     q: 'Can I use my own AI?',
@@ -147,10 +162,12 @@ export default function LandingPage() {
           <div className="human-hero-wash" aria-hidden="true" />
           <div className="hero-grid relative mx-auto w-full max-w-7xl">
             <div className="hero-copy">
-              <h1 className="hero-title display">Design the experience around AI.</h1>
+              <h1 className="hero-title display">The experience is not the interface.</h1>
               <p className="hero-deck">
-                Thoughtstead is one connected workspace for deciding how AI changes the
-                work: the people it affects, the processes it touches, and the systems behind it.
+                Thoughtstead is the workspace for designing how people and AI share the work,
+                then getting the people ready: the training, the champions, the change. From the
+                first question to a system someone can run and a team that can run it. Every
+                consequential action waits for a person.
               </p>
               <div className={`hero-actions ${EARLY_ACCESS_SHOWN ? 'hero-actions-early' : ''}`}>
                 <EarlyAccessCta placement="hero" anchor />
@@ -168,35 +185,50 @@ export default function LandingPage() {
 
         <AnimatedShowcaseCard />
 
-        <Section id="product" className="transformation-path-section" wide>
+        <section id="design" className="design-conditions-section">
+          <div className="design-conditions-hero">
+            <div className="design-conditions-code-backdrop" aria-hidden="true" />
+            <div className="design-conditions-copy">
+              <h2 className="h2"><span>AI is now part</span><span>of the system.</span></h2>
+              <p>An experience is a person’s relationship with a system in operation, and AI now recommends, decides and acts inside it. So the work starts with the system: who decides, what the AI knows, who can stop it. The interface is where the answers show up.</p>
+            </div>
+          </div>
+        </section>
+
+        <Section id="audience" className="transformation-path-section" wide>
           <div className="transformation-path-intro">
-            <h2 className="h2">From a complex challenge to a change people can use.</h2>
-            <p>Keep the strategic intent connected to the experience, the operating model, and the work of making it real.</p>
+            <h2 className="h2">Built for the person who has to make AI work for the people who use it.</h2>
+            <p>Not a chat assistant and not a general notes app. For design work that ends in a decision someone is accountable for.</p>
           </div>
           <div className="transformation-step-grid">
-            {TRANSFORMATION_STEPS.map((step) => (
-              <article className="transformation-step" key={step.number}>
-                <h3>{step.title}</h3>
-                <p>{step.body}</p>
+            {SITUATIONS.map((s) => (
+              <article className="transformation-step" key={s.title}>
+                <h3>{s.title}</h3>
+                <p>{s.body}</p>
               </article>
             ))}
           </div>
         </Section>
 
-        <section id="design" className="design-conditions-section">
-          <div className="design-conditions-hero">
-            <div className="design-conditions-code-backdrop" aria-hidden="true" />
-            <div className="design-conditions-copy">
-              <h2 className="h2"><span>AI doesn’t enter</span><span>a blank space.</span></h2>
-              <p>Understand the human work and the systems around it. Then design where AI belongs, what it changes, and where people stay in control.</p>
-            </div>
+        <Section id="product" className="transformation-path-section" wide>
+          <div className="transformation-path-intro">
+            <h2 className="h2">Eight phases. The technology is half of them.</h2>
+            <p>Most AI projects plan the build and hope the people follow. Here training starts before the system exists, and adoption is measured, not assumed.</p>
           </div>
-        </section>
+          <div className="transformation-step-grid transformation-step-grid-phases">
+            {PHASES.map(([title, body]) => (
+              <article className="transformation-step" key={title}>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </article>
+            ))}
+          </div>
+        </Section>
 
         <Section className="governance-section" wide>
           <div className="governance-intro">
             <h2 className="h2">Everything the work needs. Nothing happens without you.</h2>
-            <p>One workspace holds the work, with authority and responsibility built in from the start.</p>
+            <p>Authority lives in the system, not in a prompt. Anything that sends, shares or deletes waits for a person.</p>
           </div>
           <LoopVideo
             className="governance-video"
@@ -262,12 +294,10 @@ export default function LandingPage() {
         <Section id="price" className="price-section" wide>
           <div className="price-intro">
             <Reveal>
-              <h2 className="h2">
-                No tiers. No trial. <span className="quote">No hostage data.</span>
-              </h2>
+              <h2 className="h2">One workspace for the whole engagement.</h2>
             </Reveal>
             <Reveal delay={60}>
-              <p>One subscription for the design workspace, hosted AI, project work, and client delivery.</p>
+              <p>One subscription for the workspace, hosted AI, project work, and client delivery. No tiers, and your data exports in one click.</p>
             </Reveal>
           </div>
 
