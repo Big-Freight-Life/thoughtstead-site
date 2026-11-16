@@ -27,7 +27,7 @@ const LOOP_SECONDS = 21.2;
  * How fast the loop's own clock runs, by where it is in the loop. The particle
  * intro (before the screens arrive) and the exit (after they leave) ran slow,
  * so they play faster; the stretch where the screens are on show runs at the
- * original pace so they stay readable. The whole loop now takes about 14s of
+ * original pace so they stay readable. The whole loop now takes about 16s of
  * real time instead of 21s. The timeline above is unchanged — only how quickly
  * the clock moves through it.
  */
