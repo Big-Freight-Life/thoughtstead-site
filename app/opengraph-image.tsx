@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { ThoughtsteadMark } from '@/components/thoughtstead-logo';
+import { BigFreightLifeMark } from '@/components/big-freight-life-mark';
 
 export const alt = 'Thoughtstead — design the experience around AI';
 export const size = {
@@ -22,7 +22,7 @@ export default async function Image() {
           background: '#f0eee5',
         }}
       >
-        <ThoughtsteadMark style={{ width: 96, height: 96 }} />
+        <BigFreightLifeMark style={{ width: 96, height: 96, color: '#11110f' }} />
         <div
           style={{
             marginTop: 28,
