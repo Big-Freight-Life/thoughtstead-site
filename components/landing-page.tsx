@@ -171,14 +171,9 @@ export default function LandingPage() {
       <SiteNav />
       <main>
         <section className="hero human-hero experience-hero relative overflow-hidden px-6">
-          <Image
-            src="/hero-product-lead-hd-retouched.webp"
-            alt="A product lead working across a desktop, notebook, and research materials"
-            fill
-            priority
-            sizes="100vw"
-            className="human-hero-media"
-          />
+          {/* The hero photo was removed here: CSS hid it (.experience-hero
+              .human-hero-media) but `priority` still made every visitor
+              download the page's largest image. */}
           <div className="human-hero-wash" aria-hidden="true" />
           <div className="hero-grid relative mx-auto w-full max-w-7xl">
             <div className="hero-copy">
