@@ -150,18 +150,6 @@
   transform-origin: 70% 50%;
 }
 
-.promptPanel {
-  left: 3%;
-  bottom: 7%;
-  width: 24%;
-  opacity: var(--prompt-opacity);
-  transform:
-    translate3d(var(--prompt-x), var(--prompt-y), calc(72px + var(--prompt-z)))
-    scale(var(--prompt-scale))
-    rotateY(var(--prompt-rotate));
-  box-shadow: 0 34px 100px rgb(0 0 0 / .7), 0 0 0 1px rgb(36 87 255 / .15);
-}
-
 .panel img { display: block; width: 100%; height: auto; }
 
 .cursor {
