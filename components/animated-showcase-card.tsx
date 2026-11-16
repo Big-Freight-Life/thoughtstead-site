@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { BigFreightLifeMark } from './big-freight-life-mark';
 import styles from './animated-showcase-card.module.css';
 
@@ -21,6 +22,26 @@ export const SHOWCASE_TIMELINE = [
 ] as const;
 
 const LOOP_SECONDS = 21.2;
+
+/**
+ * How fast the loop's own clock runs, by where it is in the loop. The particle
+ * intro (before the screens arrive) and the exit (after they leave) ran slow,
+ * so they play faster; the stretch where the screens are on show runs at the
+ * original pace so they stay readable. The whole loop now takes about 14s of
+ * real time instead of 21s. The timeline above is unchanged — only how quickly
+ * the clock moves through it.
+ */
+function playbackRate(seconds: number): number {
+  // Ease between speeds rather than switching, so nothing lurches at a seam:
+  // the intro slows gradually into the screens, and speeds up gradually after.
+  const ease = (from: number, to: number, x: number) => {
+    const k = Math.min(1, Math.max(0, (x - from) / (to - from)));
+    return k * k * (3 - 2 * k);
+  };
+  const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
+  if (seconds < 9) return lerp(1.7, 1, ease(4.6, 7.3, seconds));
+  return lerp(1, 1.45, ease(12, 14.2, seconds));
+}
 /**
  * The card's own behaviour, matched to the reference it was modelled on.
  *
@@ -583,7 +604,7 @@ export function AnimatedShowcaseCard() {
       if (cursorActive) writePill(dt);
 
       if (visible) {
-        elapsedMs = (elapsedMs + dt * 1000) % (LOOP_SECONDS * 1000);
+        elapsedMs = (elapsedMs + dt * 1000 * playbackRate(elapsedMs / 1000)) % (LOOP_SECONDS * 1000);
         paint(elapsedMs / 1000);
       }
 
@@ -741,30 +762,15 @@ export function AnimatedShowcaseCard() {
 
         <div className={styles.workspace} aria-hidden="true">
           <article className={`${styles.panel} ${styles.codePanel}`}>
-            <header className={styles.panelBar}>
-              <span className={styles.windowDots}><i /><i /><i /></span>
-              <b>service-blueprint</b>
-              <em>Current state</em>
-            </header>
-            <div className={styles.editorBody}>
-              <aside><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span></aside>
-              <pre><code><span className={styles.codeMuted}>const</span> experience = blueprint({'{'}{`\n`}  performer: <span className={styles.codeString}>&apos;service team&apos;</span>,{`\n`}  moment: <span className={styles.codeString}>&apos;resolve a request&apos;</span>,{`\n`}  system: <span className={styles.codeString}>&apos;AI-assisted intake&apos;</span>,{`\n`}  safeguard: <span className={styles.codeAccent}>&apos;human review&apos;</span>,{`\n`}{'}'});</code></pre>
-            </div>
-            <footer className={styles.editorFooter}><span>Process design</span><i /> <span>People · moments · systems</span></footer>
+            <Image src="/showcase/home.jpg" alt="" width={1600} height={930} sizes="(min-width: 1024px) 44vw, 90vw" priority={false} />
           </article>
 
           <article className={`${styles.panel} ${styles.agentPanel}`}>
-            <header className={styles.agentHeader}><span>Positioning brief</span><i /></header>
-            <div className={styles.agentIdentity}><b>Who it serves</b><span>In progress</span></div>
-            <p>Teams handling complex requests across disconnected systems.</p>
-            <div className={styles.recommendation}><span>Design question</span><strong>Where should AI assist?</strong></div>
-            <footer><span>Next step</span><b>Map the process</b></footer>
+            <Image src="/showcase/approval.jpg" alt="" width={1100} height={557} sizes="(min-width: 1024px) 34vw, 70vw" />
           </article>
 
           <article className={`${styles.panel} ${styles.promptPanel}`}>
-            <span className={styles.promptSpark}>✦</span>
-            <div><b>Ask Thoughtstead</b><p>Show where the current process creates delay for the people doing the work.</p></div>
-            <span className={styles.promptArrow}>↗</span>
+            <Image src="/showcase/workspaces.jpg" alt="" width={560} height={358} sizes="(min-width: 1024px) 18vw, 40vw" />
           </article>
         </div>
 
