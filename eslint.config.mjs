@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Animation sources (HTML + vendored GSAP). Rendered offline; not part of the app.
+    "motion/**",
   ]),
 ]);
 

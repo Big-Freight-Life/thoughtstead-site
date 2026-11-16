@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { BigFreightLifeMark } from './big-freight-life-mark';
 import styles from './animated-showcase-card.module.css';
 
@@ -10,7 +11,7 @@ import styles from './animated-showcase-card.module.css';
  */
 export const SHOWCASE_TIMELINE = [
   { phase: 'void', start: 0, end: 1.05, description: 'Sparse particles drift in deep space.' },
-  { phase: 'formation', start: 0.85, end: 4.75, description: 'Particles gather into the Thoughtstead mark.' },
+  { phase: 'formation', start: 0.85, end: 4.75, description: 'Particles gather into the Big Freight Life folder mark.' },
   { phase: 'title', start: 3.95, end: 6.95, description: 'The Thoughtstead title resolves and recedes.' },
   { phase: 'hold', start: 6.95, end: 7.4, description: 'The mark holds alone for a beat before the screens arrive.' },
   { phase: 'workspace', start: 7.4, end: 12.3, description: 'Product panels settle into a layered workspace.' },
@@ -21,6 +22,26 @@ export const SHOWCASE_TIMELINE = [
 ] as const;
 
 const LOOP_SECONDS = 21.2;
+
+/**
+ * How fast the loop's own clock runs, by where it is in the loop. The particle
+ * intro (before the screens arrive) and the exit (after they leave) ran slow,
+ * so they play faster; the stretch where the screens are on show runs at the
+ * original pace so they stay readable. The whole loop now takes about 16s of
+ * real time instead of 21s. The timeline above is unchanged — only how quickly
+ * the clock moves through it.
+ */
+function playbackRate(seconds: number): number {
+  // Ease between speeds rather than switching, so nothing lurches at a seam:
+  // the intro slows gradually into the screens, and speeds up gradually after.
+  const ease = (from: number, to: number, x: number) => {
+    const k = Math.min(1, Math.max(0, (x - from) / (to - from)));
+    return k * k * (3 - 2 * k);
+  };
+  const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
+  if (seconds < 9) return lerp(1.7, 1, ease(4.6, 7.3, seconds));
+  return lerp(1, 1.45, ease(12, 14.2, seconds));
+}
 /**
  * The card's own behaviour, matched to the reference it was modelled on.
  *
@@ -36,18 +57,16 @@ const ENTRY_SCRUB_RATE = 3.4;
 const CURSOR_FOLLOW_RATE = 9;
 
 /**
- * The three filled paths of the Thoughtstead mark — crown, lower-left lobe,
- * lower-right lobe — copied from `thoughtstead-logo.tsx` in its own 64-unit
- * viewBox. The particles form the brand's brain, not an abstract shape, so
- * these must stay in step with the mark: if the logo is redrawn, redraw this.
- * The veins are strokes and are deliberately left out — at this particle
- * density they close the seams that give the mark its shape.
+ * The Big Freight Life folder mark, as one filled path in its own 512-unit
+ * viewBox — the same geometry as `big-freight-life-mark.tsx`, so the particles
+ * form the brand's logo rather than an abstract shape. If the logo is redrawn,
+ * redraw this. It is one path with three subpaths filled even-odd: the folder,
+ * the ring's outer stadium subtracting from it, and the inner stadium filling
+ * back in, which is what leaves the ring as an open band.
  */
-const MARK_VIEWBOX = 64;
+const MARK_VIEWBOX = 512;
 const MARK_PATHS = [
-  'M6 40c-3-3-4-8-2-12-1-5 2-9 6-12 1-5 5-8 10-8 3-4 8-4 12 .5 4-4.5 10-3.5 13 .5 5 0 9 4 10 9 5 2 7 7 5 12 3 4 1 8-2 11-8.5 1.5-16.5-1-24 1-9.5 2-18-2.5-29-1Z',
-  'M6.5 42.3c7.5-1.5 16.5 2.1 24.1-.1 1.5 4.8-1.1 8.8.2 13-1.4 4.1-5.4 6.7-10.1 6.6-4.5-.1-8-2.5-10.1-6-4.2-.8-7-4-6.4-8.2.2-2 1.1-3.6 2.3-4.8Z',
-  'M33.8 42.2c7.5 2.2 16.5-1.4 23.8.2 2.4 2.5 3.5 6 2 9.2.8 4-2 7-6 7.7-2.8 3.5-7.5 4.4-11.6 2.1-4.4-1.1-7.4-3.8-7.5-7.3-1.4-4.2 1.4-8.1-.7-11.7Z',
+  'M 52,48 L 240,48 A 12,12 0 0 1 252,60 L 252,116 A 12,12 0 0 0 264,128 L 460,128 A 12,12 0 0 1 472,140 L 472,452 A 12,12 0 0 1 460,464 L 52,464 A 12,12 0 0 1 40,452 L 40,60 A 12,12 0 0 1 52,48 Z M 192,220 L 320,220 A 60,60 0 0 1 320,340 L 192,340 A 60,60 0 0 1 192,220 Z M 192,248 L 320,248 A 32,32 0 0 1 320,312 L 192,312 A 32,32 0 0 1 192,248 Z',
 ];
 /** How much of the card's height the mark occupies once it has formed. Model
  *  space is isotropic — the shader divides x by the aspect ratio, so one unit
@@ -118,7 +137,7 @@ function particleColor(height: number, variation: number) {
 /**
  * Rejection-samples points inside the mark by rasterising it once and reading
  * back the alpha. Filling the real paths is what keeps the silhouette honest —
- * an approximation of a brain drawn in code would drift from the logo the
+ * an approximation of the mark drawn in code would drift from the logo the
  * moment either changed.
  */
 function sampleMarkPoints(count: number, random: () => number) {
@@ -132,7 +151,7 @@ function sampleMarkPoints(count: number, random: () => number) {
   const scale = size / MARK_VIEWBOX;
   context.setTransform(scale, 0, 0, scale, 0, 0);
   context.fillStyle = '#ffffff';
-  for (const definition of MARK_PATHS) context.fill(new Path2D(definition));
+  for (const definition of MARK_PATHS) context.fill(new Path2D(definition), 'evenodd');
 
   const { data } = context.getImageData(0, 0, size, size);
 
@@ -280,7 +299,7 @@ function createParticleRenderer(canvas: HTMLCanvasElement): ParticleRenderer | n
   const colors = new Float32Array(count * 3);
   const random = seededRandom();
   const markPoints = sampleMarkPoints(count, random);
-  if (!markPoints) throw new Error('Unable to sample the Thoughtstead mark.');
+  if (!markPoints) throw new Error('Unable to sample the Big Freight Life mark.');
 
   for (let index = 0; index < count; index += 1) {
     const offset = index * 3;
@@ -583,7 +602,7 @@ export function AnimatedShowcaseCard() {
       if (cursorActive) writePill(dt);
 
       if (visible) {
-        elapsedMs = (elapsedMs + dt * 1000) % (LOOP_SECONDS * 1000);
+        elapsedMs = (elapsedMs + dt * 1000 * playbackRate(elapsedMs / 1000)) % (LOOP_SECONDS * 1000);
         paint(elapsedMs / 1000);
       }
 
@@ -741,30 +760,11 @@ export function AnimatedShowcaseCard() {
 
         <div className={styles.workspace} aria-hidden="true">
           <article className={`${styles.panel} ${styles.codePanel}`}>
-            <header className={styles.panelBar}>
-              <span className={styles.windowDots}><i /><i /><i /></span>
-              <b>decision.ts</b>
-              <em>Release 2.1</em>
-            </header>
-            <div className={styles.editorBody}>
-              <aside><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span></aside>
-              <pre><code><span className={styles.codeMuted}>const</span> decision = valueMatrix({'{'}{`\n`}  assumption: <span className={styles.codeString}>&apos;activation lift&apos;</span>,{`\n`}  falsePositive: <span className={styles.codeNumber}>42</span>,{`\n`}  falseNegative: <span className={styles.codeNumber}>180</span>,{`\n`}{'}'});{`\n\n`}decision.<span className={styles.codeAccent}>shouldShip</span>();</code></pre>
-            </div>
-            <footer className={styles.editorFooter}><span>Value Matrix</span><i /> <span>Inputs valid</span></footer>
+            <Image src="/showcase/home-today.jpg" alt="" width={1600} height={930} sizes="(min-width: 1024px) 44vw, 90vw" priority={false} />
           </article>
 
           <article className={`${styles.panel} ${styles.agentPanel}`}>
-            <header className={styles.agentHeader}><span>Agent review</span><i /></header>
-            <div className={styles.agentIdentity}><b>Rollout reviewer</b><span>Evidence connected</span></div>
-            <p>The downside rests on one assumption: retained activation after day seven.</p>
-            <div className={styles.recommendation}><span>Recommendation</span><strong>Hold the release</strong></div>
-            <footer><span>Outbound action</span><b>Parked for approval</b></footer>
-          </article>
-
-          <article className={`${styles.panel} ${styles.promptPanel}`}>
-            <span className={styles.promptSpark}>✦</span>
-            <div><b>Ask Thoughtstead</b><p>Compare the launch assumption with the last three customer calls.</p></div>
-            <span className={styles.promptArrow}>↗</span>
+            <Image src="/showcase/approval-email.jpg" alt="" width={1100} height={609} sizes="(min-width: 1024px) 34vw, 70vw" />
           </article>
         </div>
 

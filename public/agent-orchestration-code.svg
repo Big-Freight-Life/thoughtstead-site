@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="460" viewBox="0 0 1500 460">
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="24" font-weight="650">
+    <text x="12" y="30"><tspan fill="#95c9ff">const</tspan><tspan fill="#f0eee5"> experience = </tspan><tspan fill="#95c9ff">await</tspan><tspan fill="#f0eee5"> orchestrate({ context: [people, work, systems], agents: [research, synthesis, validation], evidence: mapSources(input), approval: required });</tspan></text>
+    <text x="12" y="65"><tspan fill="#dfff4f">const</tspan><tspan fill="#f0eee5"> context = compose({ people, work, systems, constraints, evidence, goals }); </tspan><tspan fill="#95c9ff">const</tspan><tspan fill="#f0eee5"> plan = agents.route(context);</tspan></text>
+    <text x="12" y="100"><tspan fill="#95c9ff">for</tspan><tspan fill="#f0eee5"> (</tspan><tspan fill="#dfff4f">const</tspan><tspan fill="#f0eee5"> step </tspan><tspan fill="#95c9ff">of</tspan><tspan fill="#f0eee5"> plan) { await record(step, { source: step.evidence, owner: step.accountable }); }</tspan></text>
+    <text x="12" y="135"><tspan fill="#95c9ff">const</tspan><tspan fill="#f0eee5"> agents = [observe, map, test, review].map(role =&gt; createAgent(role, context));</tspan></text>
+    <text x="12" y="170"><tspan fill="#dfff4f">await</tspan><tspan fill="#f0eee5"> Promise.all(agents.map(agent =&gt; agent.trace({ decisions, sources, assumptions }))); </tspan></text>
+    <text x="12" y="205"><tspan fill="#95c9ff">if</tspan><tspan fill="#f0eee5"> (action.isExternal || action.isDestructive) { await human.approve(action); }</tspan></text>
+    <text x="12" y="240"><tspan fill="#95c9ff">function</tspan><tspan fill="#f0eee5"> designExperience(input) { return orchestrate(input).withEvidence().withBoundaries(); }</tspan></text>
+    <text x="12" y="275"><tspan fill="#dfff4f">const</tspan><tspan fill="#f0eee5"> outcome = await simulate({ baseline: currentWork, proposal: agentPlan, uncertainty: assumptions });</tspan></text>
+    <text x="12" y="310"><tspan fill="#95c9ff">await</tspan><tspan fill="#f0eee5"> review({ value: outcome.value, risk: outcome.risk, owner: human.decisionMaker });</tspan></text>
+    <text x="12" y="345"><tspan fill="#95c9ff">return</tspan><tspan fill="#f0eee5"> experience.connect({ moments, processes, systems, people, permissions });</tspan></text>
+    <text x="12" y="380"><tspan fill="#dfff4f">const</tspan><tspan fill="#f0eee5"> evidence = await collect({ decisions, outcomes, humanBaseline, confidence });</tspan></text>
+    <text x="12" y="415"><tspan fill="#95c9ff">await</tspan><tspan fill="#f0eee5"> agents.prepare(change); await human.review(change); await publish.onlyWhenApproved(change);</tspan></text>
+    <text x="12" y="450"><tspan fill="#95c9ff">export</tspan><tspan fill="#f0eee5"> { experience, evidence, permissions, decisionTrail };</tspan></text>
+  </g>
+</svg>

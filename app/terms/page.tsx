@@ -16,7 +16,7 @@ export default function TermsPage() {
       <main className="mx-auto max-w-3xl px-6 py-16 md:py-24">
         <article className="prose doc-prose min-w-0 max-w-2xl prose-a:no-underline hover:prose-a:underline prose-code:before:content-none prose-code:after:content-none prose-code:rounded prose-code:bg-surface-2 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-normal">
           <h1>Terms</h1>
-          <p className="text-sm text-faint">Last updated 2026-08-09</p>
+          <p className="text-sm text-faint">Last updated 2026-11-16</p>
 
           <p>
             These are the terms for subscribing to and using Thoughtstead, written in plain
@@ -26,15 +26,18 @@ export default function TermsPage() {
           <h2>The service</h2>
           <p>
             Thoughtstead is a hosted subscription. We run the service; you sign in and use it.
-            Your subscription covers one individual account and everything described on the{' '}
-            <Link href="/">home page</Link> for as long as it is active.
+            Your subscription covers one individual account and the product as described on the{' '}
+            <Link href="/docs/license">Plan &amp; billing</Link> page, on the web and in the desktop
+            app, for as long as it is active.
           </p>
 
           <h2>Billing</h2>
           <ul>
             <li>
               Thoughtstead is <strong>{HOSTED_PRICE} per {HOSTED_PERIOD}</strong>, billed in
-              advance. AI usage is included; there is no metered surcharge.
+              advance. AI usage is included; there is no metered surcharge. Reasonable-use limits apply
+              to connections you make with your own AI tools; they are listed in
+              the <Link href="/docs/mcp">docs</Link>.
             </li>
             <li>
               <strong>Cancel any time.</strong> Your subscription runs to the end of the period
@@ -70,6 +73,39 @@ export default function TermsPage() {
               You are responsible for what you put in, and for having the right to put it there.
             </li>
           </ul>
+
+          <h2>The desktop app</h2>
+          <p>
+            The desktop app is part of your subscription. You may install and use it on your own
+            devices to reach your own account. Do not copy it, resell it, or take it apart, and do
+            not use it to get around the limits of your plan. Updates are part of the service.
+          </p>
+
+          <h2>Recording and other people</h2>
+          <p>
+            The desktop app can record audio. You are responsible for recording lawfully, which
+            includes telling the people you record and getting their consent where the law that
+            applies to you and to them requires it. The consent question the app asks you is a
+            record for you. It does not make a recording lawful, and it does not move any
+            responsibility to us.
+          </p>
+
+          <h2>Your own AI tools</h2>
+          <p>
+            You may connect your own AI tools, such as Claude Code or Codex. Their terms and
+            privacy practices are between you and them, not us. You decide what each connection
+            may do, and you are responsible for what you authorise. An action you approve,
+            including an email sent from your own address, is your action. Anything that sends
+            or deletes waits for your approval, so read it before you approve it.
+          </p>
+
+          <h2>AI can be wrong</h2>
+          <p>
+            Thoughtstead uses AI to summarise, draft, link and propose. AI can be wrong. The
+            Value Matrix and the other analysis in the product are aids to a decision, not legal,
+            financial or professional advice, and you remain responsible for the decisions you
+            make with them.
+          </p>
 
           <h2>Acceptable use</h2>
           <p>
