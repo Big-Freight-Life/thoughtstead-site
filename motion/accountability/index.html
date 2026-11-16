@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape-1440p">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=2560, height=1152" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      :root {
+        --ink: #f4f4f2;
+        --muted: #a9adb9;
+        --line: #3b3f50;
+        --accent: #8da6ff;
+        --coral: #f04c23;
+        --font: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 2560px; height: 1152px; overflow: hidden; background: transparent; }
+      #root { position: relative; width: 2560px; height: 1152px; font-family: var(--font); color: var(--ink); }
+      .beat { position: absolute; inset: 0; }
+      svg.layer { position: absolute; inset: 0; width: 2560px; height: 1152px; overflow: visible; }
+
+      .chip {
+        position: absolute; display: flex; align-items: center; gap: 20px;
+        padding: 26px 44px; border-radius: 999px; font-size: 46px; font-weight: 500;
+        letter-spacing: -0.01em; white-space: nowrap; border: 3px solid var(--line); color: var(--muted);
+      }
+      .chip.ok { border-color: var(--accent); color: var(--ink); background: rgba(141, 166, 255, 0.10); }
+      .chip.no { opacity: 0.8; }
+      .chip .mark { font-size: 44px; line-height: 1; }
+      .chip.ok .mark { color: var(--accent); }
+      .chip.no .mark { color: var(--coral); }
+
+      .node {
+        position: absolute; border-radius: 44px; border: 3px solid var(--accent);
+        background: rgba(141, 166, 255, 0.12); text-align: center;
+      }
+      .node small { display: block; font-size: 34px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+      .node b { display: block; margin-top: 12px; font-size: 70px; font-weight: 700; letter-spacing: -0.03em; }
+
+      .agent {
+        position: absolute; width: 190px; height: 190px; border-radius: 50%;
+        border: 3px solid var(--accent); background: rgba(141, 166, 255, 0.14);
+        display: grid; place-items: center; font-size: 44px; font-weight: 600;
+      }
+
+      .card {
+        position: absolute; width: 640px; padding: 36px 44px; border-radius: 40px;
+        border: 3px solid var(--line); background: #1a1c25;
+      }
+      .card small { display: block; font-size: 32px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+      .card b { display: block; margin-top: 10px; font-size: 58px; font-weight: 700; letter-spacing: -0.03em; }
+
+      .btn {
+        position: absolute; padding: 26px 64px; border-radius: 999px; font-size: 46px; font-weight: 600;
+        border: 3px solid var(--line); color: var(--muted);
+      }
+      .btn.primary { background: var(--accent); border-color: var(--accent); color: #12131a; }
+
+      .label { position: absolute; font-size: 40px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+      .dot { position: absolute; width: 22px; height: 22px; border-radius: 50%; background: var(--line); bottom: 40px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="16.4" data-width="2560" data-height="1152">
+
+      <!-- BEAT 1: the boundary. An agent reaches for something outside what it may touch. -->
+      <div id="b1" class="beat clip" data-start="0" data-duration="4.8" data-track-index="0">
+        <svg class="layer" viewBox="0 0 2560 1152">
+          <rect id="ring" x="620" y="230" width="1320" height="692" rx="80" fill="none" stroke="#8da6ff" stroke-width="4" stroke-dasharray="1" stroke-dashoffset="1" pathLength="1" opacity="0.8" />
+          <line id="probe" x1="1190" y1="576" x2="1190" y2="576" stroke="#f04c23" stroke-width="5" stroke-linecap="round" />
+          <circle id="hit" cx="622" cy="576" r="10" fill="none" stroke="#f04c23" stroke-width="5" opacity="0" />
+        </svg>
+        <div id="agent" class="agent" style="left:1185px;top:481px;">Agent</div>
+        <div id="in1" class="chip ok" style="left:1280px;top:350px;"><span class="mark">✓</span>Workspace</div>
+        <div id="in2" class="chip ok" style="left:1280px;top:802px;"><span class="mark">✓</span>Projects</div>
+        <div id="in3" class="chip ok" style="left:1700px;top:576px;"><span class="mark">✓</span>Documents</div>
+        <div id="out1" class="chip no" style="left:300px;top:576px;"><span class="mark">✕</span>Other clients</div>
+        <div id="out2" class="chip no" style="left:2260px;top:400px;"><span class="mark">✕</span>Payments</div>
+        <div id="out3" class="chip no" style="left:2260px;top:752px;"><span class="mark">✕</span>Deleting</div>
+      </div>
+
+      <!-- BEAT 2: the reasoning. A recommendation tied to the evidence and assumptions behind it. -->
+      <div id="b2" class="beat clip" data-start="4.8" data-duration="4.8" data-track-index="0">
+        <svg class="layer" viewBox="0 0 2560 1152">
+          <path id="p1" d="M 880 330 C 960 330 940 576 1000 576" fill="none" stroke="#8da6ff" stroke-width="4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <path id="p2" d="M 880 576 L 1000 576" fill="none" stroke="#8da6ff" stroke-width="4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <path id="p3" d="M 880 822 C 960 822 940 576 1000 576" fill="none" stroke="#8da6ff" stroke-width="4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <path id="p4" d="M 1560 576 C 1640 576 1700 400 1800 400" fill="none" stroke="#8da6ff" stroke-width="4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <path id="p5" d="M 1560 576 C 1640 576 1700 752 1900 752" fill="none" stroke="#8da6ff" stroke-width="4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+        </svg>
+        <div id="e1" class="chip" style="left:500px;top:330px;">Northwind check-in meeting</div>
+        <div id="e2" class="chip" style="left:500px;top:576px;">Value Matrix · break-even</div>
+        <div id="e3" class="chip" style="left:500px;top:822px;">Human baseline · 71%</div>
+        <div id="dec" class="node" style="left:1280px;top:576px;width:560px;padding:36px 20px;">
+          <small>Recommendation</small>
+          <b>Launch pricing</b>
+        </div>
+        <div id="a1" class="chip ok" style="left:2080px;top:400px;">Assumes $44 per case</div>
+        <div id="a2" class="chip ok" style="left:2080px;top:752px;">Owner · you</div>
+      </div>
+
+      <!-- BEAT 3: the approval. An action waits at a gate until a person says yes. -->
+      <div id="b3" class="beat clip" data-start="9.6" data-duration="6.8" data-track-index="0">
+        <svg class="layer" viewBox="0 0 2560 1152">
+          <line id="gateTop" x1="1280" y1="230" x2="1280" y2="510" stroke="#8da6ff" stroke-width="8" stroke-linecap="round" />
+          <line id="gateBot" x1="1280" y1="510" x2="1280" y2="790" stroke="#8da6ff" stroke-width="8" stroke-linecap="round" />
+          <path id="cursor" d="M0 0 L0 62 L18 46 L30 74 L44 68 L32 40 L56 40 Z" fill="#f4f4f2" stroke="#12131a" stroke-width="3" />
+        </svg>
+        <div id="glabel" class="label" style="left:1280px;top:110px;">Waits for you</div>
+        <div id="act" class="card" style="left:100px;top:425px;">
+          <small>Drafted by agent</small>
+          <b>Send invoice</b>
+        </div>
+        <div id="sent" class="chip ok" style="left:1900px;top:510px;font-size:54px;"><span class="mark">✓</span>Sent</div>
+        <div id="approve" class="btn primary" style="left:1100px;top:880px;">Approve</div>
+        <div id="decline" class="btn" style="left:1460px;top:880px;">Decline</div>
+      </div>
+
+      <!-- progress dots: one per beat -->
+      <div id="d1" class="dot" style="left:1230px;"></div>
+      <div id="d2" class="dot" style="left:1269px;"></div>
+      <div id="d3" class="dot" style="left:1308px;"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      gsap.set(".chip, .node", { xPercent: -50, yPercent: -50 });
+      gsap.set("#agent", { opacity: 0, scale: 0.6 });
+      gsap.set("#glabel", { xPercent: -50 });
+      gsap.set(".btn", { xPercent: -50 });
+      gsap.set("#cursor", { x: 1900, y: 1100, opacity: 0 });
+
+      const fadeBeat = (id, start, dur) => {
+        tl.fromTo(id, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, start);
+        tl.to(id, { opacity: 0, duration: 0.4, ease: "power2.in" }, start + dur - 0.4);
+      };
+      const dots = (start, idx) => {
+        ["#d1", "#d2", "#d3"].forEach((d, i) => {
+          tl.to(d, { backgroundColor: i === idx ? "#8da6ff" : "#3b3f50", duration: 0.3 }, start);
+        });
+      };
+
+      // Beat 1 · 0 → 4.8
+      fadeBeat("#b1", 0, 4.8);
+      dots(0, 0);
+      tl.to("#ring", { strokeDashoffset: 0, duration: 1.0, ease: "power2.inOut" }, 0.2);
+      tl.to("#agent", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, 0.5);
+      tl.from(["#in1", "#in2", "#in3"], { opacity: 0, scale: 0.8, duration: 0.45, stagger: 0.18, ease: "back.out(1.4)" }, 1.0);
+      tl.from(["#out1", "#out2", "#out3"], { opacity: 0, duration: 0.5, stagger: 0.18 }, 1.7);
+      tl.to("#probe", { attr: { x2: 642 }, duration: 0.55, ease: "power2.in" }, 2.7);
+      tl.to("#hit", { opacity: 1, attr: { r: 44 }, duration: 0.35, ease: "power2.out" }, 3.25);
+      tl.to("#hit", { opacity: 0, duration: 0.3 }, 3.6);
+      tl.to("#out1", { x: "+=-14", duration: 0.07, yoyo: true, repeat: 5 }, 3.25);
+      tl.to("#probe", { attr: { x2: 1190 }, duration: 0.5, ease: "power2.out" }, 3.55);
+
+      // Beat 2 · 4.8 → 9.6
+      fadeBeat("#b2", 4.8, 4.8);
+      dots(4.8, 1);
+      tl.from("#dec", { opacity: 0, scale: 0.85, duration: 0.5, ease: "back.out(1.4)" }, 5.0);
+      tl.from(["#e1", "#e2", "#e3"], { opacity: 0, x: "-=60", duration: 0.45, stagger: 0.18, ease: "power2.out" }, 5.5);
+      tl.to(["#p1", "#p2", "#p3"], { strokeDashoffset: 0, duration: 0.7, stagger: 0.12, ease: "power2.inOut" }, 6.2);
+      tl.from(["#a1", "#a2"], { opacity: 0, x: "+=60", duration: 0.45, stagger: 0.18, ease: "power2.out" }, 6.9);
+      tl.to(["#p4", "#p5"], { strokeDashoffset: 0, duration: 0.6, stagger: 0.12, ease: "power2.inOut" }, 7.0);
+      ["#e1", "#e2", "#e3"].forEach((id, i) => {
+        tl.to(id, { borderColor: "#8da6ff", color: "#f4f4f2", duration: 0.25 }, 7.7 + i * 0.5);
+      });
+      tl.to("#dec", { boxShadow: "0 0 0 10px rgba(141,166,255,0.18)", duration: 0.5 }, 8.8);
+
+      // Beat 3 · 9.6 → 15.2
+      fadeBeat("#b3", 9.6, 6.8);
+      dots(9.6, 2);
+      tl.from(["#gateTop", "#gateBot"], { opacity: 0, duration: 0.5 }, 9.8);
+      tl.from("#glabel", { opacity: 0, y: -16, duration: 0.5 }, 10.1);
+      tl.from("#act", { x: -420, opacity: 0, duration: 0.9, ease: "power3.out" }, 10.2);
+      tl.to("#act", { x: 390, duration: 0.5, ease: "power2.inOut" }, 11.1);
+      tl.to("#gateTop", { stroke: "#f4f4f2", duration: 0.2, yoyo: true, repeat: 3 }, 11.7);
+      tl.from(["#approve", "#decline"], { opacity: 0, y: 24, duration: 0.45, stagger: 0.12 }, 11.7);
+      tl.to("#cursor", { opacity: 1, duration: 0.2 }, 12.1);
+      tl.to("#cursor", { x: 1140, y: 920, duration: 0.8, ease: "power2.inOut" }, 12.1);
+      tl.to("#approve", { scale: 0.94, duration: 0.12 }, 12.95);
+      tl.to("#approve", { scale: 1, boxShadow: "0 0 0 14px rgba(141,166,255,0.25)", duration: 0.25 }, 13.07);
+      tl.to("#gateTop", { y: -60, duration: 0.5, ease: "power2.inOut" }, 13.2);
+      tl.to("#gateBot", { y: 60, duration: 0.5, ease: "power2.inOut" }, 13.2);
+      tl.to("#cursor", { opacity: 0, duration: 0.3 }, 13.4);
+      tl.to("#act", { x: 1500, duration: 0.8, ease: "power2.inOut" }, 13.5);
+      tl.to("#act", { opacity: 0, duration: 0.3 }, 14.1);
+      tl.from("#sent", { opacity: 0, scale: 0.7, duration: 0.45, ease: "back.out(1.8)" }, 14.1);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
