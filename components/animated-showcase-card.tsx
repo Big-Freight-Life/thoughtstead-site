@@ -743,27 +743,27 @@ export function AnimatedShowcaseCard() {
           <article className={`${styles.panel} ${styles.codePanel}`}>
             <header className={styles.panelBar}>
               <span className={styles.windowDots}><i /><i /><i /></span>
-              <b>decision.ts</b>
-              <em>Release 2.1</em>
+              <b>service-blueprint</b>
+              <em>Current state</em>
             </header>
             <div className={styles.editorBody}>
               <aside><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span></aside>
-              <pre><code><span className={styles.codeMuted}>const</span> decision = valueMatrix({'{'}{`\n`}  assumption: <span className={styles.codeString}>&apos;activation lift&apos;</span>,{`\n`}  falsePositive: <span className={styles.codeNumber}>42</span>,{`\n`}  falseNegative: <span className={styles.codeNumber}>180</span>,{`\n`}{'}'});{`\n\n`}decision.<span className={styles.codeAccent}>shouldShip</span>();</code></pre>
+              <pre><code><span className={styles.codeMuted}>const</span> experience = blueprint({'{'}{`\n`}  performer: <span className={styles.codeString}>&apos;service team&apos;</span>,{`\n`}  moment: <span className={styles.codeString}>&apos;resolve a request&apos;</span>,{`\n`}  system: <span className={styles.codeString}>&apos;AI-assisted intake&apos;</span>,{`\n`}  safeguard: <span className={styles.codeAccent}>&apos;human review&apos;</span>,{`\n`}{'}'});</code></pre>
             </div>
-            <footer className={styles.editorFooter}><span>Value Matrix</span><i /> <span>Inputs valid</span></footer>
+            <footer className={styles.editorFooter}><span>Process design</span><i /> <span>People · moments · systems</span></footer>
           </article>
 
           <article className={`${styles.panel} ${styles.agentPanel}`}>
-            <header className={styles.agentHeader}><span>Agent review</span><i /></header>
-            <div className={styles.agentIdentity}><b>Rollout reviewer</b><span>Evidence connected</span></div>
-            <p>The downside rests on one assumption: retained activation after day seven.</p>
-            <div className={styles.recommendation}><span>Recommendation</span><strong>Hold the release</strong></div>
-            <footer><span>Outbound action</span><b>Parked for approval</b></footer>
+            <header className={styles.agentHeader}><span>Positioning brief</span><i /></header>
+            <div className={styles.agentIdentity}><b>Who it serves</b><span>In progress</span></div>
+            <p>Teams handling complex requests across disconnected systems.</p>
+            <div className={styles.recommendation}><span>Design question</span><strong>Where should AI assist?</strong></div>
+            <footer><span>Next step</span><b>Map the process</b></footer>
           </article>
 
           <article className={`${styles.panel} ${styles.promptPanel}`}>
             <span className={styles.promptSpark}>✦</span>
-            <div><b>Ask Thoughtstead</b><p>Compare the launch assumption with the last three customer calls.</p></div>
+            <div><b>Ask Thoughtstead</b><p>Show where the current process creates delay for the people doing the work.</p></div>
             <span className={styles.promptArrow}>↗</span>
           </article>
         </div>
