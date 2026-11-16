@@ -432,7 +432,8 @@ body::before { content:""; position:fixed; inset:0; z-index:60; pointer-events:n
 .context-copy>p { color:var(--muted); font-size:1.05rem; line-height:1.65; }
 .context-keys { display:flex; flex-wrap:wrap; gap:.6rem; margin-top:2rem; }.context-keys span { padding:.65rem .8rem; border:1px solid var(--line-2); color:var(--text); font-family:var(--font-mono); font-size:.62rem; letter-spacing:.06em; text-transform:uppercase; }.context-keys span:first-child{border-color:var(--sky)}.context-keys span:nth-child(2){border-color:var(--coral)}.context-keys span:last-child{border-color:var(--acid)}
 
-.price-section { --chapter-ink:var(--acid); }
+.price-section { --chapter-ink:#2f5bff; }
+.price-section .quote { background:linear-gradient(transparent 86%,#2f5bff 86%); box-decoration-break:clone; -webkit-box-decoration-break:clone; }
 /* THE PRICE CARD, rebuilt.
    What was here: a narrow card carrying a plan name, a price and a dead button,
    which left roughly two thirds of it empty — and three separate decorations
@@ -2242,10 +2243,11 @@ summary::-webkit-details-marker { display:none; }
 .design-conditions-code-backdrop {
   position:absolute;
   inset:-12%;
-  opacity:.2;
+  opacity:.26;
   pointer-events:none;
   background:url('/agent-orchestration-code.svg') center / cover no-repeat;
-  mask-image:radial-gradient(ellipse at center, #000 15%, transparent 78%);
+  /* Code is texture at the edges only; it fades out behind the words. */
+  mask-image:radial-gradient(ellipse 52% 58% at 50% 50%, transparent 38%, #000 100%);
 }
 .design-conditions-copy {
   position:relative;
@@ -2271,11 +2273,14 @@ summary::-webkit-details-marker { display:none; }
 }
 .design-conditions-copy h2 span { display:block; }
 .design-conditions-copy>p:last-child {
-  max-width:44rem;
+  max-width:50rem;
+  text-wrap:balance;
   margin:clamp(1.5rem,3vw,2.5rem) auto 0;
-  color:#c7c8ce;
-  font-size:var(--t-lead);
+  color:#f4f4f2;
+  font-size:clamp(1.15rem,1.5vw,1.4rem);
+  font-weight:500;
   line-height:1.55;
+  text-shadow:0 0 28px #12131a, 0 0 8px #12131a;
 }
 .design-conditions-visual {
   position:relative;
@@ -2396,8 +2401,9 @@ summary::-webkit-details-marker { display:none; }
 .final-cta-inner { position:relative; align-items:center; justify-content:center; padding:0; text-align:center; }
 .final-cta-title { max-width:none; color:#f7f8fa; font-size:var(--t-display); line-height:1.035; text-align:center; }
 .final-cta-inner>h2 { margin:1rem auto 0; }
-.final-cta-action .hosted-cta-stub { min-height:3.25rem; padding-inline:1.65rem; color:#12131a; border-color:#f7f8fa; background:#f7f8fa; box-shadow:0 4px 14px rgb(0 0 0 / .22); }
-.final-cta-action .hosted-cta-live { min-height:3.25rem; padding-inline:1.65rem; }
+.final-cta-action .hosted-cta-stub { min-height:3.25rem; padding-inline:1.65rem; color:#ffffff; border-color:#2f5bff; background:#2f5bff; box-shadow:0 4px 14px rgb(0 0 0 / .22); }
+.final-cta-action .hosted-cta-live { min-height:3.25rem; padding-inline:1.65rem; color:#ffffff; border-color:#2f5bff; background:#2f5bff; }
+.final-cta-action .hosted-cta-live:hover { color:#ffffff; border-color:#5b80ff; background:#5b80ff; }
 
 @media (max-width:800px) {
   .transformation-step-grid { grid-template-columns:1fr; }

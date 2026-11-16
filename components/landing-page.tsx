@@ -242,8 +242,8 @@ export default function LandingPage() {
             </div>
             <div className="desktop-shot">
               <Image
-                src="/desktop-morning-brief.jpg"
-                alt="The Thoughtstead home screen: today’s captures, decisions awaiting you, and the items that need you"
+                src="/desktop-home-today.jpg"
+                alt="The Thoughtstead Today screen: open project tabs, the daily brief, a question bar, and the decisions awaiting you"
                 width={1800}
                 height={1125}
                 sizes="(min-width: 1024px) 56vw, 100vw"
