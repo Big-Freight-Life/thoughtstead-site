@@ -2385,12 +2385,15 @@ summary::-webkit-details-marker { display:none; }
 .governance-intro h2 { margin-top:0; text-wrap:balance; }
 .governance-intro>p { max-width:44rem; margin:1.25rem auto 0; color:var(--muted); font-size:var(--t-lead); line-height:1.6; }
 .governance-video { display:block; width:100%; max-width:72rem; height:auto; margin-inline:auto; aspect-ratio:20/9; }
+.loop-video-phone { display:none; }
 .governance-captions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(1.5rem,4vw,4rem); max-width:72rem; margin:clamp(1.5rem,3vw,2.5rem) auto 0; }
 .governance-caption h3 { font-size:var(--t-h4); line-height:1.15; letter-spacing:-.025em; font-weight:var(--w-emph); }
 .governance-caption p { margin-top:.6rem; color:var(--muted); line-height:1.55; }
 .governance-also { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(1.5rem,4vw,4rem); max-width:72rem; margin:clamp(2.5rem,5vw,4rem) auto 0; }
 @media (max-width:800px) {
   .governance-captions, .governance-also { grid-template-columns:minmax(0,1fr); gap:1.75rem; }
+  .loop-video-wide { display:none; }
+  .governance-video.loop-video-phone { display:block; width:100%; max-width:26rem; aspect-ratio:4/5; }
 }
 .price-section { padding-block:clamp(6rem,10vw,10rem); background:var(--bg); }
 .price-intro { max-width:none; grid-template-columns:minmax(0,1fr); align-items:start; gap:1.25rem; margin-bottom:clamp(2.5rem,5vw,4rem); }

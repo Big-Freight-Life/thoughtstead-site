@@ -200,9 +200,16 @@ export default function LandingPage() {
           </div>
           <LoopVideo
             className="governance-video"
-            webm="/governance-accountability.webm"
-            mp4="/governance-accountability.mp4"
-            poster="/governance-accountability-poster.jpg"
+            wide={{
+              webm: '/governance-accountability.webm',
+              mp4: '/governance-accountability.mp4',
+              poster: '/governance-accountability-poster.jpg',
+            }}
+            phone={{
+              webm: '/governance-accountability-portrait.webm',
+              mp4: '/governance-accountability-portrait.mp4',
+              poster: '/governance-accountability-portrait-poster.jpg',
+            }}
           />
           <div className="governance-captions">
             {GOVERNANCE_PILLARS.map(([title, body]) => (
