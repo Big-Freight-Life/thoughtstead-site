@@ -116,7 +116,9 @@ test.describe('the accountability section on the page', () => {
       page.getByRole('heading', { name: 'Everything the work needs. Nothing happens without you.' }),
     ).toBeVisible();
     const section = page.locator('.governance-section');
-    await expect(section.locator('.governance-video')).toHaveCount(1);
+    // Two videos are in the page (wide and phone); CSS shows exactly one.
+    await expect(section.locator('.governance-video')).toHaveCount(2);
+    await expect(section.locator('.governance-video:visible')).toHaveCount(1);
     await expect(section.locator('.governance-captions .governance-caption')).toHaveCount(3);
     await expect(section).toContainText('Make the boundaries explicit');
     await expect(section).toContainText('Capture anywhere');
