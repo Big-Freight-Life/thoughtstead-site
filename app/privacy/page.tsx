@@ -27,9 +27,16 @@ export default function PrivacyPage() {
 
           <h2>What this site collects</h2>
           <p>
-            This marketing and documentation site is <strong>static</strong>. It has no accounts,
-            no database, and sets no cookies of its own — there is no cookie banner here because
-            there is nothing to consent to.
+            This marketing and documentation site is <strong>static</strong>. It has no accounts
+            and sets no cookies of its own — there is no cookie banner here because there is
+            nothing to consent to.
+          </p>
+          <p>
+            The one exception is the <strong>early access list</strong>. If you leave your email
+            there, we keep that address and when you joined, and use it for one thing: to tell
+            you when Thoughtstead opens. We don&rsquo;t store your IP address with it, and we
+            don&rsquo;t add you to anything else. To be taken off the list, email{' '}
+            <a href="mailto:support@bfl.design">support@bfl.design</a>.
           </p>
           <p>
             {/* Explicit {' '}: JSX drops the literal space between a closing tag
@@ -165,12 +172,13 @@ export default function PrivacyPage() {
           <p>
             Running Thoughtstead involves a small number of providers: our payment provider
             (billing), Vercel (hosting this site and the app, plus anonymous analytics for this
-            site), Supabase (the database your contexts live in), Clerk (sign-in), Cloudflare
-            (the offsite backup copy), and OpenRouter, which routes our AI requests (enrichment,
-            search embeddings, answers, transcription and speech) to the model providers behind
-            it. If you connect Gmail or Calendar, Google is involved as described above. They
-            process data on our instructions in order to deliver the service, and none of them
-            is permitted to use your content for their own purposes.
+            site), Neon (the database that holds the early access list), Supabase (the database
+            your contexts live in), Clerk (sign-in), Cloudflare (the offsite backup copy), and
+            OpenRouter, which routes our AI requests (enrichment, search embeddings, answers,
+            transcription and speech) to the model providers behind it. If you connect Gmail or
+            Calendar, Google is involved as described above. They process data on our
+            instructions in order to deliver the service, and none of them is permitted to use
+            your content for their own purposes.
           </p>
 
           <h2>Changes</h2>

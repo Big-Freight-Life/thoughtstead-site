@@ -1,7 +1,6 @@
 import { type ReactNode } from 'react';
 import Image from 'next/image';
 import {
-  HostedCta,
   HOSTED_PRICE,
   HOSTED_PERIOD,
   HOSTED_LIVE,
@@ -10,6 +9,7 @@ import {
   ANNUAL_SAVING_PERCENT,
   PLAN_NAME,
 } from '@/components/cta';
+import { EarlyAccessCta, EARLY_ACCESS_SHOWN } from '@/components/early-access-cta';
 import { Reveal } from '@/components/reveal';
 import { SiteNav, SiteFooter } from '@/components/site-chrome';
 import { AnimatedShowcaseCard } from '@/components/animated-showcase-card';
@@ -152,8 +152,8 @@ export default function LandingPage() {
                 Thoughtstead is one connected workspace for deciding how AI changes the
                 work: the people it affects, the processes it touches, and the systems behind it.
               </p>
-              <div className="hero-actions">
-                <HostedCta large />
+              <div className={`hero-actions ${EARLY_ACCESS_SHOWN ? 'hero-actions-early' : ''}`}>
+                <EarlyAccessCta placement="hero" anchor />
                 <div
                   className="hero-plan-lockup"
                   aria-label={`${HOSTED_PRICE} per ${HOSTED_PERIOD}. One plan. Export any time.`}
@@ -284,7 +284,7 @@ export default function LandingPage() {
               <p className="price-annual">
                 or {ANNUAL_PRICE}/{ANNUAL_PERIOD} &mdash; save {ANNUAL_SAVING_PERCENT}%
               </p>
-              <div className="price-action"><HostedCta large /></div>
+              <div className="price-action"><EarlyAccessCta placement="pricing" mode="link" /></div>
             </div>
 
             <ul className="price-includes">
@@ -327,7 +327,7 @@ export default function LandingPage() {
                 <span>Make the change</span>
                 <span>ready to move.</span>
               </h2>
-              <div className="final-cta-action"><HostedCta large /></div>
+              <div className="final-cta-action"><EarlyAccessCta placement="closing" tone="dark" /></div>
             </Reveal>
           </div>
         </section>

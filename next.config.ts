@@ -1,8 +1,23 @@
 import createMDX from '@next/mdx';
 import type { NextConfig } from 'next';
 
+// Baseline response headers for every route. Deliberately the low-risk set: none
+// of these can break a page. No Content-Security-Policy yet: this site loads
+// Vercel Analytics and MDX-rendered pages, and a policy needs its own pass with
+// a report-only period first. HSTS is left to Vercel, which sends it on the
+// production domain.
+const securityHeaders = [
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()' },
+];
+
 const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
+  async headers() {
+    return [{ source: '/:path*', headers: securityHeaders }];
+  },
   images: {
     // Next 16 gates `quality` behind an allowlist; a value that is not listed
     // is silently ignored and falls back to 75. The hero was asking for 90 and
