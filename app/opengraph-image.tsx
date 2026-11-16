@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { ThoughtsteadMark } from '@/components/thoughtstead-logo';
 
-export const alt = 'Thoughtstead — AI experience architecture';
+export const alt = 'Thoughtstead — design the experience around AI';
 export const size = {
   width: 1200,
   height: 630,

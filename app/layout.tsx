@@ -34,11 +34,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://thoughtstead.com'),
   title: {
-    default: 'Thoughtstead — AI experience architecture',
+    default: 'Thoughtstead — design the experience around AI',
     template: '%s · Thoughtstead',
   },
   description:
-    'Thoughtstead gives AI experience architects one connected workspace to shape how people, processes, and systems change around AI.',
+    'One connected workspace for deciding how AI changes the work: the people it affects, the processes it touches, and the systems behind it.',
   openGraph: {
     title: 'Thoughtstead',
     description: 'Design the experience around AI.',

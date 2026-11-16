@@ -74,12 +74,18 @@ const GOVERNANCE_PILLARS = [
   ['Keep consequential actions accountable', 'Outbound or destructive agent work waits for a person to approve it.'],
 ];
 
+const DESKTOP_POINTS = [
+  ['Capture the room', 'Record and transcribe the meeting you are in, or any audio your Mac is playing.'],
+  ['One keystroke away', 'Live in the menu bar and get a thought down before it is gone.'],
+  ['Your own AI, built in', 'Use the Claude Code or Codex you already pay for, inside Thoughtstead’s own tools.'],
+];
+
 // The card had a price and a dead button and nothing else, so two thirds of it
 // was empty and a decorative wedge had been drawn across the gap to fill it.
 // These are what the plan carries, and they are the reason the card is a card.
 const INCLUDES = [
   ['Every surface', 'The studio, and the rest of it'],
-  ['AI included', 'No API key to manage, no per-token bill'],
+  ['AI included', 'Search and enrichment need no API key. Or bring your own Claude Code or Codex'],
   ['Every context', 'As many as the things you run'],
   ['Guests', 'Comment on a concept without a seat'],
   ['Export', 'Everything, one click, any time'],
@@ -95,8 +101,16 @@ const FAQS = [
     a: 'Agents can prepare work, but outbound or destructive actions wait for a person to review and approve them.',
   },
   {
-    q: 'What does AI experience architecture mean here?',
-    a: 'It means designing the whole experience around an AI capability: the people involved, the work it changes, the systems it depends on, and the boundaries that keep it accountable.',
+    q: 'Who is Thoughtstead for?',
+    a: 'Anyone who has to work out how an AI capability will fit into real work, with clients or colleagues waiting on the answer. It holds the people it affects, the process it changes, the system behind it, and who stays accountable.',
+  },
+  {
+    q: 'Can I use my own AI?',
+    a: 'Yes. The Claude Code or Codex you already use can work inside Thoughtstead, with only Thoughtstead’s tools. It reads your workspace and makes changes you can see. Anything that sends or deletes waits for your approval.',
+  },
+  {
+    q: 'Is there a desktop app?',
+    a: 'Yes, for Mac first, with Windows to follow. It records the meeting you are in, lives in the menu bar, and runs your own AI. Everything it does is also in the browser.',
   },
   {
     q: 'Can I bring clients and collaborators into the work?',
@@ -136,8 +150,8 @@ export default function LandingPage() {
             <div className="hero-copy">
               <h1 className="hero-title display">Design the experience around AI.</h1>
               <p className="hero-deck">
-                Thoughtstead gives AI experience architects one connected workspace to shape
-                how people, processes, and systems change around AI.
+                Thoughtstead is one connected workspace for deciding how AI changes the
+                work: the people it affects, the processes it touches, and the systems behind it.
               </p>
               <div className="hero-actions">
                 <HostedCta large />
@@ -183,8 +197,8 @@ export default function LandingPage() {
         <Section id="matrix" className="matrix-section" wide>
           <div className="matrix-intro">
             <div>
-              <h2>See what an AI decision costs when it’s wrong.</h2>
-              <p>Compare outcomes with the human baseline. Test the assumptions that could change your decision.</p>
+              <h2>Everything the work needs, in one workspace.</h2>
+              <p>Capture it, keep each client apart, let agents draft it, and keep the reasoning behind every decision.</p>
             </div>
           </div>
           <Reveal className="matrix-card-field"><ValueMatrixCards /></Reveal>
@@ -203,6 +217,36 @@ export default function LandingPage() {
                 <p>{body}</p>
               </article>
             ))}
+          </div>
+        </Section>
+
+        <Section id="desktop" className="desktop-section" wide>
+          <div className="desktop-grid">
+            <div className="desktop-copy">
+              <h2 className="h2">Built for the desktop. Open on the web.</h2>
+              <p className="desktop-lead">
+                The desktop app is where Thoughtstead works hardest. Everything it does is also
+                in your browser, with the same workspaces and the same pages.
+              </p>
+              <ul className="desktop-points">
+                {DESKTOP_POINTS.map(([title, body]) => (
+                  <li key={title}>
+                    <strong>{title}</strong>
+                    <span>{body}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="desktop-note">Mac first, with Windows to follow. Launching soon.</p>
+            </div>
+            <div className="desktop-shot">
+              <Image
+                src="/desktop-morning-brief.jpg"
+                alt="The Thoughtstead home screen: today’s captures, decisions awaiting you, and the items that need you"
+                width={1800}
+                height={1125}
+                sizes="(min-width: 1024px) 56vw, 100vw"
+              />
+            </div>
           </div>
         </Section>
 

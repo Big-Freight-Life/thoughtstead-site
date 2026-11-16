@@ -1,23 +1,23 @@
 const CARDS = [
   {
     kind: 'outcomes',
-    title: 'Four outcomes',
-    body: 'True positives, false positives, false negatives, and true negatives stay visible as separate consequences.',
+    title: 'Capture anywhere',
+    body: 'Voice, text, meetings and documents go in raw first, so nothing is lost before it is understood.',
   },
   {
     kind: 'refusal',
-    title: 'Impossible means impossible',
-    body: 'When the counts cannot coexist, the matrix refuses them and names the numbers in conflict.',
+    title: 'A workspace per client',
+    body: 'Each client, company or product gets its own isolated context. Search and agents never cross the wall.',
   },
   {
     kind: 'break-even',
-    title: 'The break-even point',
-    body: 'The result names the exact assumption that would reverse the decision, so someone can challenge it.',
+    title: 'Agents that wait for you',
+    body: 'Agents draft the email, the invoice, the follow-up. Anything that sends or deletes waits for your approval.',
   },
   {
     kind: 'baseline',
-    title: 'A human baseline',
-    body: 'The system is measured against what people do today, not against an imaginary perfect model.',
+    title: 'Decisions with their reasons',
+    body: 'Every decision keeps the meeting and evidence behind it, and the Value Matrix prices what it costs to be wrong.',
   },
 ] as const;
 
@@ -62,13 +62,12 @@ function AnimatedIcon({ kind }: { kind: (typeof CARDS)[number]['kind'] }) {
 export function ValueMatrixCards() {
   return (
     <div className="matrix-card-grid" data-testid="value-matrix-cards">
-      {CARDS.map((card, index) => (
+      {CARDS.map((card) => (
         <article className="matrix-feature-card" key={card.kind}>
           <div className="matrix-feature-stage">
             <AnimatedIcon kind={card.kind} />
           </div>
           <div className="matrix-feature-copy">
-            <span>{String(index + 1).padStart(2, '0')}</span>
             <h3>{card.title}</h3>
             <p>{card.body}</p>
           </div>

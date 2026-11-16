@@ -4,104 +4,66 @@ export const metadata = {
 
 # Connect AI tools
 
-Thoughtstead speaks [MCP](https://modelcontextprotocol.io) — the protocol
-Claude, Cursor, and a growing list of AI tools use to read and act on
-outside data. Once connected, your AI tools can search Thoughtstead, list
-recent captures, look up people and decisions, and capture new thoughts —
-all scoped to exactly what you allow.
+You can let the Claude Code, Codex, Claude app or ChatGPT plan you already pay
+for work inside Thoughtstead. It uses your own plan. Thoughtstead never sees
+your login for it and never asks for an API key.
 
-## Create a key
+Your AI connects through [MCP](https://modelcontextprotocol.io), the protocol
+Claude, Codex and a growing list of tools use to read and act on outside data.
+It reaches Thoughtstead through tools on our server, and only those tools.
 
-In your app: **Settings → MCP access**. Give the key a name (e.g.
-`laptop-claude`), pick an access mode, and create it. The raw key is shown
-**once**, right after creation — copy it somewhere safe immediately, because
-Thoughtstead only stores a hash of it and can't show it to you again.
+## What it may do
 
-Three access modes are available:
+Nothing is shared until you approve the connection in **Settings → MCP**. You
+choose one of four levels:
 
-- **Read only** — search, list, and lookup tools only. A read-only key
-  cannot capture a thought, record a decision, or touch the agent queue,
-  even if a connected AI tool tries to call those tools — they're never
-  registered for that key in the first place.
-- **Read + write** — every tool, including capturing thoughts and recording
-  decisions.
-- **Custom** — pick the exact set of tools this key can call, tool by tool.
+- **Read your memory.** The AI can search and read.
+- **Read and add to your memory.** It can also save thoughts.
+- **Work in this workspace.** It can also create and edit projects. Anything that
+  deletes, sends, assigns, or ends a role waits for your approval in Approvals.
+- **Build one client's ontology.** The AI sees only that one ontology and that
+  client's own thoughts, documents, and meetings, and nothing else in your
+  workspace. It cannot change anything itself: every edit it proposes waits on
+  the Object Model page for you to approve or reject.
 
-This is least-privilege by construction: a tool a key isn't scoped for
-*doesn't exist* for that key at all — it's never registered, not just hidden
-behind a permission check.
+Each connection has two daily limits that reset at 00:00 UTC: 200 writes and 500
+reads. You can revoke a connection at any time in Settings, and it stops working
+straight away.
 
-## Connect a client
-
-The MCP endpoint is the same for everyone:
-
-```text
-https://app.thoughtstead.com/api/mcp/mcp
-```
-
-Every request needs your key as a bearer token:
-`Authorization: Bearer YOUR_KEY`.
-
-A key belongs to the context you created it in. A key made in Business can
-never read your Personal context, whatever the connected tool asks for.
-
-### Claude Code
+## Connect Claude Code
 
 ```bash
-claude mcp add --transport http thoughtstead https://app.thoughtstead.com/api/mcp/mcp --header "Authorization: Bearer YOUR_KEY"
+claude mcp add --transport http thoughtstead https://app.thoughtstead.com/api/mcp/mcp
 ```
 
-### Claude Desktop
+Then start `claude`, run `/mcp`, and follow the browser sign-in. Add
+`--scope user` to the first command to use it in every project.
 
-Claude Desktop needs a small local bridge to attach an `Authorization`
-header to a remote MCP server. Add this to your `claude_desktop_config.json`:
+## Connect the Claude app or claude.ai
 
-```json
-{
-  "mcpServers": {
-    "thoughtstead": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://app.thoughtstead.com/api/mcp/mcp",
-        "--header",
-        "Authorization:Bearer ${THOUGHTSTEAD_MCP_KEY}"
-      ],
-      "env": {
-        "THOUGHTSTEAD_MCP_KEY": "YOUR_KEY"
-      }
-    }
-  }
-}
+Open Customize, then Connectors, then **+ Add**, then Add custom connector. Enter
+a name and the same address, continue, and sign in. On Team and Enterprise plans,
+an owner adds the connector under Organization settings, and members then click
+Connect.
+
+## Connect Codex
+
+Add this to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.thoughtstead]
+url = "https://app.thoughtstead.com/api/mcp/mcp"
 ```
 
-### Cursor
+Then run `codex mcp login thoughtstead` and sign in. In the Codex desktop app or
+IDE extension, choose Authenticate instead.
 
-Cursor talks to remote MCP servers directly. Add this to `.cursor/mcp.json`
-(project-level) or `~/.cursor/mcp.json` (global):
+## Finish
 
-```json
-{
-  "mcpServers": {
-    "thoughtstead": {
-      "url": "https://app.thoughtstead.com/api/mcp/mcp",
-      "headers": {
-        "Authorization": "Bearer YOUR_KEY"
-      }
-    }
-  }
-}
-```
-
-## Revoking a key
-
-Back in **Settings → MCP access**, click **Revoke** next to any key. Revoked
-keys stop working immediately — the client will get an authentication
-error on its next call.
+After you sign in, the connection appears in **Settings → MCP**, waiting for your
+approval. Pick a level and approve it.
 
 ## Next
 
-- [Agents & approval](/docs/agents) — how tools like `capture_thought` and
-  the agent queue tools fit into the bigger picture of what agents are and
-  aren't allowed to do on their own.
+- [Agents & approval](/docs/agents) — what an agent may do on its own, and why
+  anything outbound waits for you.

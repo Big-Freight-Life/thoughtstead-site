@@ -5,9 +5,9 @@ export const metadata = {
 # Agents & approval
 
 Thoughtstead's built-in agents can draft you a morning brief, tidy up
-duplicate people and entities, chase what is owed, and work through a queue
-of small chores — all without you lifting a finger. This page explains the boundary around
-what they're allowed to do on their own, and why you can trust it.
+duplicate people and entities, and work through a queue of small chores. This
+page explains the boundary around what they're allowed to do on their own, and
+why you can trust it.
 
 ## Agents propose. You approve.
 
@@ -61,8 +61,15 @@ should produce zero outbound action without human approval, full stop.
 - You can approve, or reject with a reason — either way, it's on the
   record.
 
+## Your own AI follows the same rule
+
+If you connect your own Claude Code or Codex, it works through Thoughtstead's
+tools on the server, and the same boundary applies. It can read and make changes
+you can see. Anything that sends, deletes, assigns, or ends a role waits for your
+approval. You choose how much a connection may do, and you can revoke it in
+Settings.
+
 ## Next
 
-- [Connect AI tools](/docs/mcp) — the same least-privilege thinking applies
-  to MCP keys: a read-only key can't even see the tools that would let it
-  capture or act.
+- [Connect AI tools](/docs/mcp) — how to connect your own AI, and the levels of
+  access you can approve.
