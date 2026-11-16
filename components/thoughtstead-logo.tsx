@@ -1,4 +1,5 @@
 import type { SVGProps } from 'react';
+import { BigFreightLifeMark } from '@/components/big-freight-life-mark';
 
 type ThoughtsteadMarkProps = Omit<SVGProps<SVGSVGElement>, 'children'> & {
   accent?: string;
@@ -76,21 +77,18 @@ type ThoughtsteadLogoProps = {
   className?: string;
   markClassName?: string;
   wordmarkClassName?: string;
-  inverse?: boolean;
 };
 
 export function ThoughtsteadLogo({
   className,
   markClassName,
   wordmarkClassName,
-  inverse = false,
 }: ThoughtsteadLogoProps) {
   return (
     <span className={`thoughtstead-logo ${className ?? ''}`} aria-hidden="true">
-      <ThoughtsteadMark
-        ink={inverse ? '#f0eee5' : '#716f68'}
-        className={`thoughtstead-logo__mark ${markClassName ?? ''}`}
-      />
+      {/* The Big Freight Life folder mark is the logo. It draws in currentColor,
+          so it takes the text tone of whatever it sits on. */}
+      <BigFreightLifeMark className={`thoughtstead-logo__mark ${markClassName ?? ''}`} />
       <span className={`thoughtstead-logo__wordmark ${wordmarkClassName ?? ''}`}>
         Thoughtstead
       </span>

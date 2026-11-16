@@ -3,22 +3,21 @@ import { ADVERTISED_PRICES } from '../lib/pricing';
 
 test('landing renders the pitch and hosted pricing', async ({ page }) => {
   await page.goto('/');
-  // The pitch is the wedge, not the storage promise: every other tool helps you
-  // build the thing, and none of them will tell you whether you should.
+  // The pitch names the work, not a job title: how AI changes the work for the
+  // people it affects, the processes it touches and the systems behind it.
   await expect(
-    page.getByRole('heading', { level: 1, name: /Everything helps you build it/i }),
+    page.getByRole('heading', { level: 1, name: /Design the experience around AI/i }),
   ).toBeVisible();
-  // The turn is a separate element from the headline, and it is the half that
-  // carries the argument — assert it by name, not just by the h1.
-  await expect(page.locator('.hero-turn')).toHaveText(/Nothing says if you should/i);
   await expect(
-    page.getByRole('heading', { name: /Life is moving too fast to be the only one.*holding it together/i }),
+    page.getByRole('heading', { name: /Make the change.*ready to move/i }),
   ).toBeVisible();
-  // The category line. Thoughtstead is a life operating system, not an "AI
-  // second brain" (undersold it, borrowed category) and not a "business OS"
-  // (contested, and strands /health, /lifestyle, /maintenance, /warranties).
-  await expect(page.getByText(/life operating system/i).first()).toBeVisible();
+  // Retired framings stay retired. "Life operating system" described the
+  // product before the design-environment focus (2026-11-11); "second brain" is
+  // an undersold, borrowed category; and "AI experience architect" is a job
+  // title, which positioning names by situation instead.
+  await expect(page.getByText(/life operating system/i)).toHaveCount(0);
   await expect(page.getByText(/second brain/i)).toHaveCount(0);
+  await expect(page.getByText(/AI experience architect/i)).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Individual' })).toBeVisible();
   await expect(page.locator('.price-card-head p')).toHaveText(/Available now|Launching soon/);
   await expect(page.getByText('$19.99').first()).toBeVisible();
@@ -26,7 +25,7 @@ test('landing renders the pitch and hosted pricing', async ({ page }) => {
   await expect(page.getByText(/\$199\.99\/year/)).toBeVisible();
 });
 
-test('landing sections share one white canvas without divider rules', async ({ page }) => {
+test('landing sections share one canvas without divider rules', async ({ page }) => {
   await page.goto('/');
   const sectionStyles = await page.locator('main > section').evaluateAll((sections) =>
     sections.map((section) => {
@@ -39,14 +38,14 @@ test('landing sections share one white canvas without divider rules', async ({ p
     }),
   );
 
-  // rgb(240, 238, 229) is #f0eee5 — the bone ground taken from the bfl.design
-  // hero so the two properties read as one house. It was #fcfcfb when this
-  // guard was written; the guard is about the canvas being ONE colour across
-  // every band, not about which colour, so the expectation moves with --bg.
+  // rgb(18, 19, 26) is #12131a — the design system's dark surface, which is the
+  // page ground (--bg). It was bone (#f0eee5) before the page went dark; the
+  // guard is about the canvas being ONE colour across every band, not about
+  // which colour, so the expectation moves with --bg.
   // If this fails after a palette change, update the value — do not widen it to
   // accept any colour, which is the banded-slab page it exists to prevent.
   expect(sectionStyles.every(({ background }) =>
-    background === 'rgb(240, 238, 229)' || background === 'rgba(0, 0, 0, 0)')).toBe(true);
+    background === 'rgb(18, 19, 26)' || background === 'rgba(0, 0, 0, 0)')).toBe(true);
   expect(sectionStyles.every(({ borderTop, borderBottom }) => borderTop === '0px' && borderBottom === '0px')).toBe(true);
 
   const chrome = await page.locator('nav[aria-label="Main"]').locator('..').evaluate((header) => {
@@ -57,10 +56,10 @@ test('landing sections share one white canvas without divider rules', async ({ p
     const style = getComputedStyle(element);
     return { background: style.backgroundColor, borderTop: style.borderTopWidth };
   });
-  // Same bone ground as the sections above — the nav and footer share the page
+  // Same ground as the sections above — the nav and footer share the page
   // canvas rather than banding against it, which is the whole point of the check.
-  expect(chrome).toEqual({ background: 'rgb(240, 238, 229)', borderBottom: '0px' });
-  expect(footer).toEqual({ background: 'rgb(240, 238, 229)', borderTop: '0px' });
+  expect(chrome).toEqual({ background: 'rgb(18, 19, 26)', borderBottom: '0px' });
+  expect(footer).toEqual({ background: 'rgb(18, 19, 26)', borderTop: '0px' });
   await expect(page.locator('main .eyebrow')).toHaveCount(0);
 });
 
@@ -215,47 +214,13 @@ test('no content is left invisible after a fast scroll to the bottom', async ({ 
   expect(hiddenTop).toBe(0);
 });
 
-test('the product story replaces screenshot thumbnails with an interactive operating sequence', async ({ page }) => {
-  // Reduced motion, and it is the guard that needs it rather than the design.
-  //
-  // This was first needed because `.phone-device` carried
-  // `animation: phone-float 7s infinite` — the handset and everything drawn
-  // inside it drifted forever, and Playwright will not click an element until
-  // its box is identical across two animation frames, so the Approve click
-  // burned 57 retries on "element is not stable" and then timed out. The float
-  // was removed on request, but the line stays: OperatingStory reads the same
-  // query to stop its 5.2s autoplay, which would otherwise rotate the panel
-  // out from under the click.
-  //
-  // Emulating reduced motion is the honest fix because it is a real
-  // configuration the site answers, not a test-only escape hatch, and it keeps
-  // the full actionability check — visible, enabled, receiving events — rather
-  // than reaching for `force: true`, which would let the button pass while
-  // covered.
-  //
-  // What this test guards is that the sequence is INTERACTIVE. It does not
-  // guard that the phone animates; nothing here should fail if the float were
-  // retuned. Do not "fix" a future failure of this test by deleting the line
-  // below without re-reading what is actually broken.
-  await page.emulateMedia({ reducedMotion: 'reduce' });
+test('the showcase card shows real app screens, not drawn mock panels', async ({ page }) => {
   await page.goto('/');
-  const story = page.locator('[data-operating-story]');
-  await expect(story).toBeAttached();
-  await expect(page.locator('.story-screen-stage')).toHaveCount(0);
-  await expect(page.locator('main img[src*="product-screenshots"]')).toHaveCount(0);
-
-  const tabs = story.getByRole('tab');
-  await expect(tabs).toHaveCount(3);
-  await tabs.nth(1).click();
-  await expect(story).toHaveAttribute('data-phase', 'method');
-  await expect(story.getByRole('tabpanel')).toContainText('seven connected surfaces');
-
-  await tabs.nth(2).click();
-  await expect(story).toHaveAttribute('data-phase', 'approval');
-  const panel = story.getByRole('tabpanel');
-  await expect(panel).toContainText('Outbound action parked');
-  await panel.getByRole('button', { name: 'Approve' }).click();
-  await expect(panel).toContainText('Approved');
+  const screens = page.locator('[data-showcase-card] img');
+  await expect(screens).toHaveCount(2);
+  for (const screen of await screens.all()) {
+    expect(decodeURIComponent((await screen.getAttribute('src')) || '')).toContain('/showcase/');
+  }
 });
 
 test('animated showcase is responsive, accessible, and pauses outside the viewport', async ({ page }) => {
@@ -514,7 +479,7 @@ test('the page renders fully with JavaScript disabled', async ({ browser }) => {
   // the wrong reason. The closing headline is the final content on the page, so
   // seeing it proves the whole document rendered rather than merely that some
   // .reveal block un-hid.
-  await expect(page.getByText(/holding it together/i).first()).toBeVisible();
+  await expect(page.getByText(/ready to move/i).first()).toBeVisible();
   await context.close();
 });
 
@@ -558,15 +523,9 @@ test('the nav marks Docs as current only on docs pages', async ({ page }) => {
 test('the social card quotes the headline it describes', async ({ page }) => {
   await page.goto('/');
   const og = await page.locator('meta[property="og:description"]').getAttribute('content');
-  // The pitch is two elements now — the h1 and the cobalt turn under it — so
-  // the card is checked against both. Against the h1 alone, a card quoting only
-  // half the pitch would pass. innerText, not textContent: block boundaries
-  // matter, and textContent would run the two together with no space.
-  const h1 = await page.evaluate(() => {
-    const head = document.querySelector('h1') as HTMLElement;
-    const turn = document.querySelector('.hero-turn') as HTMLElement;
-    return `${head.innerText} ${turn.innerText}`;
-  });
+  // The pitch is the h1 alone now. innerText, not textContent, so block
+  // boundaries are respected.
+  const h1 = await page.evaluate(() => (document.querySelector('h1') as HTMLElement).innerText);
 
   // Compare on words. The page renders a curly apostrophe (&rsquo;) and the
   // meta tag carries a straight one, and the meta sentence ends in a full stop
