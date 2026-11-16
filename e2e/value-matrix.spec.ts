@@ -109,26 +109,19 @@ test.describe('the ported engine', () => {
   });
 });
 
-test.describe('the Value Matrix cards on the page', () => {
-  test('names the four product behaviors without rendering the retired calculator', async ({ page }) => {
+test.describe('the accountability section on the page', () => {
+  test('combines the approval story and the foundations in one section, without the retired calculator', async ({ page }) => {
     await page.goto('/');
-    const cards = page.getByTestId('value-matrix-cards');
-    await expect(cards).toBeVisible();
-    await expect(cards.locator('article')).toHaveCount(4);
-    await expect(cards).toContainText('Four outcomes');
-    await expect(cards).toContainText('Impossible means impossible');
-    await expect(cards).toContainText('The break-even point');
-    await expect(cards).toContainText('A human baseline');
+    await expect(
+      page.getByRole('heading', { name: 'Everything the work needs. Nothing happens without you.' }),
+    ).toBeVisible();
+    const section = page.locator('.governance-section');
+    await expect(section.locator('.governance-video')).toHaveCount(1);
+    await expect(section.locator('.governance-captions .governance-caption')).toHaveCount(3);
+    await expect(section).toContainText('Make the boundaries explicit');
+    await expect(section).toContainText('Capture anywhere');
+    await expect(section).toContainText('A workspace per client');
     await expect(page.getByTestId('value-matrix-demo')).toHaveCount(0);
-  });
-
-  test('the line icons animate, with a static reduced-motion treatment', async ({ page }) => {
-    await page.goto('/');
-    const movingPart = page.locator('.matrix-icon-outcomes i').first();
-    await expect(movingPart).toBeAttached();
-    expect(await movingPart.evaluate((node) => getComputedStyle(node).animationName)).not.toBe('none');
-
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    expect(await movingPart.evaluate((node) => getComputedStyle(node).animationName)).toBe('none');
+    await expect(page.getByTestId('value-matrix-cards')).toHaveCount(0);
   });
 });

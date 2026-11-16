@@ -13,7 +13,7 @@ import {
 import { Reveal } from '@/components/reveal';
 import { SiteNav, SiteFooter } from '@/components/site-chrome';
 import { AnimatedShowcaseCard } from '@/components/animated-showcase-card';
-import { ValueMatrixCards } from '@/components/value-matrix-cards';
+import { LoopVideo } from '@/components/loop-video';
 
 // Positioning rule 5: name the audience by SITUATION, never by label. There is
 // no "product manager" and no "founder" here on purpose — including in the
@@ -62,16 +62,15 @@ const TRANSFORMATION_STEPS = [
   },
 ];
 
-const DESIGN_CONDITIONS = [
-  ['People', 'Roles, needs, decisions, and handoffs'],
-  ['Work', 'The process as people experience it'],
-  ['Systems', 'The tools and AI that support the work'],
-];
-
 const GOVERNANCE_PILLARS = [
   ['Make the boundaries explicit', 'Define what an AI system may access and what it must not do unattended.'],
   ['Keep the reasoning reviewable', 'Tie decisions and recommendations to the evidence and assumptions behind them.'],
   ['Keep consequential actions accountable', 'Outbound or destructive agent work waits for a person to approve it.'],
+];
+
+const FOUNDATIONS = [
+  ['Capture anywhere', 'Voice, text, meetings and documents go in raw first, so nothing is lost before it is understood.'],
+  ['A workspace per client', 'Each client, company or product gets its own isolated context. Search and agents never cross the wall.'],
 ];
 
 const DESKTOP_POINTS = [
@@ -98,7 +97,7 @@ const FAQS = [
   },
   {
     q: 'How are AI actions kept accountable?',
-    a: 'Agents can prepare work, but outbound or destructive actions wait for a person to review and approve them.',
+    a: 'Agents prepare the work. Anything that sends or deletes waits for you to approve it, and every step leaves a record.',
   },
   {
     q: 'Who is Thoughtstead for?',
@@ -194,28 +193,31 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <Section id="matrix" className="matrix-section" wide>
-          <div className="matrix-intro">
-            <div>
-              <h2>Everything the work needs, in one workspace.</h2>
-              <p>Capture it, keep each client apart, let agents draft it, and keep the reasoning behind every decision.</p>
-            </div>
-          </div>
-          <Reveal className="matrix-card-field"><ValueMatrixCards /></Reveal>
-        </Section>
-
         <Section className="governance-section" wide>
           <div className="governance-intro">
-            <h2 className="h2">Make the change powerful. Keep it accountable.</h2>
-            <p>Good transformation design makes authority and responsibility part of the system from the start.</p>
+            <h2 className="h2">Everything the work needs. Nothing happens without you.</h2>
+            <p>One workspace holds the work, with authority and responsibility built in from the start.</p>
           </div>
-          <div className="governance-grid">
-            {GOVERNANCE_PILLARS.map(([title, body], index) => (
-              <article className="governance-card" key={title}>
-                <span>0{index + 1}</span>
+          <LoopVideo
+            className="governance-video"
+            webm="/governance-accountability.webm"
+            mp4="/governance-accountability.mp4"
+            poster="/governance-accountability-poster.jpg"
+          />
+          <div className="governance-captions">
+            {GOVERNANCE_PILLARS.map(([title, body]) => (
+              <div className="governance-caption" key={title}>
                 <h3>{title}</h3>
                 <p>{body}</p>
-              </article>
+              </div>
+            ))}
+          </div>
+          <div className="governance-also">
+            {FOUNDATIONS.map(([title, body]) => (
+              <div className="governance-caption" key={title}>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </div>
             ))}
           </div>
         </Section>

@@ -77,14 +77,12 @@ type ThoughtsteadLogoProps = {
   className?: string;
   markClassName?: string;
   wordmarkClassName?: string;
-  inverse?: boolean;
 };
 
 export function ThoughtsteadLogo({
   className,
   markClassName,
   wordmarkClassName,
-  inverse: _inverse = false,
 }: ThoughtsteadLogoProps) {
   return (
     <span className={`thoughtstead-logo ${className ?? ''}`} aria-hidden="true">
