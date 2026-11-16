@@ -2363,7 +2363,8 @@ summary::-webkit-details-marker { display:none; }
 /* Desktop band: copy on the left, a real app screen on the right. Same card
    surface as every other card, no stroke, no eyebrows. */
 .desktop-section { padding-block:clamp(6rem,10vw,10rem); background:var(--bg); }
-.desktop-grid { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(2.5rem,6vw,6rem); align-items:center; }
+.desktop-section { overflow:hidden; }
+.desktop-grid { display:grid; grid-template-columns:minmax(0,34rem) minmax(0,1fr); gap:clamp(2.5rem,6vw,6rem); align-items:stretch; margin-right:calc(50% - 50vw); }
 .desktop-copy h2 { max-width:none; }
 .desktop-lead { max-width:34rem; margin-top:1.25rem; color:var(--muted); font-size:var(--t-lead); line-height:1.6; }
 .desktop-points { margin-top:2.25rem; border-top:1px solid var(--line-2); }
@@ -2371,10 +2372,12 @@ summary::-webkit-details-marker { display:none; }
 .desktop-points strong { display:block; font-size:var(--t-h4); letter-spacing:-.02em; font-weight:var(--w-emph); }
 .desktop-points span { display:block; margin-top:.3rem; color:var(--muted); line-height:1.55; }
 .desktop-note { margin-top:1.5rem; color:var(--faint); font-size:var(--t-small); }
-.desktop-shot { overflow:hidden; border-radius:1.25rem; background:var(--surface); box-shadow:0 40px 90px -50px rgb(0 0 0 / .7); }
-.desktop-shot img { display:block; width:100%; height:auto; }
+.desktop-shot { position:relative; min-height:28rem; overflow:hidden; border-radius:1.25rem 0 0 1.25rem; background:var(--surface); box-shadow:0 40px 90px -50px rgb(0 0 0 / .7); }
+.desktop-shot img { position:absolute; top:0; left:0; display:block; height:100%; width:auto; max-width:none; }
 @media (max-width:900px) {
-  .desktop-grid { grid-template-columns:minmax(0,1fr); }
+  .desktop-grid { grid-template-columns:minmax(0,1fr); margin-right:0; }
+  .desktop-shot { min-height:0; aspect-ratio:16/10; border-radius:1.25rem; }
+  .desktop-shot img { width:100%; height:auto; }
   .desktop-copy h2 { max-width:none; }
 }
 .price-section { padding-block:clamp(6rem,10vw,10rem); background:var(--bg); }
