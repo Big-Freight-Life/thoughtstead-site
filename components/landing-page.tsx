@@ -69,6 +69,26 @@ const PHASES = [
   ['Iterate and scale', 'Permanent capability, controlled steps in autonomy, the next wave.'],
 ];
 
+// Value Matrix: human baseline, break-even and the "most serious error" with its
+// "recommended human control" all exist in the app (value-matrix/calculations.ts,
+// decision-panel.tsx). The sensitivity view is deliberately NOT claimed: not
+// confirmed user-visible.
+const VALUE_POINTS = [
+  ['Against a human baseline', 'Measured against what people do today, not against zero.'],
+  ['Break-even', 'The point at which the AI starts to pay for itself.'],
+  ['The most serious error', 'Named, with the human control that catches it.'],
+];
+
+// Outside the app, so each link was checked live on 2026-11-16 (200). The
+// Framework Lab is NOT linked: bfl.design/course redirects to learn.bfl.design,
+// which has no DNS record, and its CLI is marked unpublished. Re-check before
+// adding it.
+const FRAMEWORK_LINKS = [
+  ['The BFL Framework', 'The method, chapter by chapter: capability, decisions, workflow, governance, authority and trust.', 'https://bfl.design/framework'],
+  ['AI Experience Architecture', 'The discipline in short: the experience is the relationship with the system in operation, and AI is now part of it.', 'https://raybutler.bfl.design/ai-experience-architecture'],
+  ['Learn with BFL', 'Programs, the primer and the tool index from Big Freight Life.', 'https://bfl.design/learn'],
+];
+
 const GOVERNANCE_PILLARS = [
   ['Make the boundaries explicit', 'You choose how much your own AI may do.'],
   ['Keep the reasoning reviewable', 'Every decision keeps what was known and why.'],
@@ -151,14 +171,9 @@ export default function LandingPage() {
       <SiteNav />
       <main>
         <section className="hero human-hero experience-hero relative overflow-hidden px-6">
-          <Image
-            src="/hero-product-lead-hd-retouched.webp"
-            alt="A product lead working across a desktop, notebook, and research materials"
-            fill
-            priority
-            sizes="100vw"
-            className="human-hero-media"
-          />
+          {/* The hero photo was removed here: CSS hid it (.experience-hero
+              .human-hero-media) but `priority` still made every visitor
+              download the page's largest image. */}
           <div className="human-hero-wash" aria-hidden="true" />
           <div className="hero-grid relative mx-auto w-full max-w-7xl">
             <div className="hero-copy">
@@ -225,6 +240,21 @@ export default function LandingPage() {
           </div>
         </Section>
 
+        <Section id="proof" className="governance-section" wide>
+          <div className="governance-intro">
+            <h2 className="h2">Price the mistake before you build the system.</h2>
+            <p>AI doesn’t have to be perfect. It has to beat the alternative. The Value Matrix sets what the AI is expected to get right and wrong against a human baseline, so “is it worth it” becomes a number someone can argue with. It lists the assumptions that still need research, so nothing hides in the model.</p>
+          </div>
+          <div className="governance-captions">
+            {VALUE_POINTS.map(([title, body]) => (
+              <div className="governance-caption" key={title}>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+
         <Section className="governance-section" wide>
           <div className="governance-intro">
             <h2 className="h2">Everything the work needs. Nothing happens without you.</h2>
@@ -255,6 +285,21 @@ export default function LandingPage() {
             {FOUNDATIONS.map(([title, body]) => (
               <div className="governance-caption" key={title}>
                 <h3>{title}</h3>
+                <p>{body}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section id="framework" className="governance-section" wide>
+          <div className="governance-intro">
+            <h2 className="h2">The tool and the thinking come from the same place.</h2>
+            <p>Thoughtstead is where the AI Experience Architecture method is put to work. The method is written up in the BFL Framework, from capability and decision architecture to governance, authority and trust. The workspace is where you run it on a real engagement.</p>
+          </div>
+          <div className="governance-captions">
+            {FRAMEWORK_LINKS.map(([title, body, href]) => (
+              <div className="governance-caption" key={title}>
+                <h3><a className="inline-block py-2.5 underline underline-offset-4" href={href}>{title}</a></h3>
                 <p>{body}</p>
               </div>
             ))}

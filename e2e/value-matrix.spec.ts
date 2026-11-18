@@ -112,10 +112,11 @@ test.describe('the ported engine', () => {
 test.describe('the accountability section on the page', () => {
   test('combines the approval story and the foundations in one section, without the retired calculator', async ({ page }) => {
     await page.goto('/');
-    await expect(
-      page.getByRole('heading', { name: 'Everything the work needs. Nothing happens without you.' }),
-    ).toBeVisible();
-    const section = page.locator('.governance-section');
+    const heading = page.getByRole('heading', { name: 'Everything the work needs. Nothing happens without you.' });
+    await expect(heading).toBeVisible();
+    // Other sections share the .governance-section layout (proof, framework), so
+    // scope to the one that holds this heading rather than every match.
+    const section = page.locator('.governance-section', { has: heading });
     // Two videos are in the page (wide and phone); CSS shows exactly one.
     await expect(section.locator('.governance-video')).toHaveCount(2);
     await expect(section.locator('.governance-video:visible')).toHaveCount(1);
