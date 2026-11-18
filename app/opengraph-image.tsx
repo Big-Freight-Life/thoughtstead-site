@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { BigFreightLifeMark } from '@/components/big-freight-life-mark';
 
-export const alt = 'Thoughtstead — design the experience around AI';
+export const alt = 'Thoughtstead — the experience is not the interface';
 export const size = {
   width: 1200,
   height: 630,
@@ -42,7 +42,7 @@ export default async function Image() {
             opacity: 0.66,
           }}
         >
-          Design the experience around AI.
+          The experience is not the interface.
         </div>
       </div>
     ),

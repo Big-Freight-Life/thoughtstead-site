@@ -3,10 +3,10 @@ import { ADVERTISED_PRICES } from '../lib/pricing';
 
 test('landing renders the pitch and hosted pricing', async ({ page }) => {
   await page.goto('/');
-  // The pitch names the work, not a job title: how AI changes the work for the
-  // people it affects, the processes it touches and the systems behind it.
+  // The pitch names the discipline (AI Experience Architecture) and addresses
+  // people by situation, never by job title.
   await expect(
-    page.getByRole('heading', { level: 1, name: /Design the experience around AI/i }),
+    page.getByRole('heading', { level: 1, name: /The experience is not the interface/i }),
   ).toBeVisible();
   await expect(
     page.getByRole('heading', { name: /Make the change.*ready to move/i }),
@@ -14,10 +14,11 @@ test('landing renders the pitch and hosted pricing', async ({ page }) => {
   // Retired framings stay retired. "Life operating system" described the
   // product before the design-environment focus (2026-11-11); "second brain" is
   // an undersold, borrowed category; and "AI experience architect" is a job
-  // title, which positioning names by situation instead.
+  // title, which positioning names by situation instead. The discipline's own
+  // name, "AI Experience Architecture", is allowed (2026-11-16 decision).
   await expect(page.getByText(/life operating system/i)).toHaveCount(0);
   await expect(page.getByText(/second brain/i)).toHaveCount(0);
-  await expect(page.getByText(/AI experience architect/i)).toHaveCount(0);
+  await expect(page.getByText(/AI experience architects?\b/i)).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Individual' })).toBeVisible();
   await expect(page.locator('.price-card-head p')).toHaveText(/Available now|Launching soon/);
   await expect(page.getByText('$19.99').first()).toBeVisible();

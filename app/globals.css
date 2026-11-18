@@ -2219,6 +2219,19 @@ summary::-webkit-details-marker { display:none; }
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:1rem;
 }
+.transformation-step-grid-phases {
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+.transformation-step-grid-phases .transformation-step {
+  min-height:13rem;
+  padding:clamp(1.25rem,2vw,1.75rem);
+}
+.transformation-step-grid-phases .transformation-step h3 {
+  font-size:clamp(1.15rem,1.6vw,1.4rem);
+}
+@media (max-width:1100px) {
+  .transformation-step-grid-phases { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
 .transformation-step {
   min-height:15rem;
   display:flex;
