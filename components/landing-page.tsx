@@ -140,6 +140,10 @@ const FAQS = [
     a: 'Agents prepare the work. Anything that sends or deletes waits for you to approve it, and every step leaves a record.',
   },
   {
+    q: 'What are the Delivery desk and the Coach?',
+    a: 'The Delivery desk shows what changed across your clients and what needs you. The Coach checks new work for gaps, such as a condition that could never fail, and never fills them for you. Both are driven by your own Claude Code or Codex.',
+  },
+  {
     q: 'Can I use my own AI?',
     a: 'Yes. The Claude Code or Codex you already use can work inside Thoughtstead, with only Thoughtstead’s tools. It reads your workspace and makes changes you can see. Anything that sends or deletes waits for your approval.',
   },

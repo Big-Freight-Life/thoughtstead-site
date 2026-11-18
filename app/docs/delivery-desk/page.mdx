@@ -1,0 +1,42 @@
+export const metadata = {
+  title: 'Delivery desk & Coach',
+};
+
+# Delivery desk & Coach
+
+The Delivery desk is where you see what is happening across your clients' AI
+work and what needs you. The Coach checks a newcomer's work before anyone relies
+on it. Both are driven by the AI you already use. Thoughtstead does not run a
+model for them on your behalf.
+
+## The Delivery desk
+
+One page that answers a single question: what changed, what is due, and what is
+waiting on a person. It shows proposals awaiting a decision, missing information,
+blocked work and overdue upkeep, so recurring work such as retests, re-reads and
+reviews is visible and is never cleared just because time passed.
+
+## The Coach
+
+The Coach looks at work a person is about to rely on and shows the gaps. It
+checks things like:
+
+- whether every line has a named person, not a role or "the team";
+- whether a condition could actually fail, rather than "when ready";
+- whether a baseline was captured before a promise was made;
+- whether the condition was written before the result it judges.
+
+It is mostly written rules, not a model. It reports what is missing and what
+would close the gap. It never fills in a value or edits your work, and it says
+"no gap found" only when the check actually ran.
+
+## Your own AI drives it
+
+Connect your own Claude Code or Codex (see [Connect AI tools](/docs/mcp)) and it
+can operate the desk through Thoughtstead's tools. It uses your plan with its
+provider. Thoughtstead never holds your Claude or Codex login.
+
+What it produces are proposals. A person at the approval gate turns a proposal
+into a record, the same rule that applies everywhere else (see
+[Agents & approval](/docs/agents)). You choose how much a connection may do, and
+you can revoke it in Settings.
