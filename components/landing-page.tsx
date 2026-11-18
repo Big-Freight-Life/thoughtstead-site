@@ -71,11 +71,12 @@ const PHASES = [
 
 // Value Matrix: human baseline, break-even and the "most serious error" with its
 // "recommended human control" all exist in the app (value-matrix/calculations.ts,
-// decision-panel.tsx). The sensitivity view is deliberately NOT claimed: not
-// confirmed user-visible.
+// decision-panel.tsx), and the Compare view's break-even solver
+// (frontend/value-matrix/sensitivity-panel.tsx, verified 2026-11-18). Its posture
+// slider is NOT claimed: the app labels those results a scenario, not a measurement.
 const VALUE_POINTS = [
   ['Against a human baseline', 'Measured against what people do today, not against zero.'],
-  ['Break-even', 'The point at which the AI starts to pay for itself.'],
+  ['Break-even', 'What would have to be true for the answer to change, and the point where the AI starts to pay for itself.'],
   ['The most serious error', 'Named, with the human control that catches it.'],
 ];
 
@@ -111,7 +112,7 @@ const DESKTOP_POINTS = [
 // These are what the plan carries, and they are the reason the card is a card.
 const INCLUDES = [
   ['Every surface', 'The studio, and the rest of it'],
-  ['AI included', 'Search and enrichment need no API key. Or bring your own Claude Code or Codex'],
+  ['Search and enrichment included', 'No API key to manage. Agent work runs on your own Claude Code or Codex'],
   ['Every context', 'As many as the things you run'],
   ['Guests', 'Comment on a concept without a seat'],
   ['Export', 'Everything, one click, any time'],
@@ -137,6 +138,10 @@ const FAQS = [
   {
     q: 'How are AI actions kept accountable?',
     a: 'Agents prepare the work. Anything that sends or deletes waits for you to approve it, and every step leaves a record.',
+  },
+  {
+    q: 'What are the Delivery desk and the Coach?',
+    a: 'The Delivery desk shows, client by client, where each engagement stands and what needs you. The Coach is plain rules that point out gaps as you fill the record in, such as a condition that could never fail, and never fill them for you. The desk is driven by your own Claude Code or Codex. The Coach needs no AI.',
   },
   {
     q: 'Can I use my own AI?',
@@ -342,7 +347,7 @@ export default function LandingPage() {
               <h2 className="h2">One workspace for the whole engagement.</h2>
             </Reveal>
             <Reveal delay={60}>
-              <p>One subscription for the workspace, hosted AI, project work, and client delivery. No tiers, and your data exports in one click.</p>
+              <p>One subscription for the workspace, project work and client delivery. Search and enrichment are included. For agent work you bring your own Claude Code or Codex. No tiers, and your data exports in one click.</p>
             </Reveal>
           </div>
 
