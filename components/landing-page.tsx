@@ -140,8 +140,8 @@ const FAQS = [
     a: 'Agents prepare the work. Anything that sends or deletes waits for you to approve it, and every step leaves a record.',
   },
   {
-    q: 'What is the Delivery desk?',
-    a: 'One page that shows, client by client, what is due and what needs you. It is driven by your own Claude Code or Codex, and anything it proposes waits for your approval.',
+    q: 'What are the Delivery desk and the Coach?',
+    a: 'The Delivery desk shows, client by client, where each engagement stands and what needs you. The Coach is plain rules that point out gaps as you fill the record in, such as a condition that could never fail, and never fill them for you. The desk is driven by your own Claude Code or Codex. The Coach needs no AI.',
   },
   {
     q: 'Can I use my own AI?',

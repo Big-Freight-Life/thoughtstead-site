@@ -1,22 +1,51 @@
 export const metadata = {
-  title: 'Delivery desk',
+  title: 'Delivery desk & Coach',
 };
 
-# Delivery desk
+# Delivery desk & Coach
 
-The Delivery desk is where you see what is happening across your clients' AI
-work and what needs you. It is driven by the AI you already use. Thoughtstead
-does not run a model for it on your behalf.
+The Delivery desk shows what is happening across your clients' AI work and what
+needs you. The Coach checks the record as you fill it in and points out what is
+missing. The desk is driven by the AI you already use, and the Coach is plain
+rules that need no AI. Thoughtstead does not run a model for either one on your
+behalf.
 
-## What it shows
+## The Delivery desk
 
-One page that answers a single question: what changed, what is due, and what is
-waiting on a person. It lists each client with the next thing that needs
-attention, including overdue and due-soon upkeep, so recurring work such as
-retests, re-reads and reviews stays visible and is never cleared just because
-time passed.
+One page, client by client. Every client with a project and an engagement
+appears on its own, with a short line saying where that engagement stands and
+the next thing to do. A client you haven't set up yet shows a **Set up** button;
+set it up and Thoughtstead tracks its due dates, overdue upkeep and running
+clocks as well. Engagements whose project isn't linked to a client are listed
+separately, with a link to attach one.
 
-## Your own AI drives it
+The block at the top says how many engagements are actually stuck, and it never
+says nothing needs you if it couldn't read the engagements.
+
+## The Coach
+
+The Coach looks at what you have written and shows each gap as a gap: what is
+missing, and what would close it. It never fills in a value, never edits your
+work, and never blocks you from saving, marking a phase done, or exporting.
+
+It checks five things:
+
+- whether a line that needs an owner names a person, not a role or "the team";
+- whether a condition could actually fail, rather than "when ready";
+- whether a benefit has a baseline, a starting point to measure from;
+- whether a condition was written before the result it judges;
+- whether a recommendation was written before the numbers were in.
+
+Findings appear in two places. On a phase sheet, a note sits next to the field or
+row it applies to, labelled **Coach**, and clears as soon as you fix it. On the
+project's consulting overview, one line gives the number of gaps and links to the
+first. It only says there are no gaps for a check that actually ran. If a check
+couldn't run, it says why. A row you haven't started isn't flagged.
+
+The Coach is rules, so it costs nothing and works whether or not you have
+connected an AI.
+
+## Your own AI drives the desk
 
 Connect your own Claude Code or Codex (see [Connect AI tools](/docs/mcp)) and it
 can work from the desk through Thoughtstead's tools. It uses your plan with its

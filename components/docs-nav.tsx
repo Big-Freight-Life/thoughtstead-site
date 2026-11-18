@@ -15,7 +15,7 @@ const DOCS_LINKS = [
   { href: '/docs/mcp', label: 'Connect AI tools' },
   { href: '/docs/connectors', label: 'Gmail & Calendar' },
   { href: '/docs/importers', label: 'Import your notes' },
-  { href: '/docs/delivery-desk', label: 'Delivery desk' },
+  { href: '/docs/delivery-desk', label: 'Delivery desk & Coach' },
   { href: '/docs/agents', label: 'Agents & approval' },
   { href: '/docs/costs', label: 'Costs' },
   { href: '/docs/license', label: 'Plan & billing' },
